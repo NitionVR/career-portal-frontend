@@ -1,54 +1,59 @@
-# Etalente-clone Frontend
+# TempApp
 
-This repository will house the frontend application for the Etalente-clone talent acquisition platform. It will provide the user interface for candidates and recruiters to interact with the system.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.1.
 
-## Purpose
-This project is dedicated to building a modern, responsive, and intuitive user experience for the Etalente-clone application. It will consume APIs provided by the `etalente-clone-backend` service.
+## Development server
 
-## Planned Technologies
-*   **Framework:** Angular 20+
-*   **Language:** TypeScript
-*   **Styling:** Angular Material
-*   **Package Manager:** npm
+To start a local development server, run:
 
-## Getting Started (Initial Setup)
-1.  **Clone the repository:**
-    ```bash
-    git clone <frontend_repo_url>
-    cd etalente-clone-frontend
-    ```
-2.  **Initial Dependencies (Placeholder):**
-    *   Node.js (LTS version recommended)
-    *   npm
-    *   Angular CLI (will be installed later)
-
-    _Note: Full application setup and run instructions will be added once the project structure and initial code are in place._
-
-## Commit Strategy (Conventional Commits)
-
-We follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification for our commit messages. This helps in creating an explicit development history, enabling automated changelog generation, and simplifying semantic versioning.
-
-**Format:** `<type>[optional scope]: <description>`
-
-**Example:**
-```
-feat(auth): implement magic link authentication
-fix(deps): update vulnerable dependency lodash
-docs(readme): add initial setup instructions
+```bash
+ng serve
 ```
 
-**Common Types:**
-*   `feat`: A new feature
-*   `fix`: A bug fix
-*   `docs`: Documentation only changes
-*   `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semicolons, etc.)
-*   `refactor`: A code change that neither fixes a bug nor adds a feature
-*   `perf`: A code change that improves performance
-*   `test`: Adding missing tests or correcting existing tests
-*   `build`: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-*   `ci`: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
-*   `chore`: Other changes that don't modify src or test files
-*   `revert`: Reverts a previous commit
+Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
-## License
-MIT License
+## Code scaffolding
+
+Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+
+```bash
+ng generate component component-name
+```
+
+For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+
+```bash
+ng generate --help
+```
+
+## Building
+
+To build the project run:
+
+```bash
+ng build
+```
+
+This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+
+## Running unit tests
+
+To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+
+```bash
+ng test
+```
+
+## Running end-to-end tests
+
+For end-to-end (e2e) testing, run:
+
+```bash
+ng e2e
+```
+
+Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Additional Resources
+
+For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

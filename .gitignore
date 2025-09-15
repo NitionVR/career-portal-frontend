@@ -1,107 +1,45 @@
-# .gitignore file created for free with Tower (https://www.git-tower.com/)
-# For suggestions or improvements please contact us using support@git-tower.com
-# Generated on 2025-09-10
-# Includes: angular, typescript, npm
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-### Universal ###
-# Common files that should be ignored in all projects
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
 
-# Logs
-*.log
-# Temporary files
-*.tmp
-*~
-
-*.bak
-# Environment files (containing secrets, API keys, credentials)
-.env
-*.env
-.env.*
-
-# Local configuration that shouldn't be shared
-*.local
-
-### Angular ###
-# Angular build files, dependencies, and IDE settings
-
-dist/
-tmp/
-out-tsc/
-bazel-out
-node_modules/
-
+# Node
+/node_modules
 npm-debug.log
 yarn-error.log
+
+# IDEs and editors
 .idea/
 .project
 .classpath
-
 .c9/
 *.launch
 .settings/
 *.sublime-workspace
-.vscode/*
 
+# Visual Studio Code
+.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
 
-app/**/*.js
-app/**/*.js.map
-bower_components/
+# Miscellaneous
+/.angular/cache
 .sass-cache/
-connect.lock/
-
-coverage/
-libpeerconnection.log
+/connect.lock
+/coverage
+/libpeerconnection.log
 testem.log
-typings/
-.angular/
+/typings
 
-e2e/*.js
-e2e/*.map
+# System files
+.DS_Store
+Thumbs.db
 
-### Typescript ###
-# typescript specific files
-
-*.tsbuildinfo
-node_modules/
-dist/
-
-### Npm ###
-# NPM package manager files and directories
-
-# NPM (Node Package Manager)
-node_modules/
-package-lock.json
-.npm/
-.node-gyp/
-
-npm-debug.log*
-.npmrc
-.npm-cache/
-.npm-global/
-.node_repl_history
-
-.env
-npm-shrinkwrap.json
-.npmignore
-.package-lock.json
-npm-debug.log.*
-
-.npm-debug/
-.npm-tmp/
-.npm-tarball/
-node_modules_*
-.npm-init.js
-
-.npm-update-notifier
-.node_modules.ember-try/
-.npm-version
-.node_history
-.v8flags.*
-
-.babel.json
-package.json.bak
+###
+*.spec
