@@ -6,11 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
-import { LucideAngularModule, Mail, ArrowRight, CheckCircle } from 'lucide-angular';
+import { LucideAngularModule } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -20,9 +17,6 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     ReactiveFormsModule,
     RouterLink,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatButtonModule,
     LucideAngularModule,
   ],
