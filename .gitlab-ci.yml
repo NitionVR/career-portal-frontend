@@ -60,7 +60,7 @@ test_app:
   stage: test
   image: cypress/browsers:node-22.20.0-chrome-140.0.7339.207-1-ff-143.0.1-edge-140.0.3485.81-1
   before_script:
-    - npm install
+    - npm install --legacy-peer-deps
   script:
     - ./node_modules/.bin/ng test --watch=false --browsers=ChromeHeadlessCI
   rules:
