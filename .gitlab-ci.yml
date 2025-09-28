@@ -1,6 +1,7 @@
 stages:
   - validate_iac
   - deploy_app_infra
+  - security_scan
   - build_image
   - deploy_app
 
@@ -10,7 +11,7 @@ variables:
   ECR_LATEST_TAG: latest
 
 .aws_base:
-  image: 
+  image:
     name: amazon/aws-cli:latest
     entrypoint: ["/usr/bin/env", "bash", "-l", "-c"]
   before_script:
@@ -40,6 +41,19 @@ deploy_app_infra:
       changes:
         - aws/cloudformation/application/ecs-service.yaml
     - if: '$CI_COMMIT_TAG =~ /^infra-/'
+
+security_scan:
+  stage: security_scan
+  image:
+    name: "zricethezav/gitleaks"
+    entrypoint: [""]
+  script:
+    -gitleaks detect --source . --verbose --report-path gitleaks-report.json
+  artifacts:
+    paths:
+      - gitleaks-report.json
+    rules:
+      - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 build_image:
   stage: build_image
