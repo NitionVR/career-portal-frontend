@@ -1,12 +1,13 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
+import { LucideAngularModule, Mail, ArrowRight, CheckCircle } from 'lucide-angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes)
-  ]
+    provideRouter(routes),
+    provideAnimations(),
+    importProvidersFrom(LucideAngularModule.pick({ Mail, ArrowRight, CheckCircle })),
+  ],
 };

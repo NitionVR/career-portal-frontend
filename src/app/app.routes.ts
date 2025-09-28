@@ -4,6 +4,7 @@ import { LoginPage } from './pages/login/login';
 // import { MagicLinkPage } from './pages/magic-link/magic-link';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginPage },
   // { path: 'register', component: RegisterPage },
   // { path: 'auth/magic-link', component: MagicLinkPage },

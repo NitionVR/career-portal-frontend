@@ -21,7 +21,6 @@ import { CommonModule } from '@angular/common';
     LucideAngularModule,
   ],
   templateUrl: './login.html',
-  styleUrl: './login.css',
 })
 export class LoginPage {
   isSubmitted = false;

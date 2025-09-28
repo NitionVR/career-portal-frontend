@@ -35,7 +35,7 @@
             <div class="relative">
               <lucide-icon name="mail" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"></lucide-icon>
               <input id="email" type="email" placeholder="your@email.com" formControlName="email"
-                class="flex h-12 w-full rounded-lg border bg-background px-4 py-3 pl-10 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 hover:border-primary/50 md:text-sm"
+                class="flex h-12 w-full rounded-lg border bg-background py-3 pl-10 pr-4 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 hover:border-primary/50 md:text-sm"
                 [ngClass]="{
                   'border-destructive focus-visible:ring-destructive': email?.invalid && (email?.dirty || email?.touched),
                   'border-input focus-visible:ring-primary': !email?.invalid || (!email?.dirty && !email?.touched)
@@ -52,7 +52,7 @@
           </div>
 
           <button type="submit" [disabled]="loginForm.invalid || isSubmitting"
-            class="bg-gradient-primary text-white w-full group py-3 rounded-lg shadow-medium hover:shadow-large transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center h-11">
+            class="bg-gradient-primary text-white w-full group py-3 rounded-lg shadow-medium hover:shadow-large transform hover:scale-[1.02] active:!scale-[0.98] transition-all duration-300 flex items-center justify-center h-11">
             <div *ngIf="!isSubmitting" class="flex items-center justify-center space-x-2">
               <span>Continue with Email</span>
               <lucide-icon name="arrow-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></lucide-icon>
