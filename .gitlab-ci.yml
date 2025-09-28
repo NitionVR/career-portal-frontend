@@ -2,6 +2,7 @@ stages:
   - validate_iac
   - deploy_app_infra
   - security_scan
+  - test
   - build_image
   - deploy_app
 
@@ -54,6 +55,16 @@ security_scan:
       - gitleaks-report.json
     rules:
       - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
+test_app:
+  stage: test
+  image: node:20
+  before_script:
+    - npm install
+  script:
+    - ng test --watch=false --browsers=ChromeHeadless
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 build_image:
   stage: build_image
