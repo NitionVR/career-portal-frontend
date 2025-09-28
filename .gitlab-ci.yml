@@ -53,8 +53,8 @@ security_scan:
   artifacts:
     paths:
       - gitleaks-report.json
-    rules:
-      - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 test_app:
   stage: test
