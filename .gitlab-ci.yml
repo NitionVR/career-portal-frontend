@@ -62,7 +62,7 @@ test_app:
   before_script:
     - npm install
   script:
-    - ./node_modules/.bin/ng test --watch=false --browsers=ChromeHeadless
+    - ./node_modules/.bin/ng test --watch=false --browsers=ChromeHeadlessCI
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
