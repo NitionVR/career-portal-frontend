@@ -43,3 +43,6 @@ Thumbs.db
 
 ###
 *.spec
+
+project.spec.md
+ARCHITECTURE.md
