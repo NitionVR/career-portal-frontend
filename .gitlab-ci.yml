@@ -58,7 +58,7 @@ security_scan:
 
 test_app:
   stage: test
-  image: node:20
+  image: cypress/browsers:node20.12.2-chrome124.0.6367.60-1
   before_script:
     - npm install
   script:
