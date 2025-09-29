@@ -27,18 +27,8 @@ export class RegisterPage {
   authService = inject(AuthService);
 
   registerForm = new FormGroup({
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
   });
-
-  get firstName() {
-    return this.registerForm.get('firstName');
-  }
-
-  get lastName() {
-    return this.registerForm.get('lastName');
-  }
 
   get email() {
     return this.registerForm.get('email');
