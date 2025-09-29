@@ -2,6 +2,11 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
 import { CommonModule } from '@angular/common';
+import { jwtDecode } from 'jwt-decode';
+
+interface JwtPayload {
+  is_new_user?: boolean;
+}
 
 @Component({
   selector: 'app-magic-link',
@@ -32,7 +37,18 @@ export class MagicLinkPage implements OnInit {
         next: (jwt) => {
           localStorage.setItem('jwt', jwt);
           this.message = 'Successfully verified! Redirecting...';
-          this.router.navigate(['/']); // Redirect to dashboard or home
+
+          try {
+            const decodedToken: JwtPayload = jwtDecode(jwt);
+            if (decodedToken.is_new_user) {
+              this.router.navigate(['/profile/create']);
+            } else {
+              this.router.navigate(['/']); // Redirect to dashboard or home
+            }
+          } catch (e) {
+            console.error('Error decoding JWT', e);
+            this.error = 'An error occurred. Please try again.';
+          }
         },
         error: (err) => {
           console.error(err);
