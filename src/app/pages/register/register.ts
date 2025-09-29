@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,6 +8,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../core/services/auth';
 
 @Component({
   selector: 'app-register',
@@ -22,6 +23,8 @@ import { CommonModule } from '@angular/common';
 })
 export class RegisterPage {
   isSubmitting = false;
+  isSubmitted = false;
+  authService = inject(AuthService);
 
   registerForm = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
@@ -41,17 +44,21 @@ export class RegisterPage {
     return this.registerForm.get('email');
   }
 
-  async register() {
+  register() {
     if (this.registerForm.invalid) {
       return;
     }
 
     this.isSubmitting = true;
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log('Registering user:', this.registerForm.value);
-    this.isSubmitting = false;
-    // Redirect to a success page or login page
+    this.authService.login(this.email?.value ?? '').subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.isSubmitted = true;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isSubmitting = false;
+      },
+    });
   }
 }

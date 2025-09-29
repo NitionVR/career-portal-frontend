@@ -3,6 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { LucideAngularModule, User, Mail, ArrowRight } from 'lucide-angular';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RegisterPage } from './register';
 
 describe('RegisterPage', () => {
@@ -15,6 +16,7 @@ describe('RegisterPage', () => {
         ReactiveFormsModule,
         RegisterPage,
         LucideAngularModule.pick({ User, Mail, ArrowRight }),
+        HttpClientTestingModule,
       ],
       providers: [
         provideAnimations(),

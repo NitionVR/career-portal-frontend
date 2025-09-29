@@ -2,73 +2,93 @@
   <!-- Form Panel -->
   <div class="flex flex-col justify-center items-center p-8">
     <div class="w-full max-w-sm">
-      <div class="mb-8 text-center">
-        <h1 class="mb-2 text-4xl font-bold tracking-tight">Create an Account</h1>
-        <p class="text-muted-foreground">Join Etalente to find your next opportunity.</p>
-      </div>
-
-      <form [formGroup]="registerForm" (ngSubmit)="register()" class="space-y-6">
-        <div class="grid grid-cols-2 gap-4">
-          <div class="space-y-2">
-            <label for="firstName" class="text-sm font-medium text-foreground">First Name</label>
-            <div class="relative">
-              <lucide-icon name="user" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"></lucide-icon>
-              <input id="firstName" type="text" placeholder="John" formControlName="firstName"
-                class="flex h-12 w-full rounded-lg border bg-background py-3 pl-10 pr-4 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 hover:border-primary/50 md:text-sm"
-                [ngClass]="{
-                  'border-destructive focus-visible:ring-destructive': firstName?.invalid && (firstName?.dirty || firstName?.touched),
-                  'border-input focus-visible:ring-primary': !firstName?.invalid || (!firstName?.dirty && !firstName?.touched)
-                }" />
-            </div>
-          </div>
-          <div class="space-y-2">
-            <label for="lastName" class="text-sm font-medium text-foreground">Last Name</label>
-            <div class="relative">
-              <lucide-icon name="user" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"></lucide-icon>
-              <input id="lastName" type="text" placeholder="Doe" formControlName="lastName"
-                class="flex h-12 w-full rounded-lg border bg-background py-3 pl-10 pr-4 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 hover:border-primary/50 md:text-sm"
-                [ngClass]="{
-                  'border-destructive focus-visible:ring-destructive': lastName?.invalid && (lastName?.dirty || lastName?.touched),
-                  'border-input focus-visible:ring-primary': !lastName?.invalid || (!lastName?.dirty && !lastName?.touched)
-                }" />
-            </div>
+      <!-- Success Message View -->
+      <div *ngIf="isSubmitted; else registerFormView" class="text-center">
+        <div class="mb-6 flex justify-center">
+          <div class="flex h-16 w-16 items-center justify-center rounded-full bg-success/10">
+            <lucide-icon name="check-circle" class="h-8 w-8 text-success"></lucide-icon>
           </div>
         </div>
-
-        <div class="space-y-2">
-          <label for="email" class="text-sm font-medium text-foreground">Email Address</label>
-          <div class="relative">
-            <lucide-icon name="mail" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"></lucide-icon>
-            <input id="email" type="email" placeholder="your@email.com" formControlName="email"
-              class="flex h-12 w-full rounded-lg border bg-background py-3 pl-10 pr-4 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 hover:border-primary/50 md:text-sm"
-              [ngClass]="{
-                'border-destructive focus-visible:ring-destructive': email?.invalid && (email?.dirty || email?.touched),
-                'border-input focus-visible:ring-primary': !email?.invalid || (!email?.dirty && !email?.touched)
-              }" />
-          </div>
-        </div>
-
-        <button type="submit" [disabled]="registerForm.invalid || isSubmitting"
-          class="bg-gradient-primary text-white w-full group py-3 rounded-lg shadow-medium hover:shadow-large transform hover:scale-[1.02] active:!scale-[0.98] transition-all duration-300 flex items-center justify-center h-11">
-          <div *ngIf="!isSubmitting" class="flex items-center justify-center space-x-2">
-            <span>Create Account</span>
-            <lucide-icon name="arrow-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></lucide-icon>
-          </div>
-          <div *ngIf="isSubmitting" class="flex items-center space-x-2">
-            <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-            <span>Creating...</span>
-          </div>
-        </button>
-      </form>
-
-      <div class="mt-6 text-center">
-        <p class="text-muted-foreground">
-          Already have an account?
-          <a routerLink="/login" class="font-semibold text-primary hover:text-primary-hover transition-colors">
-            Sign In
-          </a>
+        <h1 class="mb-2 text-3xl font-bold">Check your email</h1>
+        <p class="mb-6 text-muted-foreground">
+          We've sent a magic link to
+          <span class="font-medium text-foreground">{{ email?.value }}</span>
+        </p>
+        <p class="text-sm text-muted-foreground">
+          Click the link in the email to complete your registration.
         </p>
       </div>
+
+      <!-- Register Form View -->
+      <ng-template #registerFormView>
+        <div class="mb-8 text-center">
+          <h1 class="mb-2 text-4xl font-bold tracking-tight">Create an Account</h1>
+          <p class="text-muted-foreground">Join Etalente to find your next opportunity.</p>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="register()" class="space-y-6">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <label for="firstName" class="text-sm font-medium text-foreground">First Name</label>
+              <div class="relative">
+                <lucide-icon name="user" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"></lucide-icon>
+                <input id="firstName" type="text" placeholder="John" formControlName="firstName"
+                  class="flex h-12 w-full rounded-lg border bg-background py-3 pl-10 pr-4 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 hover:border-primary/50 md:text-sm"
+                  [ngClass]="{
+                    'border-destructive focus-visible:ring-destructive': firstName?.invalid && (firstName?.dirty || firstName?.touched),
+                    'border-input focus-visible:ring-primary': !firstName?.invalid || (!firstName?.dirty && !firstName?.touched)
+                  }" />
+              </div>
+            </div>
+            <div class="space-y-2">
+              <label for="lastName" class="text-sm font-medium text-foreground">Last Name</label>
+              <div class="relative">
+                <lucide-icon name="user" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"></lucide-icon>
+                <input id="lastName" type="text" placeholder="Doe" formControlName="lastName"
+                  class="flex h-12 w-full rounded-lg border bg-background py-3 pl-10 pr-4 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 hover:border-primary/50 md:text-sm"
+                  [ngClass]="{
+                    'border-destructive focus-visible:ring-destructive': lastName?.invalid && (lastName?.dirty || lastName?.touched),
+                    'border-input focus-visible:ring-primary': !lastName?.invalid || (!lastName?.dirty && !lastName?.touched)
+                  }" />
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label for="email" class="text-sm font-medium text-foreground">Email Address</label>
+            <div class="relative">
+              <lucide-icon name="mail" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"></lucide-icon>
+              <input id="email" type="email" placeholder="your@email.com" formControlName="email"
+                class="flex h-12 w-full rounded-lg border bg-background py-3 pl-10 pr-4 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 hover:border-primary/50 md:text-sm"
+                [ngClass]="{
+                  'border-destructive focus-visible:ring-destructive': email?.invalid && (email?.dirty || email?.touched),
+                  'border-input focus-visible:ring-primary': !email?.invalid || (!email?.dirty && !email?.touched)
+                }" />
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="registerForm.invalid || isSubmitting"
+            class="bg-gradient-primary text-white w-full group py-3 rounded-lg shadow-medium hover:shadow-large transform hover:scale-[1.02] active:!scale-[0.98] transition-all duration-300 flex items-center justify-center h-11">
+            <div *ngIf="!isSubmitting" class="flex items-center justify-center space-x-2">
+              <span>Create Account</span>
+              <lucide-icon name="arrow-right" class="h-4 w-4 transition-transform group-hover:translate-x-1"></lucide-icon>
+            </div>
+            <div *ngIf="isSubmitting" class="flex items-center space-x-2">
+              <div class="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+              <span>Creating...</span>
+            </div>
+          </button>
+        </form>
+
+        <div class="mt-6 text-center">
+          <p class="text-muted-foreground">
+            Already have an account?
+            <a routerLink="/login" class="font-semibold text-primary hover:text-primary-hover transition-colors">
+              Sign In
+            </a>
+          </p>
+        </div>
+      </ng-template>
     </div>
   </div>
 
