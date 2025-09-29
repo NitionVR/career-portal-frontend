@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   backend:
     build:
-      context: ../etalente-clone-backend # Assuming backend is in a sibling directory
+      context: ../etalente-clone # Assuming backend is in a sibling directory
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
