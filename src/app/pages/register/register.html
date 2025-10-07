@@ -41,29 +41,20 @@
           <div>
             <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="gender">Gender</label>
             <div class="mt-1 relative">
-              <ng-select class="appearance-none w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"
-             id="gender"
-             formControlName="gender"
-             placeholder="Select your gender">
-    <ng-option value="">Select your gender</ng-option>
-    <ng-option value="male">Male</ng-option>
-    <ng-option value="female">Female</ng-option>
-    <ng-option value="other">Other</ng-option>
-  </ng-select>
+              <app-custom-select formControlName="gender"
+                   [options]="genderOptions"
+                   placeholder="Select your gender">
+</app-custom-select>
               <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark pointer-events-none">expand_more</span>
             </div>
           </div>
           <div>
             <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="race">Race</label>
             <div class="mt-1 relative">
-              <ng-select class="appearance-none w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"
-             id="race"
-             formControlName="race"
-             placeholder="Select your race">
-    <ng-option value="">Select your race</ng-option>
-    <ng-option value="option1">Option 1</ng-option>
-    <ng-option value="option2">Option 2</ng-option>
-  </ng-select>
+              <app-custom-select formControlName="race"
+                   [options]="raceOptions"
+                   placeholder="Select your race">
+</app-custom-select>
               <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark pointer-events-none">expand_more</span>
             </div>
           </div>
@@ -71,15 +62,10 @@
         <div>
           <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="disability">Do you have a disability?</label>
           <div class="mt-1 relative">
-            <ng-select class="appearance-none w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"
-             id="disability"
-             formControlName="disability"
-             placeholder="Please select">
-    <ng-option value="">Please select</ng-option>
-    <ng-option value="yes">Yes</ng-option>
-    <ng-option value="no">No</ng-option>
-    <ng-option value="prefer-not-to-say">Prefer not to say</ng-option>
-  </ng-select>
+            <app-custom-select formControlName="disability"
+                   [options]="disabilityOptions"
+                   placeholder="Do you have a disability?">
+</app-custom-select>
             <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark pointer-events-none">expand_more</span>
           </div>
         </div>
