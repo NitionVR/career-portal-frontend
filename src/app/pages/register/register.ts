@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
 
 @Component({
   selector: 'app-register',
@@ -9,7 +9,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgSelectModule,
+    CustomSelectComponent,
   ],
   templateUrl: './register.html',
   styleUrls: ['./register.css']
@@ -17,6 +17,23 @@ import { NgSelectModule } from '@ng-select/ng-select';
 export class RegisterPage implements OnInit {
   signupForm: FormGroup;
   role: string = 'talent';
+
+  genderOptions = [
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' },
+    { value: 'other', label: 'Other' },
+  ];
+
+  raceOptions = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+  ];
+
+  disabilityOptions = [
+    { value: 'yes', label: 'Yes' },
+    { value: 'no', label: 'No' },
+    { value: 'prefer-not-to-say', label: 'Prefer not to say' },
+  ];
 
   constructor(private fb: FormBuilder) {
     this.signupForm = this.fb.group({
