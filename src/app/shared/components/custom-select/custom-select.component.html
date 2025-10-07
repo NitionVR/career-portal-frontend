@@ -1,0 +1,16 @@
+<ng-select [formControl]="formControl"
+           [items]="options"
+           bindLabel="label"
+           bindValue="value"
+           [clearable]="false"
+           class="custom-ng-select">
+  <ng-template ng-label-tmp let-item="item">
+    {{item.label}}
+  </ng-template>
+  <ng-template ng-option-tmp let-item="item">
+    {{item.label}}
+  </ng-template>
+  <ng-template ng-placeholder-tmp>
+    <span *ngIf="!formControl.value">{{placeholder}}</span>
+  </ng-template>
+</ng-select>

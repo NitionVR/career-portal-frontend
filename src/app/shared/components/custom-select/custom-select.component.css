@@ -1,0 +1,64 @@
+/* Base styling for the ng-select container to match input fields */
+:host ::ng-deep .ng-select-container {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  background-color: #f8f8f5;
+  min-height: 42px; /* Explicit min-height to ensure space for placeholder */
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus styles for ng-select */
+:host ::ng-deep .ng-select.ng-select-focused .ng-select-container {
+  border-color: #FAC638;
+  box-shadow: 0 0 0 3px rgb(29 78 216 / 0.3);
+}
+
+/* Placeholder styling (basic color) */
+:host ::ng-deep .ng-placeholder {
+  color: #6C757D; /* subtle-light color */
+}
+
+/* Selected value styling */
+:host ::ng-deep .ng-value {
+  background-color: transparent !important;
+  color: #212529 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+:host ::ng-deep .ng-value-label {
+  padding: 0 !important;
+  color: #212529 !important;
+}
+
+/* Ensure value container allows both placeholder and value */
+:host ::ng-deep .ng-value-container {
+  padding: 0 !important;
+}
+
+/* Arrow styling */
+:host ::ng-deep .ng-arrow-wrapper {
+  color: #6C757D;
+}
+
+/* Dropdown panel styling */
+:host ::ng-deep .ng-dropdown-panel {
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #FFFFFF;
+}
+
+:host ::ng-deep .ng-dropdown-panel .ng-option {
+  padding: 0.5rem 0.75rem;
+  color: #212529;
+}
+
+:host ::ng-deep .ng-dropdown-panel .ng-option.ng-option-selected,
+:host ::ng-deep .ng-dropdown-panel .ng-option.ng-option-marked {
+  background-color: #f3f4f6;
+  color: #212529;
+}
