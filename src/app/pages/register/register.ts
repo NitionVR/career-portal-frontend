@@ -1,14 +1,6 @@
-import { Component, inject } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { LucideAngularModule } from 'lucide-angular';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../core/services/auth';
 
 @Component({
   selector: 'app-register',
@@ -16,39 +8,37 @@ import { AuthService } from '../../core/services/auth';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
-    LucideAngularModule,
   ],
   templateUrl: './register.html',
+  styleUrls: ['./register.css']
 })
-export class RegisterPage {
-  isSubmitting = false;
-  isSubmitted = false;
-  authService = inject(AuthService);
+export class RegisterPage implements OnInit {
+  signupForm: FormGroup;
+  role: string = 'talent';
 
-  registerForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-  });
-
-  get email() {
-    return this.registerForm.get('email');
+  constructor(private fb: FormBuilder) {
+    this.signupForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      gender: ['', Validators.required],
+      race: ['', Validators.required],
+      disability: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      contactNumber: ['', Validators.required],
+      alternativeContact: ['']
+    });
   }
 
-  register() {
-    if (this.registerForm.invalid) {
-      return;
-    }
+  ngOnInit(): void {}
 
-    this.isSubmitting = true;
-    this.authService.login(this.email?.value ?? '').subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.isSubmitted = true;
-      },
-      error: (err) => {
-        console.error(err);
-        this.isSubmitting = false;
-      },
-    });
+  setRole(role: string): void {
+    this.role = role;
+  }
+
+  onSubmit(): void {
+    if (this.signupForm.valid) {
+      console.log('Form Submitted', this.signupForm.value);
+      // Add your form submission logic here (e.g., API call)
+    }
   }
 }
