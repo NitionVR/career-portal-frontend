@@ -1,0 +1,28 @@
+<div class="sign-in-container">
+  <h3>eTalente</h3>
+  <p>Enter your email to receive a magic link</p>
+  <form #signInForm="ngForm" (ngSubmit)="onSubmit(signInForm)">
+    <div class="form-group">
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        placeholder="you@example.com"
+        required
+      />
+    </div>
+    <div class="form-options">
+      <label>
+        <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" /> Remember Me
+      </label>
+    </div>
+    <button type="submit" [disabled]="!signInForm.valid" class="create-account-btn">
+      Send Magic Link
+    </button>
+    <p class="terms">
+      By continuing, you agree to our
+      <a href="#" target="_blank">Terms and Conditions</a> and
+      <a href="#" target="_blank">Privacy Policy</a>.
+    </p>
+  </form>
+</div>
