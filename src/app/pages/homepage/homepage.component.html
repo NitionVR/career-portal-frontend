@@ -149,7 +149,7 @@
   </main>
 </div>
 
-<div class="modal" *ngIf="showSignInModal" (click)="closeSignInModal()">
+<div class="modal" *ngIf="showSignInModal">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <app-sign-in (closeModal)="closeSignInModal()"></app-sign-in>
   </div>
