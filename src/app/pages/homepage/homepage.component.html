@@ -111,7 +111,7 @@
                       <h3 class="text-xl font-bold hover:text-[var(--primary-color)] transition-colors"><a href="#">{{ job.title }}</a></h3>
                       <p class="text-sm text-[var(--subtle-text-color)] mt-1">Ref: #{{ job.ref }}</p>
                     </div>
-                    <img alt="Company Logo" class="w-14 h-14 rounded-lg bg-white p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHwracevImG81zEqFH9kkEB5Y3E3T7tJYIIJ1DBetcfji5E1NELPFQT8FvsPJXOOWie5foLREzbuRh7-5EdA_hG6bUEgmv3NT_N3b1UVFKy_F7jSLATnKWrbRZz2HUyOchAgQ88-0pRffZzKjD5b67Ho1alckoV-EOE5_TCRBsIUr4SQCdNHUJ2rasT_qNpqyw1Q6ctkn2B__JzE2rCb6T-8HHyqNxT-LY6pMxsVNAyvnAgFlxXJ10xb7WfBpN-zlPlKyq0TES5A"/>
+                    <img alt="Company Logo" class="w-14 h-14 rounded-lg bg-white p-1" [src]="job.companyLogo"/>
                   </div>
                   <div class="mt-4 space-y-3 text-sm">
                     <p class="flex items-center text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-2">location_on</span> {{ job.location }}</p>
