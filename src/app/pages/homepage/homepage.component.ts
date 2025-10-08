@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -11,7 +11,7 @@ import { SignInComponent } from '../../shared/components/sign-in/sign-in.compone
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.css']
 })
-export class HomepageComponent {
+export class HomepageComponent implements OnInit {
   showSignInModal = false;
   searchQuery: string = '';
   filters: any = {
@@ -28,6 +28,10 @@ export class HomepageComponent {
     { title: 'DevOps Engineer', ref: '84323', location: 'Austin, TX (Hybrid)', experience: '4+ Years', salary: '$115,000 - $140,000', posted: '1 week ago', expires: 21, companyLogo: 'https://via.placeholder.com/150/00FF00/FFFFFF?text=CompanyC' }
   ];
   filteredJobs = [...this.jobs];
+
+  ngOnInit(): void {
+    this.filterJobs();
+  }
 
   onSearchChange(event: any): void {
     this.filterJobs();
