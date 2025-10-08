@@ -22,9 +22,9 @@ export class HomepageComponent {
     senior: false
   };
   jobs = [
-    { title: 'Senior Frontend Developer', ref: '84321', location: 'San Francisco, CA (Remote)', experience: '5+ Years', salary: '$120,000 - $150,000', posted: '2 days ago', expires: 28 },
-    { title: 'Product Designer', ref: '84322', location: 'New York, NY', experience: '3-5 Years', salary: '$90,000 - $110,000', posted: '5 days ago', expires: 25 },
-    { title: 'DevOps Engineer', ref: '84323', location: 'Austin, TX (Hybrid)', experience: '4+ Years', salary: '$115,000 - $140,000', posted: '1 week ago', expires: 21 }
+    { title: 'Senior Frontend Developer', ref: '84321', location: 'San Francisco, CA (Remote)', experience: '5+ Years', salary: '$120,000 - $150,000', posted: '2 days ago', expires: 28, companyLogo: 'https://via.placeholder.com/150/FF0000/FFFFFF?text=CompanyA' },
+    { title: 'Product Designer', ref: '84322', location: 'New York, NY', experience: '3-5 Years', salary: '$90,000 - $110,000', posted: '5 days ago', expires: 25, companyLogo: 'https://via.placeholder.com/150/0000FF/FFFFFF?text=CompanyB' },
+    { title: 'DevOps Engineer', ref: '84323', location: 'Austin, TX (Hybrid)', experience: '4+ Years', salary: '$115,000 - $140,000', posted: '1 week ago', expires: 21, companyLogo: 'https://via.placeholder.com/150/00FF00/FFFFFF?text=CompanyC' }
   ];
   filteredJobs = [...this.jobs];
 
