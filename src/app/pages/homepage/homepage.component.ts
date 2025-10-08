@@ -1,12 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { SignInComponent } from '../../shared/components/sign-in/sign-in.component';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [CommonModule, FormsModule, SignInComponent],
+  imports: [CommonModule, FormsModule, SignInComponent, RouterLink],
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.css']
 })
