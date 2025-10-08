@@ -1,0 +1,508 @@
+Below is an Angular component for the eTalente homepage based on the provided image. This implementation follows Angular best practices, including a modular structure, reactive forms for the search input, and a responsive design. You can integrate this into an existing Angular application.1. Create the ComponentRun the following command to generate a new component if you haven't already:bash
+
+ng generate component homepage
+
+2. HTML Template (homepage.component.html)html
+
+<div class="homepage-container">
+  <header>
+    <div class="logo">eTalente</div>
+    <nav>
+      <a href="#">Find Jobs</a>
+      <a href="#">Companies</a>
+      <a href="#">Career Advice</a>
+      <a href="#" class="login">Log In</a>
+      <a href="#" class="signup">Sign Up</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Find Your <span>Next Big Opportunity</span></h1>
+    <p>Discover thousands of job openings from top companies and find the one that's right for you.</p>
+    <div class="search-bar">
+      <input type="text" placeholder="Job title, keywords, or company" (ngModelChange)="onSearchChange($event)" [(ngModel)]="searchQuery" />
+      <button (click)="findJobs()">Find Jobs</button>
+    </div>
+  </section>
+
+  <section class="job-listings">
+    <div class="filters">
+      <h3>Filters</h3>
+      <div class="filter-group">
+        <h4>Skills</h4>
+        <label><input type="checkbox" [(ngModel)]="filters.react" /> React</label>
+        <label><input type="checkbox" [(ngModel)]="filters.nodejs" /> Node.js</label>
+        <label><input type="checkbox" [(ngModel)]="filters.typescript" /> TypeScript</label>
+      </div>
+      <div class="filter-group">
+        <h4>Experience</h4>
+        <label><input type="checkbox" [(ngModel)]="filters.entry" /> Entry Level</label>
+        <label><input type="checkbox" [(ngModel)]="filters.mid" /> Mid-Level</label>
+        <label><input type="checkbox" [(ngModel)]="filters.senior" /> Senior Level</label>
+      </div>
+      <button (click)="clearFilters()">Clear</button>
+      <button (click)="applyFilters()">Apply</button>
+    </div>
+    <div class="jobs">
+      <div class="job-card" *ngFor="let job of filteredJobs">
+        <h4>{{ job.title }} <span>Ref:{{ job.ref }}</span></h4>
+        <p><i class="fas fa-map-marker-alt"></i> {{ job.location }}</p>
+        <p><i class="fas fa-clock"></i> {{ job.experience }} Experience</p>
+        <p><i class="fas fa-money-bill-wave"></i> {{ job.salary }}</p>
+        <p>Posted: {{ job.posted }}</p>
+        <p>Expires in: {{ job.expires }} days</p>
+        <button class="apply-btn">Apply</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="pagination">
+    <button>Previous</button>
+    <span>1 2 3 ... 10</span>
+    <button>Next</button>
+  </div>
+</div>
+
+3. CSS (homepage.component.css)css
+
+.homepage-container {
+  font-family: Arial, sans-serif;
+  color: white;
+  background: linear-gradient(to bottom, #1e3a8a, #1e40af, #1e3a8a);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #1e3a8a;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1.5rem;
+}
+
+nav a.signup {
+  background-color: #facc15;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.hero {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero h1 span {
+  color: #facc15;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.search-bar input {
+  padding: 0.5rem;
+  width: 300px;
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.search-bar button {
+  padding: 0.5rem 1.5rem;
+  background-color: #facc15;
+  border: none;
+  border-radius: 0.25rem;
+  color: black;
+  cursor: pointer;
+}
+
+.job-listings {
+  display: flex;
+  padding: 2rem;
+}
+
+.filters {
+  width: 20%;
+  padding: 1rem;
+  background-color: #1e3a8a;
+  border-radius: 0.5rem;
+}
+
+.filters h3 {
+  margin-bottom: 1rem;
+}
+
+.filter-group h4 {
+  margin: 1rem 0 0.5rem;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.filters button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  background-color: #facc15;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.jobs {
+  width: 80%;
+  padding-left: 2rem;
+}
+
+.job-card {
+  background-color: #1e3a8a;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+}
+
+.job-card h4 {
+  margin: 0 0 0.5rem;
+}
+
+.job-card p {
+  margin: 0.25rem 0;
+}
+
+.apply-btn {
+  background-color: #facc15;
+  padding: 0.25rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.pagination {
+  text-align: center;
+  padding: 1rem;
+}
+
+.pagination button {
+  background-color: #facc15;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+4. TypeScript (homepage.component.ts)typescript
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-homepage',
+  templateUrl: './homepage.component.html',
+  styleUrls: ['./homepage.component.css']
+})
+export class HomepageComponent {
+  searchQuery: string = '';
+  filters = {
+    react: false,
+    nodejs: false,
+    typescript: false,
+    entry: false,
+    mid: false,
+    senior: false
+  };
+  jobs = [
+    { title: 'Senior Frontend Developer', ref: '84321', location: 'San Francisco, CA (Remote)', experience: '5+ Years', salary: '$120,000 - $150,000', posted: '2 days ago', expires: 28 },
+    { title: 'Product Designer', ref: '84322', location: 'New York, NY', experience: '3-5 Years', salary: '$90,000 - $110,000', posted: '5 days ago', expires: 25 },
+    { title: 'DevOps Engineer', ref: '84323', location: 'Austin, TX (Hybrid)', experience: '4+ Years', salary: '$115,000 - $140,000', posted: '1 week ago', expires: 21 }
+  ];
+  filteredJobs = [...this.jobs];
+
+  onSearchChange(event: any): void {
+    this.filterJobs();
+  }
+
+  findJobs(): void {
+    this.filterJobs();
+  }
+
+  clearFilters(): void {
+    Object.keys(this.filters).forEach(key => this.filters[key] = false);
+    this.filterJobs();
+  }
+
+  applyFilters(): void {
+    this.filterJobs();
+  }
+
+  filterJobs(): void {
+    this.filteredJobs = this.jobs.filter(job => {
+      const matchesSearch = !this.searchQuery || job.title.toLowerCase().includes(this.searchQuery.toLowerCase());
+      const matchesSkills = !Object.values(this.filters).some(f => f) ||
+        (this.filters.react || this.filters.nodejs || this.filters.typescript);
+      const matchesExperience = !Object.values(this.filters).some(f => f) ||
+        (this.filters.entry || this.filters.mid || this.filters.senior);
+      return matchesSearch && matchesSkills && matchesExperience;
+    });
+  }
+}
+
+5. Integration into Existing AppEnsure you have Angular FormsModule imported in your app.module.ts for the search input and filters:typescript
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { AppComponent } from './app.component';
+import { HomepageComponent } from './homepage/homepage.component';
+
+@NgModule({
+  declarations: [AppComponent, HomepageComponent],
+  imports: [BrowserModule, FormsModule],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+
+Add the <app-homepage></app-homepage> selector to the parent component's template where you want the homepage to appear.
+Include Font Awesome for icons (e.g., via CDN or Angular FontAwesome library) if you want to use the icons shown in the image.
+
+Notes:The search and filter functionality is basic and can be enhanced with backend API calls.
+The job data is hardcoded; replace it with a service to fetch real data.
+Customize the filter logic and job card details based on your requirements.
+Add routing or navigation logic for the "Find Jobs," "Companies," "Career Advice," "Log In," and "Sign Up" links as needed.
+
+From the sign up page. Above can you infer a great sign in page with matching design? Then sign in page will be accessible only via the login button on the home page.So the sign in form will pop up on top of the homepage we'll positioned centrally.  The sign in page will only require email address as we use magic link. Maybe there can be other things like remember me, terms and conditions if needed|privacy policy
+
+Based on the design of the sign-up page you provided earlier, I’ll infer a matching sign-in page with a centralized popup modal that appears over the homepage when the "Log In" button is clicked. The sign-in form will use a magic link approach, requiring only an email address, with optional features like "Remember Me," "Terms and Conditions," and "Privacy Policy" links for a polished user experience.Design InferenceColor Scheme: The sign-up page uses a gray left panel and a light right panel with yellow buttons. The sign-in modal will adopt a similar contrast, with a dark overlay and a light modal background, using yellow for the action button.
+Layout: The sign-in form will be a centered modal popup, ensuring it overlays the homepage without disrupting the layout.
+Typography and Buttons: Consistent with the sign-up page, using bold headers and yellow buttons for actions.
+
+Implementation in Angular1. Update Homepage ComponentModify the homepage.component.html to include a click event on the "Log In" button to open the sign-in modal.html
+
+<!-- In homepage.component.html, update the nav section -->
+<header>
+  <div class="logo">eTalente</div>
+  <nav>
+    <a href="#">Find Jobs</a>
+    <a href="#">Companies</a>
+    <a href="#">Career Advice</a>
+    <a href="#" class="login" (click)="openSignInModal($event)">Log In</a>
+    <a href="#" class="signup">Sign Up</a>
+  </nav>
+</header>
+
+<!-- Add modal template at the bottom -->
+<div class="modal" *ngIf="showSignInModal" (click)="closeSignInModal($event)">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <app-sign-in (closeModal)="closeSignInModal()"></app-sign-in>
+  </div>
+</div>
+
+Update homepage.component.ts to manage the modal state:typescript
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-homepage',
+  templateUrl: './homepage.component.html',
+  styleUrls: ['./homepage.component.css']
+})
+export class HomepageComponent {
+  showSignInModal = false;
+  searchQuery: string = '';
+  filters = { /* ... existing filters ... */ };
+  jobs = [/* ... existing jobs ... */];
+  filteredJobs = [...this.jobs];
+
+  openSignInModal(event: Event): void {
+    event.preventDefault();
+    this.showSignInModal = true;
+  }
+
+  closeSignInModal(): void {
+    this.showSignInModal = false;
+  }
+
+  // ... existing methods ...
+}
+
+Update homepage.component.css to style the modal:css
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #f3f4f6;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+2. Create Sign-In ComponentGenerate a new component for the sign-in form:bash
+
+ng generate component sign-in
+
+sign-in.component.htmlhtml
+
+<div class="sign-in-container">
+  <h3>eTalente</h3>
+  <p>Enter your email to receive a magic link</p>
+  <form #signInForm="ngForm" (ngSubmit)="onSubmit(signInForm)">
+    <div class="form-group">
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        placeholder="you@example.com"
+        required
+      />
+    </div>
+    <div class="form-options">
+      <label>
+        <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe" /> Remember Me
+      </label>
+    </div>
+    <button type="submit" [disabled]="!signInForm.valid" class="create-account-btn">
+      Send Magic Link
+    </button>
+    <p class="terms">
+      By continuing, you agree to our
+      <a href="#" target="_blank">Terms and Conditions</a> and
+      <a href="#" target="_blank">Privacy Policy</a>.
+    </p>
+  </form>
+</div>
+
+sign-in.component.csscss
+
+.sign-in-container {
+  text-align: center;
+}
+
+.sign-in-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.sign-in-container p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.form-options {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.create-account-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #facc15;
+  border: none;
+  border-radius: 0.25rem;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.create-account-btn:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.terms {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.terms a {
+  color: #facc15;
+  text-decoration: none;
+}
+
+sign-in.component.tstypescript
+
+import { Component, EventEmitter, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-sign-in',
+  templateUrl: './sign-in.component.html',
+  styleUrls: ['./sign-in.component.css']
+})
+export class SignInComponent {
+  @Output() closeModal = new EventEmitter<void>();
+  email: string = '';
+  rememberMe: boolean = false;
+
+  onSubmit(form: any): void {
+    if (form.valid) {
+      console.log('Magic link sent to:', this.email, 'Remember Me:', this.rememberMe);
+      // Add API call to send magic link here
+      this.closeModal.emit();
+    }
+  }
+}
+
+3. Integration into Existing AppEnsure FormsModule is imported in app.module.ts for the sign-in form:typescript
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { AppComponent } from './app.component';
+import { HomepageComponent } from './homepage/homepage.component';
+import { SignInComponent } from './sign-in/sign-in.component';
+
+@NgModule({
+  declarations: [AppComponent, HomepageComponent, SignInComponent],
+  imports: [BrowserModule, FormsModule],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+
+The sign-in modal will now appear when the "Log In" button is clicked on the homepage and can be closed by submitting the form or clicking outside the modal.
+
+Notes:The magic link functionality requires backend integration to send an email with a unique link. Replace the console.log in onSubmit with an API call.
+The "Terms and Conditions" and "Privacy Policy" links are placeholders; update them with actual URLs.
+The modal's design matches the sign-up page's aesthetic with a light background and yellow button, ensuring consistency.
+
