@@ -9,7 +9,7 @@ export const routes: Routes = [
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   { path: 'homepage', component: HomepageComponent },
   { path: 'login', component: LoginPage },
-  { path: 'register', component: RegisterPage },
+  { path: 'sign-up', component: RegisterPage },
   { path: 'auth/magic-link', component: MagicLinkPage },
   { path: 'profile/create', component: ProfileCreate },
 ];
