@@ -17,9 +17,9 @@
     --popover-foreground: 222.2 84% 4.9%;
 
     /* Primary - Professional Blue */
-    --primary: 45 96% 53%;
-    --primary-foreground: 215 41% 11%;
-    --primary-hover: 45 95% 54%;
+    --primary-color: 48 96% 53%;
+    --primary-hover-color: 45 96% 56%;
+    --primary-foreground: 222 41% 11%; /* text-gray-900 */
 
     /* Secondary - Light Gray */
     --secondary: 217 91% 60%;
@@ -87,7 +87,7 @@
   background: hsl(var(--card) / 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid hsl(var(--border) / 0.1);
+  border: 1px solid hsl(var(--foreground) / 0.1);
 }
 
 .modal {
