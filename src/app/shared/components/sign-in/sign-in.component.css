@@ -1,0 +1,52 @@
+.sign-in-container {
+  text-align: center;
+}
+
+.sign-in-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.sign-in-container p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.form-options {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.create-account-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #facc15;
+  border: none;
+  border-radius: 0.25rem;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.create-account-btn:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.terms {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.terms a {
+  color: #facc15;
+  text-decoration: none;
+}
