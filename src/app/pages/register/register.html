@@ -12,125 +12,125 @@
       <div class="text-left mb-10">
         <div class="flex items-center gap-3 mb-4">
           <span class="material-symbols-outlined text-primary" style="font-size: 40px;">business_center</span>
-          <h1 class="text-4xl font-bold text-text-light dark:text-text-dark tracking-tight">eTalente</h1>
+          <h1 class="text-4xl font-bold text-foreground tracking-tight">eTalente</h1>
         </div>
-        <h2 class="text-2xl font-medium text-subtle-light dark:text-subtle-dark">Create your professional profile</h2>
+        <h2 class="text-2xl font-medium text-muted-foreground">Create your professional profile</h2>
       </div>
-      <div class="bg-card-light dark:bg-card-dark p-4 sm:p-6 rounded-xl shadow-sm mb-8">
+      <div class="bg-card p-4 sm:p-6 rounded-xl shadow-sm mb-8">
         <div class="flex rounded-md">
-          <button class="w-1/2 py-3 text-base font-semibold" [class.bg-primary]="role === 'talent'" [class.text-white]="role === 'talent'" [class.rounded-l-md]="true" [class.bg-gray-100]="role !== 'talent'" [class.dark:bg-gray-800]="role !== 'talent'" [class.text-subtle-light]="role !== 'talent'" [class.dark:text-subtle-dark]="role !== 'talent'" (click)="setRole('talent')">Talent</button>
-          <button class="w-1/2 py-3 text-base font-semibold" [class.bg-primary]="role === 'employer'" [class.text-white]="role === 'employer'" [class.rounded-r-md]="true" [class.bg-gray-100]="role !== 'employer'" [class.dark:bg-gray-800]="role !== 'employer'" [class.text-subtle-light]="role !== 'employer'" [class.dark:text-subtle-dark]="role !== 'employer'" (click)="setRole('employer')">Employer</button>
+          <button class="w-1/2 py-3 text-base font-semibold" [class.bg-primary]="role === 'talent'" [class.text-primary-foreground]="role === 'talent'" [class.rounded-l-md]="true" [class.bg-muted]="role !== 'talent'" [class.text-muted-foreground]="role !== 'talent'" (click)="setRole('talent')">Talent</button>
+          <button class="w-1/2 py-3 text-base font-semibold" [class.bg-primary]="role === 'employer'" [class.text-primary-foreground]="role === 'employer'" [class.rounded-r-md]="true" [class.bg-muted]="role !== 'employer'" [class.text-muted-foreground]="role !== 'employer'" (click)="setRole('employer')">Employer</button>
         </div>
       </div>
       <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <div>
-          <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="username">Username</label>
+          <label class="block text-sm font-medium text-muted-foreground" for="username">Username</label>
           <div class="mt-1">
-            <input class="w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="username" formControlName="username" placeholder="Enter your username" type="text"/>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="username" formControlName="username" placeholder="Enter your username" type="text"/>
           </div>
         </div>
 
         <ng-container *ngIf="role === 'talent'">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="first-name">First Name</label>
+              <label class="block text-sm font-medium text-muted-foreground" for="first-name">First Name</label>
               <div class="mt-1">
-                <input class="w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="first-name" formControlName="firstName" placeholder="Enter your first name" type="text"/>
+                <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="first-name" formControlName="firstName" placeholder="Enter your first name" type="text"/>
               </div>
             </div>
             <div>
-              <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="last-name">Last Name</label>
+              <label class="block text-sm font-medium text-muted-foreground" for="last-name">Last Name</label>
               <div class="mt-1">
-                <input class="w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="last-name" formControlName="lastName" placeholder="Enter your last name" type="text"/>
+                <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="last-name" formControlName="lastName" placeholder="Enter your last name" type="text"/>
               </div>
             </div>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="gender">Gender</label>
+              <label class="block text-sm font-medium text-muted-foreground" for="gender">Gender</label>
               <div class="mt-1 relative">
                 <app-custom-select formControlName="gender"
                                    [options]="genderOptions"
                                    placeholder="Select your gender">
                 </app-custom-select>
-                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark pointer-events-none">expand_more</span>
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">expand_more</span>
               </div>
             </div>
             <div>
-              <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="race">Race</label>
+              <label class="block text-sm font-medium text-muted-foreground" for="race">Race</label>
               <div class="mt-1 relative">
                 <app-custom-select formControlName="race"
                                    [options]="raceOptions"
                                    placeholder="Select your race">
                 </app-custom-select>
-                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark pointer-events-none">expand_more</span>
+                <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">expand_more</span>
               </div>
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="disability">Do you have a disability?</label>
+            <label class="block text-sm font-medium text-muted-foreground" for="disability">Do you have a disability?</label>
             <div class="mt-1 relative">
               <app-custom-select formControlName="disability"
                                  [options]="disabilityOptions"
-                                 placeholder="Do you have a disability?">
+                                 placeholder="Select an option">
               </app-custom-select>
-              <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark pointer-events-none">expand_more</span>
+              <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">expand_more</span>
             </div>
           </div>
         </ng-container>
 
         <ng-container *ngIf="role === 'employer'">
           <div>
-            <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="company-name">Company Name</label>
+            <label class="block text-sm font-medium text-muted-foreground" for="company-name">Company Name</label>
             <div class="mt-1">
-              <input class="w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="company-name" formControlName="companyName" placeholder="Enter your company name" type="text"/>
+              <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="company-name" formControlName="companyName" placeholder="Enter your company name" type="text"/>
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="industry">Industry</label>
+            <label class="block text-sm font-medium text-muted-foreground" for="industry">Industry</label>
             <div class="mt-1 relative">
               <app-custom-select formControlName="industry"
                                  [options]="industryOptions"
                                  placeholder="Select your industry">
               </app-custom-select>
-              <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark pointer-events-none">expand_more</span>
+              <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">expand_more</span>
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="contact-person">Contact Person</label>
+            <label class="block text-sm font-medium text-muted-foreground" for="contact-person">Contact Person</label>
             <div class="mt-1">
-              <input class="w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="contact-person" formControlName="contactPerson" placeholder="Enter contact person's name" type="text"/>
+              <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="contact-person" formControlName="contactPerson" placeholder="Enter contact person's name" type="text"/>
             </div>
           </div>
         </ng-container>
 
         <div>
-          <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="email">E-Mail Address</label>
+          <label class="block text-sm font-medium text-muted-foreground" for="email">E-Mail Address</label>
           <div class="mt-1">
-            <input class="w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="email" formControlName="email" placeholder="you@example.com" type="email"/>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="email" formControlName="email" placeholder="you@example.com" type="email"/>
           </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="contact-number">Contact Number</label>
+            <label class="block text-sm font-medium text-muted-foreground" for="contact-number">Contact Number</label>
             <div class="mt-1">
-              <input class="w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="contact-number" formControlName="contactNumber" placeholder="Enter your contact number" type="tel"/>
+              <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="contact-number" formControlName="contactNumber" placeholder="Enter your contact number" type="tel"/>
             </div>
           </div>
           <div *ngIf="role === 'talent'">
-            <label class="block text-sm font-medium text-subtle-light dark:text-subtle-dark" for="alt-contact-number">Alternative Contact</label>
+            <label class="block text-sm font-medium text-muted-foreground" for="alt-contact-number">Alternative Contact</label>
             <div class="mt-1">
-              <input class="w-full px-4 py-3 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-md text-text-light dark:text-text-dark focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="alt-contact-number" formControlName="alternativeContact" placeholder="Optional" type="tel"/>
+              <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="alt-contact-number" formControlName="alternativeContact" placeholder="Optional" type="tel"/>
             </div>
           </div>
         </div>
         <div>
-          <button class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark focus:ring-primary transition-all duration-300 ease-in-out" type="submit" [disabled]="signupForm.invalid">
+          <button class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out" type="submit" [disabled]="signupForm.invalid">
             Create Account
           </button>
         </div>
       </form>
-      <p class="mt-8 text-center text-sm text-subtle-light dark:text-subtle-dark">
+      <p class="mt-8 text-center text-sm text-muted-foreground">
         Already have an account?
         <a class="font-medium text-primary hover:text-primary-hover hover:underline" href="#">Sign in</a>
       </p>
