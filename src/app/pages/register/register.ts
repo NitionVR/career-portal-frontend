@@ -17,6 +17,8 @@ import { Router } from '@angular/router';
 export class RegisterPage implements OnInit {
   signupForm: FormGroup;
   role: string = 'talent';
+  registrationState: 'input' | 'sent' | 'error' = 'input';
+  errorMessage: string | null = null;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.signupForm = this.fb.group({
@@ -37,16 +39,26 @@ export class RegisterPage implements OnInit {
 
       this.authService.initiateRegistration(email, role).subscribe({
         next: (response) => {
-          alert(response['message'] || 'Registration link sent successfully. Please check your email.');
-          this.router.navigate(['/']); // Redirect to homepage
+          this.registrationState = 'sent';
+          // Optionally, display a message from the response
+          console.log(response['message']);
         },
         error: (err) => {
-          alert('Registration initiation failed: ' + (err.error?.message || err.message));
           console.error('Registration initiation error', err);
+          this.errorMessage = 'Registration initiation failed: ' + (err.error?.message || err.message);
+          this.registrationState = 'error';
         }
       });
     } else {
-      alert('Please fill in all required fields.');
+      this.errorMessage = 'Please fill in all required fields.';
+      this.registrationState = 'error';
     }
+  }
+
+  resetState(): void {
+    this.registrationState = 'input';
+    this.errorMessage = null;
+    this.signupForm.reset();
+    this.role = 'talent'; // Reset role to default
   }
 }
