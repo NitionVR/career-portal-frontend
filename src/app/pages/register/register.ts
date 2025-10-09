@@ -140,7 +140,7 @@ export class RegisterPage implements OnInit {
 
       this.authService.initiateRegistration(email, role).subscribe({
         next: (response) => {
-          alert(response['message']);
+          alert(response['message'] || 'Registration link sent successfully. Please check your email.');
           this.router.navigate(['/login']); // Redirect to login or a confirmation page
         },
         error: (err) => {
