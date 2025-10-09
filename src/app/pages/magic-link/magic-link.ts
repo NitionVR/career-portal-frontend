@@ -33,28 +33,47 @@ export class MagicLinkPage implements OnInit {
     const token = this.route.snapshot.queryParamMap.get('token');
 
     if (token) {
-      this.authService.verify(token).subscribe({
-        next: (jwt) => {
-          localStorage.setItem('jwt', jwt);
-          this.message = 'Successfully verified! Redirecting...';
+      try {
+        const decodedToken: JwtPayload = jwtDecode(token);
 
-          try {
-            const decodedToken: JwtPayload = jwtDecode(jwt);
-            if (decodedToken.is_new_user) {
-              this.router.navigate(['/profile/create']);
-            } else {
-              this.router.navigate(['/']); // Redirect to dashboard or home
-            }
-          } catch (e) {
-            console.error('Error decoding JWT', e);
-            this.error = 'An error occurred. Please try again.';
-          }
-        },
-        error: (err) => {
-          console.error(err);
-          this.error = 'Invalid or expired magic link. Please try again.';
-        },
-      });
+        if (decodedToken.is_new_user) {
+          // This is a registration magic link
+          this.authService.validateRegistrationToken(token).subscribe({
+            next: (response) => {
+              if (response['valid']) {
+                this.message = 'Registration token valid. Redirecting to profile creation...';
+                this.router.navigate(['/profile/create'], { queryParams: { token } });
+              } else {
+                this.error = 'Invalid or expired registration token.';
+              }
+            },
+            error: (err) => {
+              console.error(err);
+              this.error = 'Error validating registration token. Please try again.';
+            },
+          });
+        } else {
+          // This is a login magic link
+          this.authService.verify(token).subscribe({
+            next: (response) => {
+              if (response['token']) {
+                this.authService.setToken(response['token']);
+                this.message = 'Successfully logged in! Redirecting...';
+                this.router.navigate(['/']); // Redirect to dashboard or home
+              } else {
+                this.error = 'Login failed. No token received.';
+              }
+            },
+            error: (err) => {
+              console.error(err);
+              this.error = 'Invalid or expired login link. Please try again.';
+            },
+          });
+        }
+      } catch (e) {
+        console.error('Error decoding JWT', e);
+        this.error = 'Invalid magic link format. Please try again.';
+      }
     } else {
       this.error = 'No token provided. Please try again.';
     }
