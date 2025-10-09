@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, switchMap } from 'rxjs/operators';
 import { AuthenticationControllerService } from '../../api/services/authentication-controller.service';
 import { RegistrationRequest } from '../../api/models/registration-request';
 import { CandidateRegistrationDto } from '../../api/models/candidate-registration-dto';
@@ -34,7 +34,21 @@ export class AuthService {
     [key: string]: any;
   }> {
     const params: ValidateRegistrationToken$Params = { token };
-    return this.authenticationControllerService.validateRegistrationToken(params);
+    return this.authenticationControllerService.validateRegistrationToken(params).pipe(
+      switchMap(response => {
+        return new Observable<{[key: string]: any;}>(observer => {
+          (response as Blob).text().then(text => {
+            try {
+              const json = JSON.parse(text) as { [key: string]: any; }; // Explicit cast here
+              observer.next(json);
+              observer.complete();
+            } catch (e) {
+              observer.error(e);
+            }
+          }).catch(e => observer.error(e));
+        });
+      })
+    );
   }
 
   completeCandidateRegistration(token: string, body: CandidateRegistrationDto): Observable<{
