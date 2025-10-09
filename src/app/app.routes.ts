@@ -10,6 +10,6 @@ export const routes: Routes = [
   { path: 'homepage', component: HomepageComponent },
   { path: 'login', component: LoginPage },
   { path: 'sign-up', component: RegisterPage },
-  { path: 'auth/magic-link', component: MagicLinkPage },
+  { path: 'auth/callback', component: MagicLinkPage },
   { path: 'profile/create', component: ProfileCreate },
 ];
