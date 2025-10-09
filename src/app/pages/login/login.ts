@@ -43,13 +43,16 @@ export class LoginPage {
 
     this.isSubmitting = true;
     this.authService.login(this.email?.value ?? '').subscribe({
-      next: () => {
+      next: (response) => {
         this.isSubmitting = false;
         this.isSubmitted = true;
+        // Optionally, display a message from the response
+        console.log(response); // Response should be a string message
       },
       error: (err) => {
         console.error(err);
         this.isSubmitting = false;
+        alert('Login failed: ' + (err.error?.message || err.message));
       },
     });
   }
