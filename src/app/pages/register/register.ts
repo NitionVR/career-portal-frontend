@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
+import { AuthService } from '../../core/services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -44,7 +46,7 @@ export class RegisterPage implements OnInit {
     { value: 'retail', label: 'Retail' },
     { value: 'other', label: 'Other' },
   ];
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.signupForm = this.fb.group({
       username: ['', Validators.required],
       firstName: ['', Validators.required],
@@ -133,8 +135,21 @@ export class RegisterPage implements OnInit {
 
   onSubmit(): void {
     if (this.signupForm.valid) {
-      console.log('Form Submitted', this.signupForm.value);
-      // Add your form submission logic here (e.g., API call)
+      const { email } = this.signupForm.value;
+      const role = this.role === 'talent' ? 'CANDIDATE' : 'HIRING_MANAGER';
+
+      this.authService.initiateRegistration(email, role).subscribe({
+        next: (response) => {
+          alert(response['message']);
+          this.router.navigate(['/login']); // Redirect to login or a confirmation page
+        },
+        error: (err) => {
+          alert('Registration initiation failed: ' + (err.error?.message || err.message));
+          console.error('Registration initiation error', err);
+        }
+      });
+    } else {
+      alert('Please fill in all required fields.');
     }
   }
 }
