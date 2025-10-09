@@ -40,6 +40,8 @@ export class MagicLinkPage implements OnInit {
           next: (response) => {
             if (response['valid']) {
               this.message = 'Registration token valid. Redirecting to profile creation...';
+              // Clean the URL before navigating
+              this.router.navigate([], { relativeTo: this.route, replaceUrl: true, queryParams: {} });
               this.router.navigate(['/profile/create'], { queryParams: { token } });
             } else {
               this.error = 'Invalid or expired registration token.';
@@ -57,6 +59,8 @@ export class MagicLinkPage implements OnInit {
             if (response['token']) {
               this.authService.setToken(response['token']);
               this.message = 'Successfully logged in! Redirecting...';
+              // Clean the URL before navigating
+              this.router.navigate([], { relativeTo: this.route, replaceUrl: true, queryParams: {} });
               this.router.navigate(['/']); // Redirect to dashboard or home
             } else {
               this.error = 'Login failed. No token received.';
