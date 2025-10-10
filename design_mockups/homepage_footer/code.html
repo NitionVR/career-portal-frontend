@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>eTalente - Find Your Dream Job</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        :root {
+        --primary-color: #FACC15;--primary-hover-color: #FBBF24;--secondary-color: #3B82F6;--background-color: #0F172A;--card-color: rgba(15, 23, 42, 0.6);--text-color: #F8FAFC;--subtle-text-color: #94A3B8;--border-color: #334155;--glass-blur: blur(16px);
+      }
+      .glassmorphism {
+        background: var(--card-color);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 300,
+          'GRAD' 0,
+          'opsz' 24
+      }
+      .bg-gradient-hero {
+        background-image: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #3B82F6 100%);
+      }
+      .smooth-shadow {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(59, 130, 246, 0.2);
+      }
+      .smooth-shadow-sm {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1), 0 0 20px rgba(250, 204, 21, 0.1);
+      }
+      .group:hover .group-hover-effect {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1), 0 0 50px rgba(59, 130, 246, 0.3);
+      }
+    </style>
+</head>
+<body class="bg-[var(--background-color)] font-['Inter'] text-[var(--text-color)] antialiased">
+<div class="min-h-screen flex flex-col">
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glassmorphism border-b border-[var(--border-color)]">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-20">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-[var(--primary-color)]" style="font-size: 32px;">business_center</span>
+<a class="text-2xl font-bold tracking-tighter" href="#">eTalente</a>
+</div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-sm font-medium text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors" href="#">Find Jobs</a>
+<a class="text-sm font-medium text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors" href="#">Companies</a>
+<a class="text-sm font-medium text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors" href="#">Career Advice</a>
+</nav>
+<div class="flex items-center space-x-4">
+<a class="text-sm font-medium text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors" href="#">Log In</a>
+<a class="px-5 py-2.5 text-sm font-semibold text-gray-900 bg-[var(--primary-color)] rounded-full hover:bg-[var(--primary-hover-color)] transition-all duration-300 ease-in-out transform hover:scale-105" href="#">Sign Up</a>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-20 flex-grow">
+<section class="bg-gradient-hero py-24 sm:py-32">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                        Find Your <span class="text-[var(--primary-color)]">Next Big</span> Opportunity
+                    </h1>
+<p class="mt-6 max-w-2xl mx-auto text-lg text-[var(--subtle-text-color)]">
+                        Discover thousands of job openings from top companies and find the one that's right for you.
+                    </p>
+<div class="mt-12 max-w-4xl mx-auto">
+<form class="relative w-full glassmorphism rounded-full smooth-shadow-sm p-2 flex items-center">
+<div class="flex-grow flex items-center px-4">
+<span class="material-symbols-outlined text-[var(--subtle-text-color)] mr-3">search</span>
+<input class="w-full bg-transparent border-0 focus:ring-0 text-white placeholder-gray-400 text-lg" placeholder="Job title, keywords, or company" type="text"/>
+</div>
+<button class="px-8 py-4 text-base font-bold text-gray-900 bg-[var(--primary-color)] rounded-full hover:bg-[var(--primary-hover-color)] transition-all duration-300 ease-in-out transform hover:scale-105 flex-shrink-0" type="submit">
+                                Find Jobs
+                            </button>
+</form>
+</div>
+</div>
+</section>
+<section class="py-16 sm:py-24">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+<aside class="lg:col-span-1">
+<div class="sticky top-28 space-y-8">
+<div class="glassmorphism rounded-xl p-6">
+<h3 class="text-xl font-semibold mb-6">Filters</h3>
+<div class="space-y-6">
+<div>
+<details open="">
+<summary class="flex justify-between items-center cursor-pointer font-medium text-lg list-none">
+                                                    Skills
+                                                    <span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</summary>
+<div class="mt-4 space-y-3">
+<label class="flex items-center">
+<input class="h-4 w-4 rounded border-[var(--border-color)] bg-transparent text-[var(--secondary-color)] focus:ring-[var(--secondary-color)]" type="checkbox"/>
+<span class="ml-3 text-sm text-[var(--subtle-text-color)]">React</span>
+</label>
+<label class="flex items-center">
+<input class="h-4 w-4 rounded border-[var(--border-color)] bg-transparent text-[var(--secondary-color)] focus:ring-[var(--secondary-color)]" type="checkbox"/>
+<span class="ml-3 text-sm text-[var(--subtle-text-color)]">Node.js</span>
+</label>
+<label class="flex items-center">
+<input class="h-4 w-4 rounded border-[var(--border-color)] bg-transparent text-[var(--secondary-color)] focus:ring-[var(--secondary-color)]" type="checkbox"/>
+<span class="ml-3 text-sm text-[var(--subtle-text-color)]">TypeScript</span>
+</label>
+</div>
+</details>
+</div>
+<hr class="border-[var(--border-color)]"/>
+<div>
+<details open="">
+<summary class="flex justify-between items-center cursor-pointer font-medium text-lg list-none">
+                                                    Experience
+                                                    <span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+</summary>
+<div class="mt-4 space-y-3">
+<label class="flex items-center">
+<input class="h-4 w-4 rounded border-[var(--border-color)] bg-transparent text-[var(--secondary-color)] focus:ring-[var(--secondary-color)]" type="checkbox"/>
+<span class="ml-3 text-sm text-[var(--subtle-text-color)]">Entry Level</span>
+</label>
+<label class="flex items-center">
+<input class="h-4 w-4 rounded border-[var(--border-color)] bg-transparent text-[var(--secondary-color)] focus:ring-[var(--secondary-color)]" type="checkbox"/>
+<span class="ml-3 text-sm text-[var(--subtle-text-color)]">Mid-Level</span>
+</label>
+<label class="flex items-center">
+<input class="h-4 w-4 rounded border-[var(--border-color)] bg-transparent text-[var(--secondary-color)] focus:ring-[var(--secondary-color)]" type="checkbox"/>
+<span class="ml-3 text-sm text-[var(--subtle-text-color)]">Senior Level</span>
+</label>
+</div>
+</details>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-[var(--border-color)] flex space-x-4">
+<button class="flex-1 px-4 py-2.5 text-sm font-semibold bg-transparent border border-[var(--border-color)] rounded-full hover:bg-[var(--border-color)]/50 transition-colors">Clear</button>
+<button class="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-900 bg-[var(--primary-color)] rounded-full hover:bg-[var(--primary-hover-color)] transition-colors">Apply</button>
+</div>
+</div>
+</div>
+</aside>
+<main class="lg:col-span-3">
+<div class="space-y-6">
+<div class="group relative block overflow-hidden rounded-xl transition-all duration-300 ease-in-out">
+<div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+<div class="relative glassmorphism p-6 sm:p-8 smooth-shadow group-hover-effect transition-all duration-300 ease-in-out">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="text-xl font-bold hover:text-[var(--primary-color)] transition-colors"><a href="#">Senior Frontend Developer</a></h3>
+<p class="text-sm text-[var(--subtle-text-color)] mt-1">Ref: #84321</p>
+</div>
+<img alt="Company Logo" class="w-14 h-14 rounded-lg bg-white p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHwracevImG81zEqFH9kkEB5Y3E3T7tJYIIJ1DBetcfji5E1NELPFQT8FvsPJXOOWie5foLREzbuRh7-5EdA_hG6bUEgmv3NT_N3b1UVFKy_F7jSLATnKWrbRZz2HUyOchAgQ88-0pRffZzKjD5b67Ho1alckoV-EOE5_TCRBsIUr4SQCdNHUJ2rasT_qNpqyw1Q6ctkn2B__JzE2rCb6T-8HHyqNxT-LY6pMxsVNAyvnAgFlxXJ10xb7WfBpN-zlPlKyq0TES5A"/>
+</div>
+<div class="mt-4 space-y-3 text-sm">
+<p class="flex items-center text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-2">location_on</span> San Francisco, CA (Remote)</p>
+<p class="flex items-center text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-2">bar_chart</span> 5+ Years Experience</p>
+<p class="flex items-center text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-2">payments</span> $120,000 - $150,000</p>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs text-[var(--subtle-text-color)]">
+<span>Posted: 2 days ago</span>
+<span>Expires: In 28 days</span>
+</div>
+</div>
+</div>
+<div class="group relative block overflow-hidden rounded-xl transition-all duration-300 ease-in-out">
+<div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+<div class="relative glassmorphism p-6 sm:p-8 smooth-shadow group-hover-effect transition-all duration-300 ease-in-out">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="text-xl font-bold hover:text-[var(--primary-color)] transition-colors"><a href="#">Product Designer</a></h3>
+<p class="text-sm text-[var(--subtle-text-color)] mt-1">Ref: #84322</p>
+</div>
+<img alt="Company Logo" class="w-14 h-14 rounded-lg bg-white p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4Cd_fzsXlxzdkX1KQFhzTvZ-PUyZ4vupqVwGTX4WDdQItbEK2eps10Sf9GDNp1n8d1HGxTaE-8FxqS0FvWsXQnGB12xbYjWO6wYH0nfpOfj7OfMemX5re8GjC5zGF91aDu90M6VxheYGZ_oeaLi2ZDrGq3HmUo4MKouEQfabBh6_CiTYY7DBjlomMlFXa9SWF3ZoFYbbHMLB_8SjCtwm9Vcue7WEMXHdchpNBikCGgCiNmLZ3UO6QCJRUvngsZn0dNBf_WEBzmw"/>
+</div>
+<div class="mt-4 space-y-3 text-sm">
+<p class="flex items-center text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-2">location_on</span> New York, NY</p>
+<p class="flex items-center text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-2">bar_chart</span> 3-5 Years Experience</p>
+<p class="flex items-center text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-2">payments</span> $90,000 - $110,000</p>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs text-[var(--subtle-text-color)]">
+<span>Posted: 5 days ago</span>
+<span>Expires: In 25 days</span>
+</div>
+</div>
+</div>
+<div class="group relative block overflow-hidden rounded-xl transition-all duration-300 ease-in-out">
+<div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+<div class="relative glassmorphism p-6 sm:p-8 smooth-shadow group-hover-effect transition-all duration-300 ease-in-out">
+<div class="flex items-start justify-between">
+<div>
+<h3 class="text-xl font-bold hover:text-[var(--primary-color)] transition-colors"><a href="#">DevOps Engineer</a></h3>
+<p class="text-sm text-[var(--subtle-text-color)] mt-1">Ref: #84323</p>
+</div>
+<img alt="Company Logo" class="w-14 h-14 rounded-lg bg-white p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtfrc1-kmIGfY150ng5Bs5kXucWjcDnWXkUanDAhfBw1KtxPtUYxsoV_Uokkdv6wwD-nTmdc3lgxtUn7E0Iv-EcJc-G4AqW5ObzFYKHiH4AgeyXcZl3BampoT9tSaeykucDNR-3g67ZINznrEhrK5mJjyoZkE63ACJa9EB4wIvcO-I_hD8K3bilB9AlSOrQrscU-UxZG9ZHRKkvJBr_Aq9Px0LUPe-fMKTdtUl0rja72jM6sloo-yZBbhvub07cOaMSFhPQqEHjA"/>
+</div>
+<div class="mt-4 space-y-3 text-sm">
+<p class="flex items-center text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-2">location_on</span> Austin, TX (Hybrid)</p>
+<p class="flex items-center text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-2">bar_chart</span> 4+ Years Experience</p>
+<p class="flex items-center text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-2">payments</span> $115,000 - $140,000</p>
+</div>
+<div class="mt-6 flex items-center justify-between text-xs text-[var(--subtle-text-color)]">
+<span>Posted: 1 week ago</span>
+<span>Expires: In 21 days</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-12 flex justify-center">
+<nav aria-label="Pagination" class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+<a class="relative inline-flex items-center rounded-l-md px-2 py-2 text-[var(--subtle-text-color)] ring-1 ring-inset ring-[var(--border-color)] hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">
+<span class="sr-only">Previous</span>
+<span aria-hidden="true" class="material-symbols-outlined">chevron_left</span>
+</a>
+<a aria-current="page" class="relative z-10 inline-flex items-center bg-[var(--secondary-color)] px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" href="#">1</a>
+<a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-[var(--subtle-text-color)] ring-1 ring-inset ring-[var(--border-color)] hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">2</a>
+<a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-[var(--subtle-text-color)] ring-1 ring-inset ring-[var(--border-color)] hover:bg-gray-800 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">3</a>
+<span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-[var(--subtle-text-color)] ring-1 ring-inset ring-[var(--border-color)]">...</span>
+<a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-[var(--subtle-text-color)] ring-1 ring-inset ring-[var(--border-color)] hover:bg-gray-800 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">10</a>
+<a class="relative inline-flex items-center rounded-r-md px-2 py-2 text-[var(--subtle-text-color)] ring-1 ring-inset ring-[var(--border-color)] hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">
+<span class="sr-only">Next</span>
+<span aria-hidden="true" class="material-symbols-outlined">chevron_right</span>
+</a>
+</nav>
+</div>
+</main>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-gray-900/50 border-t border-[var(--border-color)]">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<div class="md:col-span-5 lg:col-span-4">
+<h3 class="text-lg font-semibold text-white mb-4">About Us</h3>
+<p class="text-sm text-[var(--subtle-text-color)] leading-relaxed">eTalente is a modern job search platform dedicated to connecting top talent with innovative companies. Our mission is to make the job search process seamless and efficient for both candidates and employers.</p>
+</div>
+<div class="md:col-span-4 lg:col-span-3 lg:col-start-9">
+<h3 class="text-lg font-semibold text-white mb-4">Contact Us</h3>
+<div class="space-y-3 text-sm text-[var(--subtle-text-color)]">
+<p class="flex items-center"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">call</span> (123) 456-7890</p>
+<p class="flex items-center"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">mail</span> contact@etalente.com</p>
+<p class="flex items-center"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">location_on</span> 123 Innovation Drive, Tech City</p>
+</div>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-[var(--border-color)] flex flex-col sm:flex-row justify-between items-center text-sm text-[var(--subtle-text-color)]">
+<p class="mb-4 sm:mb-0">© 2024 eTalente. All rights reserved.</p>
+<div class="flex space-x-6">
+<a class="hover:text-[var(--text-color)] transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-[var(--text-color)] transition-colors" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>
