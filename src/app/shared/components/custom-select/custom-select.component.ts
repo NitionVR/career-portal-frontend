@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-interface SelectOption {
+export interface SelectOption {
   value: string;
   label: string;
 }

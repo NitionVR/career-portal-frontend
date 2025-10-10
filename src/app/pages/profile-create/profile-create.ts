@@ -6,7 +6,8 @@ import { AuthService } from '../../core/services/auth';
 import { jwtDecode } from 'jwt-decode';
 import { CandidateRegistrationDto } from '../../api/models/candidate-registration-dto';
 import { HiringManagerRegistrationDto } from '../../api/models/hiring-manager-registration-dto';
-import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
+import { CustomSelectComponent, SelectOption } from '../../shared/components/custom-select/custom-select.component';
+import { GENDER_OPTIONS, RACE_OPTIONS, DISABILITY_OPTIONS, INDUSTRY_OPTIONS } from '../../shared/data/form-options';
 
 interface JwtPayload {
   role: 'CANDIDATE' | 'HIRING_MANAGER';
@@ -29,35 +30,11 @@ export class ProfileCreate implements OnInit {
   userRole: 'CANDIDATE' | 'HIRING_MANAGER' | null = null;
   errorMessage: string | null = null;
 
-  genderOptions = [
-    { value: 'Male', label: 'Male' },
-    { value: 'Female', label: 'Female' },
-    { value: 'Other', label: 'Other' },
-  ];
-
-  raceOptions = [
-    { value: 'Asian', label: 'Asian' },
-    { value: 'Black', label: 'Black' },
-    { value: 'Caucasian', label: 'Caucasian' },
-    { value: 'Hispanic', label: 'Hispanic' },
-    { value: 'Other', label: 'Other' },
-  ];
-
-  disabilityOptions = [
-    { value: 'None', label: 'None' },
-    { value: 'Yes', label: 'Yes' },
-    { value: 'Prefer not to say', label: 'Prefer not to say' },
-  ];
-
-  industryOptions = [
-    { value: 'Technology', label: 'Technology' },
-    { value: 'Finance', label: 'Finance' },
-    { value: 'Healthcare', label: 'Healthcare' },
-    { value: 'Education', label: 'Education' },
-    { value: 'Manufacturing', label: 'Manufacturing' },
-    { value: 'Retail', label: 'Retail' },
-    { value: 'Other', label: 'Other' },
-  ];
+  // Use imported options
+  genderOptions: SelectOption[] = GENDER_OPTIONS;
+  raceOptions: SelectOption[] = RACE_OPTIONS;
+  disabilityOptions: SelectOption[] = DISABILITY_OPTIONS;
+  industryOptions: SelectOption[] = INDUSTRY_OPTIONS;
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
