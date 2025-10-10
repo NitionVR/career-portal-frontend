@@ -1,13 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { SignInComponent } from '../../shared/components/sign-in/sign-in.component';
+import { HeaderComponent } from '../../shared/components/navigation/header/header';
+import { JobPostsListComponent } from '../../shared/components/jobs/job-posts-list/job-posts-list';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [CommonModule, FormsModule, SignInComponent, RouterLink],
+  imports: [CommonModule, FormsModule, SignInComponent, HeaderComponent, JobPostsListComponent],
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.css']
 })
@@ -61,8 +62,7 @@ export class HomepageComponent implements OnInit {
     });
   }
 
-  openSignInModal(event: Event): void {
-    event.preventDefault();
+  openSignInModal(): void {
     this.showSignInModal = true;
   }
 

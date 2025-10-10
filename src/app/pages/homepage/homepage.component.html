@@ -1,23 +1,5 @@
 <div class="min-h-screen flex flex-col">
-  <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glassmorphism border-b border-border">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
-        <div class="flex items-center space-x-3">
-          <img src="/assets/logo.png" alt="eTalente Logo" class="h-8 w-8"/>
-          <a class="text-2xl font-bold tracking-tighter" href="#">eTalente</a>
-        </div>
-        <nav class="hidden md:flex items-center space-x-8">
-          <a class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" href="#">Find Jobs</a>
-          <a class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" href="#">Companies</a>
-          <a class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" href="#">Career Advice</a>
-        </nav>
-        <div class="flex items-center space-x-4">
-          <a class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" href="#" (click)="openSignInModal($event)">Log In</a>
-          <a class="px-5 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-all duration-300 ease-in-out transform hover:scale-105" routerLink="/sign-up">Sign Up</a>
-        </div>
-      </div>
-    </div>
-  </header>
+<app-header (openSignInModal)="openSignInModal()"></app-header>
   <main class="pt-20 flex-grow">
     <section class="bg-gradient-hero py-24 sm:py-32">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -102,46 +84,7 @@
             </div>
           </aside>
           <main class="lg:col-span-3">
-            <div class="space-y-6">
-              <div class="group relative block overflow-hidden rounded-xl transition-all duration-300 ease-in-out" *ngFor="let job of filteredJobs">
-                <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-                <div class="relative glassmorphism p-6 sm:p-8 smooth-shadow group-hover-effect transition-all duration-300 ease-in-out">
-                  <div class="flex items-start justify-between">
-                    <div>
-                      <h3 class="text-xl font-bold hover:text-primary transition-colors"><a href="#">{{ job.title }}</a></h3>
-                      <p class="text-sm text-muted-foreground mt-1">Ref: #{{ job.ref }}</p>
-                    </div>
-                    <img alt="Company Logo" class="w-14 h-14 rounded-lg bg-white p-1" [src]="job.companyLogo"/>
-                  </div>
-                  <div class="mt-4 space-y-3 text-sm">
-                    <p class="flex items-center text-muted-foreground"><span class="material-symbols-outlined text-base mr-2">location_on</span> {{ job.location }}</p>
-                    <p class="flex items-center text-muted-foreground"><span class="material-symbols-outlined text-base mr-2">bar_chart</span> {{ job.experience }} Experience</p>
-                    <p class="flex items-center text-muted-foreground"><span class="material-symbols-outlined text-base mr-2">payments</span> {{ job.salary }}</p>
-                  </div>
-                  <div class="mt-6 flex items-center justify-between text-xs text-muted-foreground">
-                    <span>Posted: {{ job.posted }}</span>
-                    <span>Expires: In {{ job.expires }} days</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="mt-12 flex justify-center">
-              <nav aria-label="Pagination" class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-                <a class="relative inline-flex items-center rounded-l-md px-2 py-2 text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">
-                  <span class="sr-only">Previous</span>
-                  <span aria-hidden="true" class="material-symbols-outlined">chevron_left</span>
-                </a>
-                <a aria-current="page" class="relative z-10 inline-flex items-center bg-secondary px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" href="#">1</a>
-                <a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">2</a>
-                <a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">3</a>
-                <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border">...</span>
-                <a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">10</a>
-                <a class="relative inline-flex items-center rounded-r-md px-2 py-2 text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">
-                  <span class="sr-only">Next</span>
-                  <span aria-hidden="true" class="material-symbols-outlined">chevron_right</span>
-                </a>
-              </nav>
-            </div>
+            <app-job-posts-list [jobs]="filteredJobs"></app-job-posts-list>
           </main>
         </div>
       </div>
