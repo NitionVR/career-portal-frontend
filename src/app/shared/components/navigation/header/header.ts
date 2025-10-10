@@ -13,7 +13,7 @@ import { AuthService } from '../../../../core/services/auth';
 export class HeaderComponent {
   @Input() isLoggedIn: boolean = false;
   @Input() user: any = null; // Replace 'any' with a proper user interface
-  @Output() openSignInModal = new EventEmitter<void>();
+  @Output() openSignInModal = new EventEmitter<Event>();
 
   private authService = inject(AuthService);
 
