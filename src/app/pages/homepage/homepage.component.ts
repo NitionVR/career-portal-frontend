@@ -4,33 +4,33 @@ import { FormsModule } from '@angular/forms';
 import { SignInComponent } from '../../shared/components/sign-in/sign-in.component';
 import { HeaderComponent } from '../../shared/components/navigation/header/header';
 import { JobPostsListComponent } from '../../shared/components/jobs/job-posts-list/job-posts-list';
+import { FilterComponent } from '../../shared/components/filters/filter.component';
+import { MOCK_JOBS } from '../../shared/data/mock-jobs';
+import { JobPostResponse } from '../../api/models/job-post-response';
+import { SkillDto } from '../../api/models/skill-dto';
+import { FilterService } from '../../core/services/filter.service';
 
 @Component({
   selector: 'app-homepage',
   standalone: true,
-  imports: [CommonModule, FormsModule, SignInComponent, HeaderComponent, JobPostsListComponent],
+  imports: [CommonModule, FormsModule, SignInComponent, HeaderComponent, JobPostsListComponent, FilterComponent],
   templateUrl: './homepage.component.html',
   styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
   showSignInModal = false;
   searchQuery: string = '';
-  filters: any = {
-    react: false,
-    nodejs: false,
-    typescript: false,
-    entry: false,
-    mid: false,
-    senior: false
-  };
-  jobs = [
-    { title: 'Senior Frontend Developer', ref: '84321', location: 'San Francisco, CA (Remote)', experience: '5+ Years', salary: '$120,000 - $150,000', posted: '2 days ago', expires: 28, companyLogo: 'https://via.placeholder.com/150/FF0000/FFFFFF?text=CompanyA' },
-    { title: 'Product Designer', ref: '84322', location: 'New York, NY', experience: '3-5 Years', salary: '$90,000 - $110,000', posted: '5 days ago', expires: 25, companyLogo: 'https://via.placeholder.com/150/0000FF/FFFFFF?text=CompanyB' },
-    { title: 'DevOps Engineer', ref: '84323', location: 'Austin, TX (Hybrid)', experience: '4+ Years', salary: '$115,000 - $140,000', posted: '1 week ago', expires: 21, companyLogo: 'https://via.placeholder.com/150/00FF00/FFFFFF?text=CompanyC' }
-  ];
-  filteredJobs = [...this.jobs];
+  jobs: JobPostResponse[] = MOCK_JOBS;
+  filteredJobs: JobPostResponse[] = [];
+  currentFilters: any = {};
+
+  constructor(private filterService: FilterService) { }
 
   ngOnInit(): void {
+    this.filterService.filters$.subscribe(filters => {
+      this.currentFilters = filters;
+      this.filterJobs();
+    });
     this.filterJobs();
   }
 
@@ -42,27 +42,28 @@ export class HomepageComponent implements OnInit {
     this.filterJobs();
   }
 
-  clearFilters(): void {
-    Object.keys(this.filters).forEach(key => this.filters[key] = false);
-    this.filterJobs();
-  }
-
-  applyFilters(): void {
+  onFiltersApplied(filters: any): void {
+    this.currentFilters = filters;
     this.filterJobs();
   }
 
   filterJobs(): void {
     this.filteredJobs = this.jobs.filter(job => {
-      const matchesSearch = !this.searchQuery || job.title.toLowerCase().includes(this.searchQuery.toLowerCase());
-      const matchesSkills = !Object.values(this.filters).some(f => f) ||
-        (this.filters.react || this.filters.nodejs || this.filters.typescript);
-      const matchesExperience = !Object.values(this.filters).some(f => f) ||
-        (this.filters.entry || this.filters.mid || this.filters.senior);
+      const matchesSearch = !this.searchQuery || (job.title && job.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
+      const matchesSkills = !(this.currentFilters.react || this.currentFilters.nodejs || this.currentFilters.typescript) ||
+        (this.currentFilters.react && job.skills?.some((s: SkillDto) => s.name?.toLowerCase() === 'react')) ||
+        (this.currentFilters.nodejs && job.skills?.some((s: SkillDto) => s.name?.toLowerCase() === 'node.js')) ||
+        (this.currentFilters.typescript && job.skills?.some((s: SkillDto) => s.name?.toLowerCase() === 'typescript'));
+      const matchesExperience = !(this.currentFilters.entry || this.currentFilters.mid || this.currentFilters.senior) ||
+        (this.currentFilters.entry && job.experienceLevel?.toLowerCase().includes('entry')) ||
+        (this.currentFilters.mid && job.experienceLevel?.toLowerCase().includes('mid')) ||
+        (this.currentFilters.senior && job.experienceLevel?.toLowerCase().includes('senior'));
       return matchesSearch && matchesSkills && matchesExperience;
     });
   }
 
-  openSignInModal(): void {
+  openSignInModal(event: Event): void {
+    event.preventDefault();
     this.showSignInModal = true;
   }
 

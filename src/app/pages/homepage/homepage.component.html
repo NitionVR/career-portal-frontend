@@ -1,5 +1,5 @@
 <div class="min-h-screen flex flex-col">
-<app-header (openSignInModal)="openSignInModal()"></app-header>
+<app-header (openSignInModal)="openSignInModal($event)"></app-header>
   <main class="pt-20 flex-grow">
     <section class="bg-gradient-hero py-24 sm:py-32">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -26,62 +26,7 @@
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
           <aside class="lg:col-span-1">
-            <div class="sticky top-28 space-y-8">
-              <div class="glassmorphism rounded-xl p-6">
-                <h3 class="text-xl font-semibold mb-6">Filters</h3>
-                <div class="space-y-6">
-                  <div>
-                    <details open="">
-                      <summary class="flex justify-between items-center cursor-pointer font-medium text-lg list-none">
-                        Skills
-                        <span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
-                      </summary>
-                      <div class="mt-4 space-y-3">
-                        <label class="flex items-center">
-                          <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.react"/>
-                          <span class="ml-3 text-sm text-muted-foreground">React</span>
-                        </label>
-                        <label class="flex items-center">
-                          <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.nodejs"/>
-                          <span class="ml-3 text-sm text-muted-foreground">Node.js</span>
-                        </label>
-                        <label class="flex items-center">
-                          <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.typescript"/>
-                          <span class="ml-3 text-sm text-muted-foreground">TypeScript</span>
-                        </label>
-                      </div>
-                    </details>
-                  </div>
-                  <hr class="border-border"/>
-                  <div>
-                    <details open="">
-                      <summary class="flex justify-between items-center cursor-pointer font-medium text-lg list-none">
-                        Experience
-                        <span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
-                      </summary>
-                      <div class="mt-4 space-y-3">
-                        <label class="flex items-center">
-                          <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.entry"/>
-                          <span class="ml-3 text-sm text-muted-foreground">Entry Level</span>
-                        </label>
-                        <label class="flex items-center">
-                          <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.mid"/>
-                          <span class="ml-3 text-sm text-muted-foreground">Mid-Level</span>
-                        </label>
-                        <label class="flex items-center">
-                          <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.senior"/>
-                          <span class="ml-3 text-sm text-muted-foreground">Senior Level</span>
-                        </label>
-                      </div>
-                    </details>
-                  </div>
-                </div>
-                <div class="mt-8 pt-6 border-t border-border flex space-x-4">
-                  <button class="flex-1 px-4 py-2.5 text-sm font-semibold bg-transparent border border-border rounded-full hover:bg-border/50 transition-colors" (click)="clearFilters()">Clear</button>
-                  <button class="flex-1 px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors" (click)="applyFilters()">Apply</button>
-                </div>
-              </div>
-            </div>
+            <app-filter (filtersApplied)="onFiltersApplied($event)"></app-filter>
           </aside>
           <main class="lg:col-span-3">
             <app-job-posts-list [jobs]="filteredJobs"></app-job-posts-list>
