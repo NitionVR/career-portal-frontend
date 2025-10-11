@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth';
-import { jwtDecode } from 'jwt-decode';
+import { JwtDecoderService } from '../../core/services/jwt-decoder.service';
 import { CandidateRegistrationDto } from '../../api/models/candidate-registration-dto';
 import { HiringManagerRegistrationDto } from '../../api/models/hiring-manager-registration-dto';
 import { CustomSelectComponent, SelectOption } from '../../shared/components/custom-select/custom-select.component';
@@ -40,6 +40,7 @@ export class ProfileCreate implements OnInit {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private jwtDecoderService = inject(JwtDecoderService);
 
   ngOnInit(): void {
     this.registrationToken = this.route.snapshot.queryParamMap.get('token');
@@ -50,7 +51,7 @@ export class ProfileCreate implements OnInit {
     }
 
     try {
-      const decodedToken: JwtPayload = jwtDecode(this.registrationToken);
+      const decodedToken: JwtPayload = this.jwtDecoderService.decode(this.registrationToken);
       this.userRole = decodedToken.role;
     } catch (e) {
       console.error('Error decoding JWT', e);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, tap, switchMap } from 'rxjs/operators';
@@ -11,6 +11,7 @@ import { ValidateRegistrationToken$Params } from '../../api/fn/authentication-co
 import { CompleteCandiateRegistration$Params } from '../../api/fn/authentication-controller/complete-candiate-registration';
 import { CompleteHiringManagerRegistration$Params } from '../../api/fn/authentication-controller/complete-hiring-manager-registration';
 import { Verify$Params } from '../../api/fn/authentication-controller/verify';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -18,10 +19,9 @@ import { Verify$Params } from '../../api/fn/authentication-controller/verify';
 export class AuthService {
   private readonly TOKEN_KEY = 'jwt_token';
 
-  constructor(
-    private http: HttpClient,
-    private authenticationControllerService: AuthenticationControllerService
-  ) {}
+  private http = inject(HttpClient);
+  private authenticationControllerService = inject(AuthenticationControllerService);
+  private router = inject(Router);
 
   initiateRegistration(email: string, role: 'CANDIDATE' | 'HIRING_MANAGER'): Observable<{
     [key: string]: string;
@@ -59,6 +59,7 @@ export class AuthService {
       tap(response => {
         if (response['token']) {
           this.setToken(response['token']);
+          this.router.navigate(['/dashboard']);
         }
       })
     );
@@ -72,6 +73,7 @@ export class AuthService {
       tap(response => {
         if (response['token']) {
           this.setToken(response['token']);
+          this.router.navigate(['/dashboard']);
         }
       })
     );
@@ -90,6 +92,7 @@ export class AuthService {
       tap(response => {
         if (response['token']) {
           this.setToken(response['token']);
+          this.router.navigate(['/dashboard']);
         }
       })
     );
@@ -113,6 +116,6 @@ export class AuthService {
 
   logout(): void {
     this.removeToken();
-    // Optionally, navigate to login page or home page
+    this.router.navigate(['/']);
   }
 }
