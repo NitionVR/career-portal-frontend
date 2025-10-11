@@ -1,9 +1,12 @@
 <div class="min-h-screen flex flex-col">
-  <app-header></app-header>
+  <app-header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glassmorphism border-b border-[var(--border-color)]"></app-header>
+
   <div class="flex flex-1 pt-20">
-    <app-sidebar></app-sidebar>
-    <main class="flex-grow">
-      <router-outlet></router-outlet>
+    <app-sidebar class="w-64 flex-shrink-0 bg-gray-900/50 border-r border-[var(--border-color)] p-6 hidden md:block"></app-sidebar>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-8">
+      <router-outlet />
     </main>
   </div>
 </div>
