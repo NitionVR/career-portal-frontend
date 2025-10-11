@@ -4,7 +4,8 @@
          'w-20 p-3': isMinimized
        }">
   <div class="flex justify-end mb-4">
-    <button (click)="toggleMinimize()" class="text-muted-foreground hover:text-foreground focus:outline-none">
+    <button (click)="toggleMinimize()" class="text-muted-foreground hover:text-foreground focus:outline-none"
+            matTooltip="{{ isMinimized ? 'Open Sidebar' : 'Close Sidebar' }}" matTooltipPosition="after">
       <span class="material-symbols-outlined">
         {{ isMinimized ? 'chevron_right' : 'chevron_left' }}
       </span>
