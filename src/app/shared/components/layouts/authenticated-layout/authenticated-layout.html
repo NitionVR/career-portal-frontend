@@ -1,13 +1,23 @@
 <div class="min-h-screen flex flex-col">
-  <app-header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glassmorphism border-b border-[var(--border-color)]" [isLoggedIn]="true" [user]="{ name: 'Jane Doe', role: 'Talent' }"></app-header>
+  <app-header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glassmorphism border-b border-[var(--border-color)]" [isLoggedIn]="true" [user]="{ name: 'Jane Doe', role: 'Talent' }" (toggleMobileSidebar)="onToggleMobileSidebar()"></app-header>
 
   <div class="flex flex-1 pt-20">
-    <app-sidebar (minimizedStateChange)="onMinimizedStateChange($event)"></app-sidebar>
+    <!-- Mobile Sidebar Overlay -->
+    <div *ngIf="isMobileSidebarOpen" class="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden" (click)="onToggleMobileSidebar()"></div>
+
+    <app-sidebar (minimizedStateChange)="onMinimizedStateChange($event)"
+                 [ngClass]="{
+                   'hidden': !isMobileSidebarOpen && isMobile,
+                   'fixed top-0 left-0 bottom-0 z-30': isMobile,
+                   'translate-x-0': isMobileSidebarOpen && isMobile,
+                   '-translate-x-full': !isMobileSidebarOpen && isMobile
+                 }"
+                 class="md:block transition-transform duration-300 ease-in-out"></app-sidebar>
 
     <!-- Main Content -->
     <main class="flex-grow p-8 overflow-y-auto transition-all duration-300 ease-in-out" [ngClass]="{
-      'ml-64': !isSidebarMinimized,
-      'ml-20': isSidebarMinimized
+      'md:ml-64': !isSidebarMinimized,
+      'md:ml-20': isSidebarMinimized
     }">
       <router-outlet />
     </main>

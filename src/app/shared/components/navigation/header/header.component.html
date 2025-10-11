@@ -1,6 +1,9 @@
 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
   <div class="flex items-center justify-between h-20">
     <div class="flex items-center space-x-3">
+      <button (click)="onToggleMobileSidebar()" class="md:hidden text-muted-foreground hover:text-foreground focus:outline-none">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
       <span class="material-symbols-outlined text-[var(--primary-color)]" style="font-size: 32px;">business_center</span>
       <a class="text-2xl font-bold tracking-tighter" href="#">eTalente</a>
     </div>
