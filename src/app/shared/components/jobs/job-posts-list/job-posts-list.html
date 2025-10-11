@@ -1,40 +1,115 @@
-<div class="space-y-6">
-  <div class="group relative block overflow-hidden rounded-xl transition-all duration-300 ease-in-out" *ngFor="let job of jobs">
-    <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-    <div class="relative glassmorphism p-6 sm:p-8 smooth-shadow group-hover-effect transition-all duration-300 ease-in-out">
-      <div class="flex items-start justify-between">
-        <div>
-          <h3 class="text-xl font-bold hover:text-primary transition-colors"><a href="#">{{ job.title }}</a></h3>
-          <p class="text-sm text-muted-foreground mt-1">Ref: #{{ job.ref }}</p>
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+  <aside *ngIf="showFilters" class="lg:col-span-1">
+    <div class="sticky top-28 space-y-8">
+      <div class="glassmorphism rounded-xl p-6">
+        <h3 class="text-xl font-semibold mb-6">Filters</h3>
+        <div class="space-y-6">
+          <div>
+            <details open="">
+              <summary class="flex justify-between items-center cursor-pointer font-medium text-lg list-none">
+                Skills
+                <span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+              </summary>
+              <div class="mt-4 space-y-3">
+                <label class="flex items-center">
+                  <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.react"/>
+                  <span class="ml-3 text-sm text-muted-foreground">React</span>
+                </label>
+                <label class="flex items-center">
+                  <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.nodejs"/>
+                  <span class="ml-3 text-sm text-muted-foreground">Node.js</span>
+                </label>
+                <label class="flex items-center">
+                  <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.typescript"/>
+                  <span class="ml-3 text-sm text-muted-foreground">TypeScript</span>
+                </label>
+              </div>
+            </details>
+          </div>
+          <hr class="border-border"/>
+          <div>
+            <details open="">
+              <summary class="flex justify-between items-center cursor-pointer font-medium text-lg list-none">
+                Experience
+                <span class="material-symbols-outlined transition-transform duration-300">expand_more</span>
+              </summary>
+              <div class="mt-4 space-y-3">
+                <label class="flex items-center">
+                  <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.entry"/>
+                  <span class="ml-3 text-sm text-muted-foreground">Entry Level</span>
+                </label>
+                <label class="flex items-center">
+                  <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.mid"/>
+                  <span class="ml-3 text-sm text-muted-foreground">Mid-Level</span>
+                </label>
+                <label class="flex items-center">
+                  <input class="h-4 w-4 rounded border-border bg-transparent text-secondary focus:ring-secondary" type="checkbox" [(ngModel)]="filters.senior"/>
+                  <span class="ml-3 text-sm text-muted-foreground">Senior Level</span>
+                </label>
+              </div>
+            </details>
+          </div>
         </div>
-        <img alt="Company Logo" class="w-14 h-14 rounded-lg bg-white p-1" [src]="job.companyLogo"/>
-      </div>
-      <div class="mt-4 space-y-3 text-sm">
-        <p class="flex items-center text-muted-foreground"><span class="material-symbols-outlined text-base mr-2">location_on</span> {{ job.location }}</p>
-        <p class="flex items-center text-muted-foreground"><span class="material-symbols-outlined text-base mr-2">bar_chart</span> {{ job.experience }} Experience</p>
-        <p class="flex items-center text-muted-foreground"><span class="material-symbols-outlined text-base mr-2">payments</span> {{ job.salary }}</p>
-      </div>
-      <div class="mt-6 flex items-center justify-between text-xs text-muted-foreground">
-        <span>Posted: {{ job.posted }}</span>
-        <span>Expires: In {{ job.expires }} days</span>
+        <div class="mt-8 pt-6 border-t border-border flex space-x-4">
+          <button class="flex-1 px-4 py-2.5 text-sm font-semibold bg-transparent border border-border rounded-full hover:bg-border/50 transition-colors" (click)="clearFilters()">Clear</button>
+          <button class="flex-1 px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors" (click)="applyFilters()">Apply</button>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-<div class="mt-12 flex justify-center">
-  <nav aria-label="Pagination" class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-    <a class="relative inline-flex items-center rounded-l-md px-2 py-2 text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">
-      <span class="sr-only">Previous</span>
-      <span aria-hidden="true" class="material-symbols-outlined">chevron_left</span>
-    </a>
-    <a aria-current="page" class="relative z-10 inline-flex items-center bg-secondary px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" href="#">1</a>
-    <a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">2</a>
-    <a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">3</a>
-    <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border">...</span>
-    <a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">10</a>
-    <a class="relative inline-flex items-center rounded-r-md px-2 py-2 text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">
-      <span class="sr-only">Next</span>
-      <span aria-hidden="true" class="material-symbols-outlined">chevron_right</span>
-    </a>
-  </nav>
+  </aside>
+  <main class="lg:col-span-3">
+    <div class="space-y-6">
+      <div *ngIf="showSearchBar" class="relative w-full max-w-xl">
+        <form class="relative w-full glassmorphism rounded-full shadow-smooth-sm p-2 flex items-center">
+          <div class="flex-grow flex items-center px-4">
+            <span class="material-symbols-outlined text-muted-foreground mr-3">search</span>
+            <input class="w-full bg-transparent border-0 focus:ring-0 text-white placeholder-muted-foreground text-lg" placeholder="Job title, keywords, or company" type="text" [(ngModel)]="searchQuery" (ngModelChange)="filterJobs()"/>
+          </div>
+          <button class="px-6 py-3 text-sm font-bold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-all duration-300 ease-in-out transform hover:scale-105" type="submit" (click)="filterJobs()">
+            Search
+          </button>
+        </form>
+      </div>
+
+      <div *ngFor="let job of filteredJobs" class="group relative block overflow-hidden rounded-xl transition-all duration-300 ease-in-out">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+        <div class="relative glassmorphism p-6 sm:p-8 shadow-smooth group-hover:shadow-group-hover-effect transition-all duration-300 ease-in-out">
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="text-xl font-bold hover:text-primary transition-colors"><a href="#">{{ job.title }}</a></h3>
+              <p class="text-sm text-muted-foreground mt-1">Ref: #{{ job.id }}</p>
+            </div>
+            <img alt="Company Logo" class="w-14 h-14 rounded-lg bg-white p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHwracevImG81zEqFH9kkEB5Y3E3T7tJYIIJ1DBetcfji5E1NELPFQT8FvsPJXOOWie5foLREzbuRh7-5EdA_hG6bUEgmv3NT_N3b1UVFKy_F7jSLATnKWrbRZz2HUyOchAgQ88-0pRffZzKjD5b67Ho1alckoV-EOE5_TCRBsIUr4SQCdNHUJ2rasT_qNpqyw1Q6ctkn2B__JzE2rCb6T-8HHyqNxT-LY6pMxsVNAyvnAgFlxXJ10xb7WfBpN-zlPlKyq0TES5A"/>
+          </div>
+          <div class="mt-4 space-y-3 text-sm">
+            <p class="flex items-center text-muted-foreground"><span class="material-symbols-outlined text-base mr-2">location_on</span> {{ job.location?.city }}, {{ job.location?.countryCode }}</p>
+            <p class="flex items-center text-muted-foreground"><span class="material-symbols-outlined text-base mr-2">bar_chart</span> {{ job.experienceLevel }}</p>
+            <p class="flex items-center text-muted-foreground"><span class="material-symbols-outlined text-base mr-2">payments</span> {{ job.salary }}</p>
+          </div>
+          <div class="mt-6 flex items-center justify-between text-xs text-muted-foreground">
+            <span>Posted: {{ job.datePosted | date:'shortDate' }}</span>
+            <span>Expires: In 28 days</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 flex justify-center">
+        <nav aria-label="Pagination" class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+          <a class="relative inline-flex items-center rounded-l-md px-2 py-2 text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">
+            <span class="sr-only">Previous</span>
+            <span aria-hidden="true" class="material-symbols-outlined">chevron_left</span>
+          </a>
+          <a aria-current="page" class="relative z-10 inline-flex items-center bg-secondary px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" href="#">1</a>
+          <a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">2</a>
+          <a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">3</a>
+          <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border">...</span>
+          <a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">10</a>
+          <a class="relative inline-flex items-center rounded-r-md px-2 py-2 text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">
+            <span class="sr-only">Next</span>
+            <span aria-hidden="true" class="material-symbols-outlined">chevron_right</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </main>
 </div>
