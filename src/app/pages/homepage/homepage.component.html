@@ -1,5 +1,5 @@
 <div class="min-h-screen flex flex-col">
-<app-header (openSignInModal)="openSignInModal($event)"></app-header>
+<app-header (openSignInModal)="openSignInModal($event)" [isLoggedIn]="false"></app-header>
   <main class="pt-20 flex-grow">
     <section class="bg-gradient-hero py-24 sm:py-32">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth';
@@ -10,7 +10,7 @@ import { AuthService } from '../../../../core/services/auth';
   templateUrl: './header.html',
   styleUrls: ['./header.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   @Input() isLoggedIn: boolean = false;
   @Input() user: any = null; // Replace 'any' with a proper user interface
   @Output() openSignInModal = new EventEmitter<Event>();
@@ -18,8 +18,16 @@ export class HeaderComponent {
   private authService = inject(AuthService);
 
   ngOnInit(): void {
-    this.isLoggedIn = this.authService.isLoggedIn();
+    // For debugging purposes, log the input value
+    console.log('HeaderComponent isLoggedIn (from input):', this.isLoggedIn);
+
+    // This logic should eventually come from AuthService
+    // this.isLoggedIn = this.authService.isLoggedIn();
     // Fetch user data if logged in
     // this.user = this.authService.getCurrentUser(); // Assuming such a method exists
+  }
+
+  onOpenSignInModal(event: Event): void {
+    this.openSignInModal.emit(event);
   }
 }
