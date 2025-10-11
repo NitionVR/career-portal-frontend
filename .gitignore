@@ -50,3 +50,12 @@ ARCHITECTURE.md
 etalente-magic-login/
 homepage.log
 previous_register_design.log
+
+# Untracked files added by Gemini
+Etalente_Backend_Testing.postman_collection.json
+candidate_talent_tickets.md
+dashboards_and_pages_roadmap.md
+design_mockups/
+docs/registration_api_contract.md
+logged_tickets.log
+project_context_summary.md
