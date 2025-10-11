@@ -3,9 +3,9 @@ import { RegisterPage } from './pages/register/register';
 import { MagicLinkPage } from './pages/magic-link/magic-link';
 import { ProfileCreate } from './pages/profile-create/profile-create';
 import { HomepageComponent } from './pages/homepage/homepage.component';
-import { AuthenticatedLayoutComponent } from './shared/components/layouts/authenticated-layout/authenticated-layout.component';
+import { AuthenticatedLayoutComponent } from './shared/components/layouts/authenticated-layout/authenticated-layout';
 import { CandidateDashboardComponent } from './pages/candidate/dashboard/dashboard.component';
-import {JobPostsListComponent} from './shared/components/jobs/job-posts-list/job-posts-list';
+import { TalentJobListPageComponent } from './pages/talent/job-list/talent-job-list-page.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
@@ -18,7 +18,7 @@ export const routes: Routes = [
     component: AuthenticatedLayoutComponent,
     children: [
       { path: 'dashboard', component: CandidateDashboardComponent },
-      { path: 'job-list', component: JobPostsListComponent, data: { showSearchBar: true, showFilters: true } },
+      { path: 'job-list', component: TalentJobListPageComponent },
       // Add other authenticated routes here
       // { path: 'applications', component: MyApplicationsComponent },
       // { path: 'offers', component: JobOffersComponent },

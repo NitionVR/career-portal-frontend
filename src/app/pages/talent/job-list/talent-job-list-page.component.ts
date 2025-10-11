@@ -1,24 +1,21 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SignInComponent } from '../../shared/components/sign-in/sign-in.component';
-import { HeaderComponent } from '../../shared/components/navigation/header/header';
-import { JobPostsListComponent } from '../../shared/components/jobs/job-posts-list/job-posts-list';
-import { JobSearchComponent } from '../../shared/components/job-search/job-search.component';
-import { JobFilterComponent } from '../../shared/components/job-filter/job-filter.component';
-import { MOCK_JOBS } from '../../shared/data/mock-jobs';
-import { JobPostResponse } from '../../api/models/job-post-response';
-import { SkillDto } from '../../api/models/skill-dto';
+import { JobPostsListComponent } from '../../../shared/components/jobs/job-posts-list/job-posts-list';
+import { JobSearchComponent } from '../../../shared/components/job-search/job-search.component';
+import { JobFilterComponent } from '../../../shared/components/job-filter/job-filter.component';
+import { MOCK_JOBS } from '../../../shared/data/mock-jobs';
+import { JobPostResponse } from '../../../api/models/job-post-response';
+import { SkillDto } from '../../../api/models/skill-dto';
 
 @Component({
-  selector: 'app-homepage',
+  selector: 'app-talent-job-list-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, SignInComponent, HeaderComponent, JobPostsListComponent, JobSearchComponent, JobFilterComponent],
-  templateUrl: './homepage.component.html',
-  styleUrls: ['./homepage.component.css']
+  imports: [CommonModule, FormsModule, JobPostsListComponent, JobSearchComponent, JobFilterComponent],
+  templateUrl: './talent-job-list-page.component.html',
+  styleUrls: ['./talent-job-list-page.component.css']
 })
-export class HomepageComponent implements OnInit {
-  showSignInModal = false;
+export class TalentJobListPageComponent implements OnInit {
   searchQuery: string = '';
   jobs: JobPostResponse[] = MOCK_JOBS;
   filteredJobs: JobPostResponse[] = [];
@@ -53,14 +50,5 @@ export class HomepageComponent implements OnInit {
         (this.currentFilters.senior && job.experienceLevel?.toLowerCase().includes('senior'));
       return matchesSearch && matchesSkills && matchesExperience;
     });
-  }
-
-  openSignInModal(event: Event): void {
-    event.preventDefault();
-    this.showSignInModal = true;
-  }
-
-  closeSignInModal(): void {
-    this.showSignInModal = false;
   }
 }
