@@ -12,6 +12,7 @@ import { CompleteCandiateRegistration$Params } from '../../api/fn/authentication
 import { CompleteHiringManagerRegistration$Params } from '../../api/fn/authentication-controller/complete-hiring-manager-registration';
 import { Verify$Params } from '../../api/fn/authentication-controller/verify';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +53,7 @@ export class AuthService {
   }
 
   completeCandidateRegistration(token: string, body: CandidateRegistrationDto): Observable<{
-    [key: string]: string;
+    [key:string]: string;
   }> {
     const params: CompleteCandiateRegistration$Params = { token, body };
     return this.authenticationControllerService.completeCandiateRegistration(params).pipe(
@@ -114,8 +115,22 @@ export class AuthService {
     return !!this.getToken();
   }
 
+  getUser(): any | null {
+    const token = this.getToken();
+    if (token) {
+      try {
+        return jwtDecode(token);
+      } catch (e) {
+        console.error('Error decoding JWT', e);
+        return null;
+      }
+    }
+    return null;
+  }
+
   logout(): void {
     this.removeToken();
     this.router.navigate(['/']);
   }
 }
+

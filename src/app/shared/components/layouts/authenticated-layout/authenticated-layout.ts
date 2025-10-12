@@ -15,6 +15,7 @@ export class AuthenticatedLayoutComponent implements OnInit {
   isSidebarMinimized: boolean = false;
   isMobileSidebarOpen: boolean = false;
   isMobile: boolean = false;
+  mockUser = { name: 'Jane Doe', role: 'Talent' };
 
   ngOnInit(): void {
     this.checkIsMobile();
