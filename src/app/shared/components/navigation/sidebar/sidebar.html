@@ -4,7 +4,7 @@
          'w-20 p-3': isMinimized
        }">
   <div class="flex justify-end mb-4">
-    <button (click)="toggleMinimize()" class="text-muted-foreground hover:text-foreground focus:outline-none"
+    <button (click)="toggleMinimize()" class="text-muted-foreground hover:text-foreground focus:outline-none hidden md:block"
             matTooltip="{{ isMinimized ? 'Expand Sidebar' : 'Collapse Sidebar' }}" matTooltipPosition="after">
       <span class="material-symbols-outlined">
         {{ isMinimized ? 'chevron_right' : 'chevron_left' }}
@@ -19,7 +19,7 @@
        }"
        class="flex items-center px-4 py-3 rounded-lg transition-colors">
       <span class="material-symbols-outlined mr-3">work</span>
-      <span class="flex-grow min-w-0">Job Posts</span>
+      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Job Posts</span>
     </a>
     <a [routerLink]="['/talent/applications']" routerLinkActive #rlaApplications="routerLinkActive"
        [ngClass]="{
@@ -28,7 +28,7 @@
        }"
        class="flex items-center px-4 py-3 rounded-lg transition-colors">
       <span class="material-symbols-outlined mr-3">description</span>
-      <span class="flex-grow min-w-0">My Applications</span>
+      <span class="flex-grow min-w-0" *ngIf="!isMinimized">My Applications</span>
     </a>
     <a [routerLink]="['/talent/offers']" routerLinkActive #rlaOffers="routerLinkActive"
        [ngClass]="{
@@ -37,7 +37,7 @@
        }"
        class="flex items-center px-4 py-3 rounded-lg transition-colors">
       <span class="material-symbols-outlined mr-3">request_quote</span>
-      <span class="flex-grow min-w-0">Job Offers/Contracts</span>
+      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Job Offers/Contracts</span>
     </a>
     <a [routerLink]="['/talent/notifications']" routerLinkActive #rlaNotifications="routerLinkActive"
        [ngClass]="{
@@ -46,7 +46,7 @@
        }"
        class="flex items-center px-4 py-3 rounded-lg transition-colors">
       <span class="material-symbols-outlined mr-3">notifications</span>
-      <span class="flex-grow min-w-0">Notifications</span>
+      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Notifications</span>
       <span class="ml-auto inline-block bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">3</span>
     </a>
   </nav>

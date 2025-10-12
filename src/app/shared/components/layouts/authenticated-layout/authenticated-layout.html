@@ -5,7 +5,8 @@
     <!-- Mobile Sidebar Overlay -->
     <div *ngIf="isMobileSidebarOpen" class="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden" (click)="onToggleMobileSidebar()"></div>
 
-    <app-sidebar (minimizedStateChange)="onMinimizedStateChange($event)"
+    <app-sidebar (minimizedStateChange)="onMinimizedStateChange($event)" (closeMobileSidebar)="onCloseMobileSidebar()"
+                 [isMobile]="isMobile"
                  [ngClass]="{
                    'hidden': !isMobileSidebarOpen && isMobile,
                    'fixed top-0 left-0 bottom-0 z-30': isMobile,

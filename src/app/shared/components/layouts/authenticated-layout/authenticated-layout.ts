@@ -27,7 +27,9 @@ export class AuthenticatedLayoutComponent implements OnInit {
 
   private checkIsMobile(): void {
     this.isMobile = window.innerWidth < 768; // Tailwind's 'md' breakpoint is 768px
-    if (!this.isMobile) {
+    if (this.isMobile) {
+      this.isMobileSidebarOpen = false; // Ensure sidebar is closed on mobile by default
+    } else {
       this.isMobileSidebarOpen = false; // Close sidebar if resizing to desktop
     }
   }
@@ -38,5 +40,9 @@ export class AuthenticatedLayoutComponent implements OnInit {
 
   onToggleMobileSidebar(): void {
     this.isMobileSidebarOpen = !this.isMobileSidebarOpen;
+  }
+
+  onCloseMobileSidebar(): void {
+    this.isMobileSidebarOpen = false;
   }
 }
