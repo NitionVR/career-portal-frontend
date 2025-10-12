@@ -13,7 +13,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class SidebarComponent implements OnInit {
   @Input() isMinimized: boolean = false;
+  @Input() isMobile: boolean = false; // New input for mobile state
   @Output() minimizedStateChange = new EventEmitter<boolean>();
+  @Output() closeMobileSidebar = new EventEmitter<void>();
 
   constructor() { }
 
@@ -24,5 +26,11 @@ export class SidebarComponent implements OnInit {
   toggleMinimize(): void {
     this.isMinimized = !this.isMinimized;
     this.minimizedStateChange.emit(this.isMinimized);
+  }
+
+  onNavLinkClick(): void {
+    if (this.isMobile) { // Assuming isMobile is available or passed as input
+      this.closeMobileSidebar.emit();
+    }
   }
 }
