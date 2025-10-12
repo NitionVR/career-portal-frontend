@@ -3,7 +3,7 @@
 
   <main class="flex-grow pt-20">
     <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-      <div class="relative mx-auto flex w-full max-w-4xl flex-col rounded-2xl border border-border glassmorphism smooth-shadow">
+      <div *ngIf="job" class="relative mx-auto flex w-full max-w-4xl flex-col rounded-2xl border border-border glassmorphism smooth-shadow">
         <div class="flex-shrink-0 border-b border-border p-6">
           <div class="flex items-start justify-between">
             <div class="flex items-center gap-4">
@@ -44,7 +44,7 @@
               <div class="rounded-xl border border-border p-6 glassmorphism">
                 <h3 class="mb-4 text-lg font-semibold text-foreground">Required Skills</h3>
                 <ul class="space-y-3">
-                  <li *ngFor="let skill of job?.skills" class="flex items-center justify-between text-sm text-muted-foreground">
+                  <li *ngFor="let skill of (showAllSkills ? job.skills : (job.skills | slice:0:initialSkillsToShow))" class="flex items-center justify-between text-sm text-muted-foreground">
                     <span class="flex items-center">
                       <span class="material-symbols-outlined mr-3 text-base text-primary">verified</span>
                       {{ skill.name }}
@@ -52,6 +52,11 @@
                     <span class="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">{{ skill.level }}</span>
                   </li>
                 </ul>
+                <div *ngIf="job.skills && job.skills.length > initialSkillsToShow" class="mt-4">
+                  <button (click)="toggleShowAllSkills()" class="w-full text-sm font-semibold text-primary hover:text-primary/90 transition-colors">
+                    {{ showAllSkills ? 'Show less' : 'Show all ' + job.skills.length + ' skills' }}
+                  </button>
+                </div>
               </div>
               <div class="rounded-xl border border-white/10 p-6 glassmorphism">
                 <h3 class="mb-4 text-lg font-semibold text-foreground">Job Summary</h3>

@@ -20,6 +20,8 @@ export class JobPostDetailsPageComponent implements OnInit {
   showSignInModal = false;
   isLoggedIn: boolean = false;
   user: any | null = null;
+  showAllSkills = false;
+  readonly initialSkillsToShow = 6;
 
   constructor(private route: ActivatedRoute, private authService: AuthService) { }
 
@@ -50,5 +52,9 @@ export class JobPostDetailsPageComponent implements OnInit {
 
   closeSignInModal(): void {
     this.showSignInModal = false;
+  }
+
+  toggleShowAllSkills(): void {
+    this.showAllSkills = !this.showAllSkills;
   }
 }

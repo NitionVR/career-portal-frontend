@@ -26,6 +26,7 @@ export const MOCK_JOBS: JobPostResponse[] = [
       'Mentor junior developers and participate in code reviews.'
     ],
     qualifications: [
+      'Bachelor\'s degree in Computer Science or related field',
       '5+ years of professional experience in frontend development.',
       'Expertise in JavaScript, HTML5, and CSS3.',
       'Proficient with Angular and its ecosystem.',
@@ -33,16 +34,17 @@ export const MOCK_JOBS: JobPostResponse[] = [
       'Strong understanding of RESTful APIs and modern authorization mechanisms.'
     ],
     skills: [
-      {
-        name: 'Frontend Development',
-        level: 'Master',
-        keywords: ['HTML', 'CSS', 'JavaScript', 'Angular', 'TypeScript']
-      },
-      {
-        name: 'UI/UX Design',
-        level: 'Intermediate',
-        keywords: ['Figma', 'Wireframing', 'Prototyping']
-      }
+      { name: 'Angular', level: 'Master', keywords: [] },
+      { name: 'TypeScript', level: 'Master', keywords: [] },
+      { name: 'JavaScript (ES6+)', level: 'Master', keywords: [] },
+      { name: 'RxJS', level: 'Advanced', keywords: [] },
+      { name: 'NgRx', level: 'Advanced', keywords: [] },
+      { name: 'HTML5 & CSS3', level: 'Master', keywords: [] },
+      { name: 'Tailwind CSS', level: 'Advanced', keywords: [] },
+      { name: 'Jest', level: 'Intermediate', keywords: [] },
+      { name: 'Cypress', level: 'Intermediate', keywords: [] },
+      { name: 'Webpack', level: 'Intermediate', keywords: [] },
+      { name: 'RESTful APIs', level: 'Advanced', keywords: [] }
     ],
     status: 'OPEN'
   },
