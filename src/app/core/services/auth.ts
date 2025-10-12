@@ -35,21 +35,7 @@ export class AuthService {
     [key: string]: any;
   }> {
     const params: ValidateRegistrationToken$Params = { token };
-    return this.authenticationControllerService.validateRegistrationToken(params).pipe(
-      switchMap(response => {
-        return new Observable<{[key: string]: any;}>(observer => {
-          (response as Blob).text().then(text => {
-            try {
-              const json = JSON.parse(text) as { [key: string]: any; }; // Explicit cast here
-              observer.next(json);
-              observer.complete();
-            } catch (e) {
-              observer.error(e);
-            }
-          }).catch(e => observer.error(e));
-        });
-      })
-    );
+    return this.authenticationControllerService.validateRegistrationToken(params) as unknown as Observable<{[key: string]: any;}>;
   }
 
   completeCandidateRegistration(token: string, body: CandidateRegistrationDto): Observable<{

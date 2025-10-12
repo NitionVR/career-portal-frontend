@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { JobPostResponse } from '../../api/models/job-post-response';
-import { MOCK_JOBS } from '../../shared/data/mock-jobs';
 import { HeaderComponent } from '../../shared/components/navigation/header/header';
 import { SignInComponent } from '../../shared/components/sign-in/sign-in.component';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth';
+import { JobPostControllerService } from '../../api/services/job-post-controller.service';
+import { Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-job-post-details-page',
@@ -23,15 +24,28 @@ export class JobPostDetailsPageComponent implements OnInit {
   showAllSkills = false;
   readonly initialSkillsToShow = 6;
 
-  constructor(private route: ActivatedRoute, private authService: AuthService) { }
+  constructor(
+    private route: ActivatedRoute, 
+    private authService: AuthService,
+    private jobPostService: JobPostControllerService
+  ) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const jobId = params.get('id');
-      if (jobId) {
-        this.job = MOCK_JOBS.find(job => job.id === jobId);
+    this.route.paramMap.pipe(
+      switchMap(params => {
+        const jobId = params.get('id');
+        if (jobId) {
+          return this.jobPostService.getJobPost({ id: jobId });
+        } else {
+          return new Observable<JobPostResponse | undefined>(observer => observer.next(undefined));
+        }
+      })
+    ).subscribe(job => {
+      if (job) {
+        this.job = job;
       }
     });
+
     this.isLoggedIn = this.authService.isLoggedIn();
     this.user = this.authService.getUser();
     if (!this.user) {

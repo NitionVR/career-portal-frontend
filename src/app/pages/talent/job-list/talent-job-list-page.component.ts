@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { JobPostsListComponent } from '../../../shared/components/jobs/job-posts-list/job-posts-list';
 import { JobSearchComponent } from '../../../shared/components/job-search/job-search.component';
 import { JobFilterComponent } from '../../../shared/components/job-filter/job-filter.component';
-import { MOCK_JOBS } from '../../../shared/data/mock-jobs';
 import { JobPostResponse } from '../../../api/models/job-post-response';
 import { SkillDto } from '../../../api/models/skill-dto';
+import { JobPostControllerService } from '../../../api/services/job-post-controller.service';
+import { PageJobPostResponse } from '../../../api/models/page-job-post-response';
+import { Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-talent-job-list-page',
@@ -17,14 +19,32 @@ import { SkillDto } from '../../../api/models/skill-dto';
 })
 export class TalentJobListPageComponent implements OnInit {
   searchQuery: string = '';
-  jobs: JobPostResponse[] = MOCK_JOBS;
+  jobs: JobPostResponse[] = [];
   filteredJobs: JobPostResponse[] = [];
   currentFilters: any = {};
 
-  constructor() { }
+  constructor(private jobPostService: JobPostControllerService) { }
 
   ngOnInit(): void {
-    this.filterJobs();
+    this.jobPostService.listJobPosts({ pageable: { page: 0, size: 20 } })
+      .subscribe((page: PageJobPostResponse) => {
+      const jobsWithParsedJson = (page.content || []).map(job => {
+        try {
+          return {
+            ...job,
+            skills: typeof job.skills === 'string' ? JSON.parse(job.skills) : job.skills,
+            location: typeof job.location === 'string' ? JSON.parse(job.location) : job.location,
+            qualifications: typeof job.qualifications === 'string' ? JSON.parse(job.qualifications) : job.qualifications,
+            responsibilities: typeof job.responsibilities === 'string' ? JSON.parse(job.responsibilities) : job.responsibilities,
+          };
+        } catch (e) {
+          console.error('Failed to parse nested job data', e, job);
+          return job;
+        }
+      });
+      this.jobs = jobsWithParsedJson;
+      this.filterJobs();
+    });
   }
 
   onSearch(query: string): void {
@@ -41,9 +61,9 @@ export class TalentJobListPageComponent implements OnInit {
     this.filteredJobs = this.jobs.filter(job => {
       const matchesSearch = !this.searchQuery || (job.title && job.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
       const matchesSkills = !(this.currentFilters.react || this.currentFilters.nodejs || this.currentFilters.typescript) ||
-        (this.currentFilters.react && job.skills?.some((s: SkillDto) => s.name?.toLowerCase() === 'react')) ||
-        (this.currentFilters.nodejs && job.skills?.some((s: SkillDto) => s.name?.toLowerCase() === 'node.js')) ||
-        (this.currentFilters.typescript && job.skills?.some((s: SkillDto) => s.name?.toLowerCase() === 'typescript'));
+        (this.currentFilters.react && Array.isArray(job.skills) && job.skills.some((s: SkillDto) => s.name?.toLowerCase() === 'react')) ||
+        (this.currentFilters.nodejs && Array.isArray(job.skills) && job.skills.some((s: SkillDto) => s.name?.toLowerCase() === 'node.js')) ||
+        (this.currentFilters.typescript && Array.isArray(job.skills) && job.skills.some((s: SkillDto) => s.name?.toLowerCase() === 'typescript'));
       const matchesExperience = !(this.currentFilters.entry || this.currentFilters.mid || this.currentFilters.senior) ||
         (this.currentFilters.entry && job.experienceLevel?.toLowerCase().includes('entry')) ||
         (this.currentFilters.mid && job.experienceLevel?.toLowerCase().includes('mid')) ||
