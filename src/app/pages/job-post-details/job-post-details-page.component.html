@@ -9,11 +9,11 @@
             <div class="flex items-center gap-4">
               <img alt="Company Logo" class="w-16 h-16 rounded-lg bg-white p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHwracevImG81zEqFH9kkEB5Y3E3T7tJYIIJ1DBetcfji5E1NELPFQT8FvsPJXOOWie5foLREzbuRh7-5EdA_hG6bUEgmv3NT_N3b1UVFKy_F7jSLATnKWrbRZz2HUyOchAgQ88-0pRffZzKjD5b67Ho1alckoV-EOE5_TCRBsIUr4SQCdNHUJ2rasT_qNpqyw1Q6ctkn2B__JzE2rCb6T-8HHyqNxT-LY6pMxsVNAyvnAgFlxXJ10xb7WfBpN-zlPlKyq0TES5A"/>
               <div>
-                <h2 class="text-2xl font-bold text-foreground">{{ job?.title }}</h2>
+                <h2 class="text-2xl font-bold text-foreground">{{ job.title }}</h2>
                 <div class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                  <p class="flex items-center"><span class="material-symbols-outlined mr-1.5 text-base">business</span> {{ job?.company }}</p>
-                  <p class="flex items-center"><span class="material-symbols-outlined mr-1.5 text-base">location_on</span> {{ job?.location?.city }}, {{ job?.location?.countryCode }}</p>
-                  <p class="flex items-center"><span class="material-symbols-outlined mr-1.5 text-base">calendar_today</span>Posted: {{ job?.datePosted | date:'longDate' }}</p>
+                  <p class="flex items-center"><span class="material-symbols-outlined mr-1.5 text-base">business</span> {{ job.company }}</p>
+                  <p class="flex items-center"><span class="material-symbols-outlined mr-1.5 text-base">location_on</span> {{ job.location?.city }}, {{ job.location?.countryCode }}</p>
+                  <p class="flex items-center"><span class="material-symbols-outlined mr-1.5 text-base">calendar_today</span>Posted: {{ job.datePosted | date:'longDate' }}</p>
                 </div>
               </div>
             </div>
@@ -25,18 +25,18 @@
             <div class="space-y-8 md:col-span-2">
               <div>
                 <h3 class="mb-3 text-lg font-semibold text-primary">Job Description</h3>
-                <p class="leading-relaxed text-muted-foreground">{{ job?.description }}</p>
+                <p class="leading-relaxed text-muted-foreground">{{ job.description }}</p>
               </div>
               <div>
                 <h3 class="mb-3 text-lg font-semibold text-primary">Responsibilities</h3>
                 <ul class="list-inside list-disc space-y-2 text-muted-foreground">
-                  <li *ngFor="let resp of job?.responsibilities">{{ resp }}</li>
+                  <li *ngFor="let resp of job.responsibilities">{{ resp }}</li>
                 </ul>
               </div>
               <div>
                 <h3 class="mb-3 text-lg font-semibold text-primary">Requirements</h3>
                 <ul class="list-inside list-disc space-y-2 text-muted-foreground">
-                  <li *ngFor="let qual of job?.qualifications">{{ qual }}</li>
+                  <li *ngFor="let qual of job.qualifications">{{ qual }}</li>
                 </ul>
               </div>
             </div>
@@ -61,10 +61,10 @@
               <div class="rounded-xl border border-white/10 p-6 glassmorphism">
                 <h3 class="mb-4 text-lg font-semibold text-foreground">Job Summary</h3>
                 <ul class="space-y-3 text-sm text-muted-foreground">
-                  <li><span class="font-medium text-white/80">Salary:</span> {{ job?.salary }}</li>
-                  <li><span class="font-medium text-white/80">Experience:</span> {{ job?.experienceLevel }}</li>
-                  <li><span class="font-medium text-white/80">Job Type:</span> {{ job?.jobType }}</li>
-                  <li><span class="font-medium text-white/80">Work Model:</span> {{ job?.remote }}</li>
+                  <li><span class="font-medium text-white/80">Salary:</span> {{ job.salary }}</li>
+                  <li><span class="font-medium text-white/80">Experience:</span> {{ job.experienceLevel }}</li>
+                  <li><span class="font-medium text-white/80">Job Type:</span> {{ job.jobType }}</li>
+                  <li><span class="font-medium text-white/80">Work Model:</span> {{ job.remote }}</li>
                 </ul>
               </div>
             </div>
