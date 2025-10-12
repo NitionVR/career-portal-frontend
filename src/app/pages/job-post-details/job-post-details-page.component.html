@@ -1,0 +1,109 @@
+<div class="min-h-screen flex flex-col bg-background">
+  <app-header (openSignInModal)="openSignInModal($event)" [isLoggedIn]="isLoggedIn" [user]="user"></app-header>
+
+  <main class="flex-grow pt-20">
+    <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <div class="relative mx-auto flex w-full max-w-4xl flex-col rounded-2xl border border-border glassmorphism smooth-shadow">
+        <div class="flex-shrink-0 border-b border-border p-6">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-4">
+              <img alt="Company Logo" class="w-16 h-16 rounded-lg bg-white p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHwracevImG81zEqFH9kkEB5Y3E3T7tJYIIJ1DBetcfji5E1NELPFQT8FvsPJXOOWie5foLREzbuRh7-5EdA_hG6bUEgmv3NT_N3b1UVFKy_F7jSLATnKWrbRZz2HUyOchAgQ88-0pRffZzKjD5b67Ho1alckoV-EOE5_TCRBsIUr4SQCdNHUJ2rasT_qNpqyw1Q6ctkn2B__JzE2rCb6T-8HHyqNxT-LY6pMxsVNAyvnAgFlxXJ10xb7WfBpN-zlPlKyq0TES5A"/>
+              <div>
+                <h2 class="text-2xl font-bold text-foreground">{{ job?.title }}</h2>
+                <div class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                  <p class="flex items-center"><span class="material-symbols-outlined mr-1.5 text-base">business</span> {{ job?.company }}</p>
+                  <p class="flex items-center"><span class="material-symbols-outlined mr-1.5 text-base">location_on</span> {{ job?.location?.city }}, {{ job?.location?.countryCode }}</p>
+                  <p class="flex items-center"><span class="material-symbols-outlined mr-1.5 text-base">calendar_today</span>Posted: {{ job?.datePosted | date:'longDate' }}</p>
+                </div>
+              </div>
+            </div>
+            <!-- Close button (removed for page view) -->
+          </div>
+        </div>
+        <div class="flex-grow p-8">
+          <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div class="space-y-8 md:col-span-2">
+              <div>
+                <h3 class="mb-3 text-lg font-semibold text-primary">Job Description</h3>
+                <p class="leading-relaxed text-muted-foreground">{{ job?.description }}</p>
+              </div>
+              <div>
+                <h3 class="mb-3 text-lg font-semibold text-primary">Responsibilities</h3>
+                <ul class="list-inside list-disc space-y-2 text-muted-foreground">
+                  <li *ngFor="let resp of job?.responsibilities">{{ resp }}</li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="mb-3 text-lg font-semibold text-primary">Requirements</h3>
+                <ul class="list-inside list-disc space-y-2 text-muted-foreground">
+                  <li *ngFor="let qual of job?.qualifications">{{ qual }}</li>
+                </ul>
+              </div>
+            </div>
+            <div class="space-y-8">
+              <div class="rounded-xl border border-border p-6 glassmorphism">
+                <h3 class="mb-4 text-lg font-semibold text-foreground">Required Skills</h3>
+                <ul class="space-y-3">
+                  <li *ngFor="let skill of job?.skills" class="flex items-center justify-between text-sm text-muted-foreground">
+                    <span class="flex items-center">
+                      <span class="material-symbols-outlined mr-3 text-base text-primary">verified</span>
+                      {{ skill.name }}
+                    </span>
+                    <span class="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">{{ skill.level }}</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="rounded-xl border border-white/10 p-6 glassmorphism">
+                <h3 class="mb-4 text-lg font-semibold text-foreground">Job Summary</h3>
+                <ul class="space-y-3 text-sm text-muted-foreground">
+                  <li><span class="font-medium text-white/80">Salary:</span> {{ job?.salary }}</li>
+                  <li><span class="font-medium text-white/80">Experience:</span> {{ job?.experienceLevel }}</li>
+                  <li><span class="font-medium text-white/80">Job Type:</span> {{ job?.jobType }}</li>
+                  <li><span class="font-medium text-white/80">Work Model:</span> {{ job?.remote }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-shrink-0 flex items-center justify-end border-t border-border bg-black/20 p-6">
+          <button class="flex items-center gap-2 rounded-full bg-primary px-8 py-3 text-base font-bold text-primary-foreground transition-all duration-300 ease-in-out hover:bg-primary/90 transform hover:scale-105">
+            Apply Now
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-border bg-card">
+    <div class="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-12">
+        <div class="md:col-span-5 lg:col-span-4">
+          <h3 class="text-lg font-semibold text-foreground mb-4">About Us</h3>
+          <p class="text-sm leading-relaxed text-muted-foreground">eTalente is a modern job search platform dedicated to connecting top talent with innovative companies. Our mission is to make the job search process seamless and efficient for both candidates and employers.</p>
+        </div>
+        <div class="md:col-span-4 lg:col-span-3 lg:col-start-9">
+          <h3 class="text-lg font-semibold text-foreground mb-4">Contact Us</h3>
+          <div class="space-y-3 text-sm text-muted-foreground">
+            <p class="flex items-center"><span class="material-symbols-outlined mr-3 text-base text-primary">call</span> (123) 456-7890</p>
+            <p class="flex items-center"><span class="material-symbols-outlined mr-3 text-base text-primary">mail</span> contact@etalente.com</p>
+            <p class="flex items-center"><span class="material-symbols-outlined mr-3 text-base text-primary">location_on</span> 123 Innovation Drive, Tech City</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 flex flex-col items-center justify-between border-t border-border pt-8 text-sm text-muted-foreground sm:flex-row">
+        <p class="mb-4 sm:mb-0">© 2024 eTalente. All rights reserved.</p>
+        <div class="flex space-x-6">
+          <a class="transition-colors hover:text-foreground" href="#">Terms of Service</a>
+          <a class="transition-colors hover:text-foreground" href="#">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal" *ngIf="showSignInModal">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <app-sign-in (closeModal)="closeSignInModal()"></app-sign-in>
+    </div>
+  </div>
+</div>

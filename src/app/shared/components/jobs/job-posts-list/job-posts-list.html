@@ -4,7 +4,7 @@
     <div class="relative glassmorphism p-6 sm:p-8 shadow-smooth group-hover:shadow-group-hover-effect transition-all duration-300 ease-in-out">
       <div class="flex items-start justify-between">
         <div>
-          <h3 class="text-xl font-bold hover:text-primary transition-colors"><a href="#">{{ job.title }}</a></h3>
+          <h3 class="text-xl font-bold hover:text-primary transition-colors"><a [routerLink]="['/job-posts', job.id]">{{ job.title }}</a></h3>
           <p class="text-sm text-muted-foreground mt-1">Ref: #{{ job.id }}</p>
         </div>
         <img alt="Company Logo" class="w-14 h-14 rounded-lg bg-white p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHwracevImG81zEqFH9kkEB5Y3E3T7tJYIIJ1DBetcfji5E1NELPFQT8FvsPJXOOWie5foLREzbuRh7-5EdA_hG6bUEgmv3NT_N3b1UVFKy_F7jSLATnKWrbRZz2HUyOchAgQ88-0pRffZzKjD5b67Ho1alckoV-EOE5_TCRBsIUr4SQCdNHUJ2rasT_qNpqyw1Q6ctkn2B__JzE2rCb6T-8HHyqNxT-LY6pMxsVNAyvnAgFlxXJ10xb7WfBpN-zlPlKyq0TES5A"/>

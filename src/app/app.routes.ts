@@ -6,6 +6,7 @@ import { HomepageComponent } from './pages/homepage/homepage.component';
 import { AuthenticatedLayoutComponent } from './shared/components/layouts/authenticated-layout/authenticated-layout';
 import { CandidateDashboardComponent } from './pages/candidate/dashboard/dashboard.component';
 import { TalentJobListPageComponent } from './pages/talent/job-list/talent-job-list-page.component';
+import { JobPostDetailsPageComponent } from './pages/job-post-details/job-post-details-page.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: 'sign-up', component: RegisterPage },
   { path: 'auth/callback', component: MagicLinkPage },
   { path: 'profile/create', component: ProfileCreate },
+  { path: 'job-posts/:id', component: JobPostDetailsPageComponent }, // New route for job post details
   {
     path: 'talent',
     component: AuthenticatedLayoutComponent,
