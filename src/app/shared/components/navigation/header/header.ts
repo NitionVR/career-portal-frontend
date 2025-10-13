@@ -42,15 +42,11 @@ export class HeaderComponent implements OnInit {
   }
 
   onOpenUserMenu(): void {
-    console.log('onOpenUserMenu before:', this.showUserMenu);
     this.showUserMenu = !this.showUserMenu; // Toggle user menu visibility
-    console.log('onOpenUserMenu after:', this.showUserMenu);
   }
 
   onCloseUserMenu(): void {
-    console.log('onCloseUserMenu before:', this.showUserMenu);
     this.showUserMenu = false; // Close user menu
-    console.log('onCloseUserMenu after:', this.showUserMenu);
   }
 }
   
