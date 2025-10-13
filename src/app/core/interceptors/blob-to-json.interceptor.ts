@@ -1,12 +1,18 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
+import { LoadingService } from '../services/loading.service';
+import { inject } from '@angular/core';
 
 export function blobToJsonInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+  const loadingService = inject(LoadingService);
+
   // Only intercept requests that are expected to return a blob but should be JSON.
   if (req.responseType !== 'blob') {
     return next(req);
   }
+
+  loadingService.startLoading();
 
   return next(req).pipe(
     switchMap((event: HttpEvent<any>) => {
@@ -38,6 +44,7 @@ export function blobToJsonInterceptor(req: HttpRequest<unknown>, next: HttpHandl
         observer.next(event);
         observer.complete();
       });
-    })
+    }),
+    finalize(() => loadingService.stopLoading())
   );
 }
