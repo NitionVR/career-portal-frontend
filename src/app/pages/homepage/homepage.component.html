@@ -21,7 +21,7 @@
             <app-job-filter (filtersChanged)="onFiltersChanged($event)"></app-job-filter>
           </aside>
           <main class="lg:col-span-3">
-            <app-job-posts-list [jobs]="filteredJobs"></app-job-posts-list>
+            <app-job-posts-list [jobs]="paginatedJobs" [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-job-posts-list>
           </main>
         </div>
       </div>

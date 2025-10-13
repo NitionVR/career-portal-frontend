@@ -22,20 +22,20 @@
   </div>
 
   <div class="mt-12 flex justify-center">
-    <nav aria-label="Pagination" class="isolate inline-flex -space-x-px rounded-md shadow-sm">
-      <a class="relative inline-flex items-center rounded-l-md px-2 py-2 text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">
+    <nav *ngIf="totalPages > 1" aria-label="Pagination" class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+      <button (click)="previousPage()" [disabled]="currentPage === 0" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed">
         <span class="sr-only">Previous</span>
         <span aria-hidden="true" class="material-symbols-outlined">chevron_left</span>
-      </a>
-      <a aria-current="page" class="relative z-10 inline-flex items-center bg-secondary px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" href="#">1</a>
-      <a class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">2</a>
-      <a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">3</a>
-      <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border">...</span>
-      <a class="relative hidden items-center px-4 py-2 text-sm font-semibold text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0 md:inline-flex" href="#">10</a>
-      <a class="relative inline-flex items-center rounded-r-md px-2 py-2 text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0" href="#">
+      </button>
+      <ng-container *ngFor="let page of getPages()">
+        <button (click)="goToPage(page)" [attr.aria-current]="page === currentPage ? 'page' : null" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold focus:z-20" [ngClass]="{'z-10 bg-secondary text-white focus-visible:outline-secondary': page === currentPage, 'text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800': page !== currentPage}">
+          {{ page + 1 }}
+        </button>
+      </ng-container>
+      <button (click)="nextPage()" [disabled]="currentPage === totalPages - 1" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-muted-foreground ring-1 ring-inset ring-border hover:bg-gray-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50 disabled:cursor-not-allowed">
         <span class="sr-only">Next</span>
         <span aria-hidden="true" class="material-symbols-outlined">chevron_right</span>
-      </a>
+      </button>
     </nav>
   </div>
 </div>

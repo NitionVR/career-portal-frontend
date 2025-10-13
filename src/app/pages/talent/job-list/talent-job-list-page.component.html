@@ -8,6 +8,6 @@
     <div class="max-w-4xl mx-auto mb-8">
       <app-job-search (search)="onSearch($event)"></app-job-search>
     </div>
-    <app-job-posts-list [jobs]="filteredJobs"></app-job-posts-list>
+    <app-job-posts-list [jobs]="paginatedJobs" [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-job-posts-list>
   </main>
 </div>
