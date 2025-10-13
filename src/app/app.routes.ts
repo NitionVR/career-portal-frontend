@@ -6,6 +6,8 @@ import { HomepageComponent } from './pages/homepage/homepage.component';
 import { AuthenticatedLayoutComponent } from './shared/components/layouts/authenticated-layout/authenticated-layout';
 import { CandidateDashboardComponent } from './pages/candidate/dashboard/dashboard.component';
 import { TalentJobListPageComponent } from './pages/talent/job-list/talent-job-list-page.component';
+import { MyApplicationsPageComponent } from './pages/talent/my-applications/my-applications-page.component';
+import { ApplicationDetailsPageComponent } from './pages/talent/application-details/application-details-page.component';
 import { JobPostDetailsPageComponent } from './pages/job-post-details/job-post-details-page.component';
 
 export const routes: Routes = [
@@ -21,6 +23,8 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: CandidateDashboardComponent },
       { path: 'job-list', component: TalentJobListPageComponent },
+      { path: 'applications', component: MyApplicationsPageComponent, pathMatch: 'full' },
+      { path: 'applications/:id', component: ApplicationDetailsPageComponent },
       // Add other authenticated routes here
       // { path: 'applications', component: MyApplicationsComponent },
       // { path: 'offers', component: JobOffersComponent },
