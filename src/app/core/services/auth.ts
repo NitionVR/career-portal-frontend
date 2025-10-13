@@ -35,7 +35,7 @@ export class AuthService {
     [key: string]: any;
   }> {
     const params: ValidateRegistrationToken$Params = { token };
-    return this.authenticationControllerService.validateRegistrationToken(params) as unknown as Observable<{[key: string]: any;}>;
+    return this.authenticationControllerService.validateRegistrationToken(params);
   }
 
   completeCandidateRegistration(token: string, body: CandidateRegistrationDto): Observable<{
