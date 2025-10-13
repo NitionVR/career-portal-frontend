@@ -5,10 +5,8 @@ import { JobPostsListComponent } from '../../../shared/components/jobs/job-posts
 import { JobSearchComponent } from '../../../shared/components/job-search/job-search.component';
 import { JobFilterComponent } from '../../../shared/components/job-filter/job-filter.component';
 import { JobPostResponse } from '../../../api/models/job-post-response';
-import { SkillDto } from '../../../api/models/skill-dto';
 import { JobPostControllerService } from '../../../api/services/job-post-controller.service';
 import { PageJobPostResponse } from '../../../api/models/page-job-post-response';
-import { Observable, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-talent-job-list-page',
@@ -19,56 +17,52 @@ import { Observable, switchMap } from 'rxjs';
 })
 export class TalentJobListPageComponent implements OnInit {
   searchQuery: string = '';
-  jobs: JobPostResponse[] = [];
-  filteredJobs: JobPostResponse[] = [];
+  
+  paginatedJobs: JobPostResponse[] = [];
+
   currentFilters: any = {};
+  currentPage: number = 0;
+  pageSize: number = 10;
+  totalPages: number = 1;
 
   constructor(private jobPostService: JobPostControllerService) { }
 
   ngOnInit(): void {
-    this.jobPostService.listJobPosts({ pageable: { page: 0, size: 20 } })
-      .subscribe((page: PageJobPostResponse) => {
-      const jobsWithParsedJson = (page.content || []).map(job => {
-        try {
-          return {
-            ...job,
-            skills: typeof job.skills === 'string' ? JSON.parse(job.skills) : job.skills,
-            location: typeof job.location === 'string' ? JSON.parse(job.location) : job.location,
-            qualifications: typeof job.qualifications === 'string' ? JSON.parse(job.qualifications) : job.qualifications,
-            responsibilities: typeof job.responsibilities === 'string' ? JSON.parse(job.responsibilities) : job.responsibilities,
-          };
-        } catch (e) {
-          console.error('Failed to parse nested job data', e, job);
-          return job;
-        }
-      });
-      this.jobs = jobsWithParsedJson;
-      this.filterJobs();
+    this.fetchJobs();
+  }
+
+  fetchJobs(): void {
+    const experienceLevels = Object.keys(this.currentFilters).filter(k => this.currentFilters[k] && ['entry', 'mid', 'senior'].includes(k));
+    const jobTypes = Object.keys(this.currentFilters).filter(k => this.currentFilters[k] && ['fullTime', 'partTime', 'contract'].includes(k));
+    const workTypes = Object.keys(this.currentFilters).filter(k => this.currentFilters[k] && ['remote', 'hybrid', 'onsite'].includes(k));
+
+    this.jobPostService.listJobPosts({
+      pageable: { page: this.currentPage, size: this.pageSize },
+      search: this.searchQuery,
+      skillSearch: this.currentFilters.skillSearch,
+      experienceLevels: experienceLevels,
+      jobTypes: jobTypes,
+      workTypes: workTypes
+    }).subscribe((page: PageJobPostResponse) => {
+      this.paginatedJobs = page.content || [];
+      this.totalPages = page.totalPages || 1;
     });
   }
 
   onSearch(query: string): void {
     this.searchQuery = query;
-    this.filterJobs();
+    this.currentPage = 0; // Reset to first page
+    this.fetchJobs();
   }
 
   onFiltersChanged(filters: any): void {
     this.currentFilters = filters;
-    this.filterJobs();
+    this.currentPage = 0; // Reset to first page
+    this.fetchJobs();
   }
 
-  filterJobs(): void {
-    this.filteredJobs = this.jobs.filter(job => {
-      const matchesSearch = !this.searchQuery || (job.title && job.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
-      const matchesSkills = !(this.currentFilters.react || this.currentFilters.nodejs || this.currentFilters.typescript) ||
-        (this.currentFilters.react && Array.isArray(job.skills) && job.skills.some((s: SkillDto) => s.name?.toLowerCase() === 'react')) ||
-        (this.currentFilters.nodejs && Array.isArray(job.skills) && job.skills.some((s: SkillDto) => s.name?.toLowerCase() === 'node.js')) ||
-        (this.currentFilters.typescript && Array.isArray(job.skills) && job.skills.some((s: SkillDto) => s.name?.toLowerCase() === 'typescript'));
-      const matchesExperience = !(this.currentFilters.entry || this.currentFilters.mid || this.currentFilters.senior) ||
-        (this.currentFilters.entry && job.experienceLevel?.toLowerCase().includes('entry')) ||
-        (this.currentFilters.mid && job.experienceLevel?.toLowerCase().includes('mid')) ||
-        (this.currentFilters.senior && job.experienceLevel?.toLowerCase().includes('senior'));
-      return matchesSearch && matchesSkills && matchesExperience;
-    });
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.fetchJobs();
   }
 }
