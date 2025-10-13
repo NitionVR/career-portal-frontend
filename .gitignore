@@ -54,8 +54,9 @@ previous_register_design.log
 # Untracked files added by Gemini
 Etalente_Backend_Testing.postman_collection.json
 candidate_talent_tickets.md
+design_mockups
 dashboards_and_pages_roadmap.md
-design_mockups/
 docs/registration_api_contract.md
 logged_tickets.log
 project_context_summary.md
+gemini_memory.md
