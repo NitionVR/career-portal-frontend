@@ -4,10 +4,14 @@
       <app-job-filter (filtersChanged)="onFiltersChanged($event)"></app-job-filter>
     </div>
   </aside>
-  <main class="w-full sm:w-3/4 lg:w-4/5">
-    <div class="max-w-4xl mx-auto mb-8">
-      <app-job-search (search)="onSearch($event)"></app-job-search>
-    </div>
-    <app-job-posts-list [jobs]="paginatedJobs" [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-job-posts-list>
-  </main>
-</div>
+          <main class="w-full sm:w-3/4 lg:w-4/5 relative">
+            <div class="max-w-4xl mx-auto mb-8">
+              <app-job-search (search)="onSearch($event)"></app-job-search>
+            </div>
+            <div *ngIf="paginatedJobs.length === 0" class="glassmorphism rounded-xl p-6 text-center text-muted-foreground">
+              <span class="material-symbols-outlined text-6xl text-muted-foreground mb-4">work</span>
+              <p class="text-lg font-semibold">No job posts found.</p>
+              <p class="text-sm mt-2">Try adjusting your search or filters.</p>
+            </div>
+            <app-job-posts-list *ngIf="paginatedJobs.length > 0" [jobs]="paginatedJobs" [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-job-posts-list>
+          </main></div>

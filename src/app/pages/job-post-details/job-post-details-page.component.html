@@ -2,7 +2,7 @@
   <app-header (openSignInModal)="openSignInModal($event)" [isLoggedIn]="isLoggedIn" [user]="user"></app-header>
 
   <main class="flex-grow pt-20">
-    <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8 relative">
       <div *ngIf="job" class="relative mx-auto flex w-full max-w-4xl flex-col rounded-2xl border border-border glassmorphism smooth-shadow">
         <div class="flex-shrink-0 border-b border-border p-6">
           <div class="flex items-start justify-between">

@@ -46,9 +46,15 @@ export class HomepageComponent implements OnInit {
       experienceLevels: experienceLevels,
       jobTypes: jobTypes,
       workTypes: workTypes
-    }).subscribe((page: PageJobPostResponse) => {
-      this.paginatedJobs = page.content || [];
-      this.totalPages = page.totalPages || 1;
+    }).subscribe({
+      next: (page: PageJobPostResponse) => {
+        this.paginatedJobs = page.content || [];
+        this.totalPages = page.totalPages || 1;
+        this.currentPage = page.number || 0;
+      },
+      error: (err) => {
+        console.error('Error fetching jobs', err);
+      }
     });
   }
 

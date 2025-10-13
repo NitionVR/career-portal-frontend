@@ -20,7 +20,7 @@
           <aside class="lg:col-span-1">
             <app-job-filter (filtersChanged)="onFiltersChanged($event)"></app-job-filter>
           </aside>
-          <main class="lg:col-span-3">
+          <main class="lg:col-span-3 relative">
             <app-job-posts-list [jobs]="paginatedJobs" [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-job-posts-list>
           </main>
         </div>

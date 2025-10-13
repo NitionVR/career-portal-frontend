@@ -40,9 +40,14 @@ export class JobPostDetailsPageComponent implements OnInit {
           return new Observable<JobPostResponse | undefined>(observer => observer.next(undefined));
         }
       })
-    ).subscribe(job => {
-      if (job) {
-        this.job = job;
+    ).subscribe({
+      next: (job) => {
+        if (job) {
+          this.job = job;
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching job details', err);
       }
     });
 
