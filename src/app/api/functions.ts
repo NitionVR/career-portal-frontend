@@ -31,6 +31,14 @@ export type { GetAvailableTransitions$Params } from './fn/job-post-controller/ge
 export { getAvailableTransitions } from './fn/job-post-controller/get-available-transitions';
 export type { ListMyJobPosts$Params } from './fn/job-post-controller/list-my-job-posts';
 export { listMyJobPosts } from './fn/job-post-controller/list-my-job-posts';
+export type { ApplyForJob$Params } from './fn/job-application-controller/apply-for-job';
+export { applyForJob } from './fn/job-application-controller/apply-for-job';
+export type { GetApplicationDetails$Params } from './fn/job-application-controller/get-application-details';
+export { getApplicationDetails } from './fn/job-application-controller/get-application-details';
+export type { WithdrawApplication$Params } from './fn/job-application-controller/withdraw-application';
+export { withdrawApplication } from './fn/job-application-controller/withdraw-application';
+export type { GetMyApplications$Params } from './fn/job-application-controller/get-my-applications';
+export { getMyApplications } from './fn/job-application-controller/get-my-applications';
 export type { InviteRecruiter$Params } from './fn/invitation-controller/invite-recruiter';
 export { inviteRecruiter } from './fn/invitation-controller/invite-recruiter';
 export type { InviteRecruiterBulk$Params } from './fn/invitation-controller/invite-recruiter-bulk';
