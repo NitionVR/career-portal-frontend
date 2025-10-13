@@ -24,16 +24,14 @@
               <span class="material-symbols-outlined text-muted-foreground hover:text-foreground transition-colors">notifications</span>
               <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">3</span>
             </button>
-            <div class="flex items-center space-x-3">
+            <button class="flex items-center space-x-3">
               <img alt="User avatar" class="h-10 w-10 rounded-full" [src]="user?.profileImageUrl || 'https://via.placeholder.com/150'"/>
-              <div>
+              <div class="hidden md:block">
                 <p class="font-semibold text-sm">{{ user?.name || 'User' }}</p>
                 <p class="text-xs text-muted-foreground">{{ user?.role || 'Talent' }}</p>
               </div>
-              <button>
-                <span class="material-symbols-outlined text-muted-foreground">expand_more</span>
-              </button>
-            </div>
+              <span class="material-symbols-outlined text-muted-foreground">expand_more</span>
+            </button>
           </div>
         </ng-template>
       </div>
