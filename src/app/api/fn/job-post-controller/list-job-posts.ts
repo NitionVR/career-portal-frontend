@@ -12,12 +12,22 @@ import { PageJobPostResponse } from '../../models/page-job-post-response';
 
 export interface ListJobPosts$Params {
   pageable: Pageable;
+  search?: string;
+  skillSearch?: string;
+  experienceLevels?: Array<string>;
+  jobTypes?: Array<string>;
+  workTypes?: Array<string>;
 }
 
 export function listJobPosts(http: HttpClient, rootUrl: string, params: ListJobPosts$Params, context?: HttpContext): Observable<StrictHttpResponse<PageJobPostResponse>> {
   const rb = new RequestBuilder(rootUrl, listJobPosts.PATH, 'get');
   if (params) {
     rb.query('pageable', params.pageable, {});
+    rb.query('search', params.search, {});
+    rb.query('skillSearch', params.skillSearch, {});
+    rb.query('experienceLevels', params.experienceLevels, {});
+    rb.query('jobTypes', params.jobTypes, {});
+    rb.query('workTypes', params.workTypes, {});
   }
 
   return http.request(
