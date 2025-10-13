@@ -1,0 +1,35 @@
+  <div class="user-menu-dropdown glassmorphism">
+    <button (click)="onClose()" class="absolute top-4 right-4 text-muted-foreground hover:text-foreground">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <div class="flex items-center space-x-3 mb-4">
+      <img alt="User avatar" class="h-10 w-10 rounded-full" [src]="user?.profileImageUrl || 'https://via.placeholder.com/150'"/>
+      <div>
+        <p class="font-semibold text-lg text-foreground">{{ user?.name || 'User' }}</p>
+        <p class="text-sm text-muted-foreground">{{ user?.email || 'email@example.com' }}</p>
+      </div>
+    </div>
+
+    <hr class="border-border my-4">
+    <nav class="flex flex-col space-y-2">
+      <a routerLink="/talent/profile" (click)="onClose()" class="flex items-center justify-between px-3 py-2 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+        Profile
+        <span class="material-symbols-outlined ml-2">person</span>
+      </a>
+      <button (click)="onLogout()" class="flex items-center justify-between px-3 py-2 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors w-full text-left">
+        Logout
+        <span class="material-symbols-outlined ml-2">logout</span>
+      </button>
+    </nav>
+
+    <hr class="border-border my-4">
+
+    <nav class="flex flex-col space-y-2">
+      <a href="/privacy-policy" (click)="onClose()" class="flex items-center px-3 py-2 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+        Privacy Policy
+      </a>
+      <a href="/terms-of-use" (click)="onClose()" class="flex items-center px-3 py-2 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+        Terms of Use
+      </a>
+    </nav>
+  </div>

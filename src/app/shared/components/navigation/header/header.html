@@ -19,20 +19,16 @@
           <a class="px-5 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-all duration-300 ease-in-out transform hover:scale-105" routerLink="/sign-up">Sign Up</a>
         </ng-container>
         <ng-template #loggedInUser>
-          <div class="flex items-center space-x-6">
-            <button class="relative">
-              <span class="material-symbols-outlined text-muted-foreground hover:text-foreground transition-colors">notifications</span>
-              <span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">3</span>
-            </button>
-            <button class="flex items-center space-x-3">
-              <img alt="User avatar" class="h-10 w-10 rounded-full" [src]="user?.profileImageUrl || 'https://via.placeholder.com/150'"/>
-              <div class="hidden md:block">
-                <p class="font-semibold text-sm">{{ user?.name || 'User' }}</p>
-                <p class="text-xs text-muted-foreground">{{ user?.role || 'Talent' }}</p>
-              </div>
-              <span class="material-symbols-outlined text-muted-foreground">expand_more</span>
-            </button>
-          </div>
+            <div class="relative">
+              <button (click)="onOpenUserMenu()" class="relative flex items-center space-x-3">
+                <img alt="User avatar" class="h-10 w-10 rounded-full" [src]="user?.profileImageUrl || 'https://via.placeholder.com/150'"/>
+                <div class="hidden md:block">
+                  <p class="font-semibold text-sm">{{ user?.name || 'User' }}</p>
+                  <p class="text-xs text-muted-foreground">{{ user?.role || 'Talent' }}</p>
+                </div>
+              </button>
+              <app-user-menu-modal *ngIf="showUserMenu" [user]="user" (closeModal)="onCloseUserMenu()" (click)="$event.stopPropagation()" class="absolute top-full right-0 mt-2 w-80"></app-user-menu-modal>
+            </div>
         </ng-template>
       </div>
     </div>

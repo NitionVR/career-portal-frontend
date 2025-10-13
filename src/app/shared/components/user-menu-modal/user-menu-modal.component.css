@@ -1,0 +1,12 @@
+.user-menu-dropdown {
+  position: absolute;
+  top: 100%; /* Position below the trigger */
+  right: 0; /* Align to the right of the trigger */
+  z-index: 50; /* Ensure it's above other content */
+  background-color: hsl(var(--card));
+  padding: 1rem; /* Increased padding */
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  width: 320px; /* Explicitly set width to 320px */
+  border: 1px solid hsl(var(--border));
+}
