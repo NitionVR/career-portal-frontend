@@ -9,6 +9,7 @@ import { TalentJobListPageComponent } from './pages/talent/job-list/talent-job-l
 import { MyApplicationsPageComponent } from './pages/talent/my-applications/my-applications-page.component';
 import { ApplicationDetailsPageComponent } from './pages/talent/application-details/application-details-page.component';
 import { JobPostDetailsPageComponent } from './pages/job-post-details/job-post-details-page.component';
+import { ProfilePageComponent } from './pages/talent/profile-page/profile-page'; // Import ProfilePageComponent
 
 export const routes: Routes = [
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
@@ -25,6 +26,7 @@ export const routes: Routes = [
       { path: 'job-list', component: TalentJobListPageComponent },
       { path: 'applications', component: MyApplicationsPageComponent, pathMatch: 'full' },
       { path: 'applications/:id', component: ApplicationDetailsPageComponent },
+      { path: 'profile', component: ProfilePageComponent }, // New route for profile page
       // Add other authenticated routes here
       // { path: 'applications', component: MyApplicationsComponent },
       // { path: 'offers', component: JobOffersComponent },

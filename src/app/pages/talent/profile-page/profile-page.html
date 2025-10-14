@@ -1,0 +1,84 @@
+<div class="py-8 sm:py-12">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+    <div class="flex items-center mb-8">
+      <span class="material-symbols-outlined text-primary text-4xl mr-4">person</span>
+      <h1 class="text-3xl font-bold tracking-tight">My Profile</h1>
+    </div>
+    <div class="space-y-10">
+      <div class="glassmorphism rounded-xl p-6 sm:p-8">
+        <h2 class="text-xl font-semibold mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">account_circle</span>
+          Profile Picture
+        </h2>
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <div class="relative">
+            <img alt="User avatar" class="h-32 w-32 rounded-full ring-4 ring-secondary/50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB9dlvqcgv_9_uNlhIov6f7xWIsXxmKdCCHoml79PoJyGOftNhCqIAxhypnat0xKeHURjMIWAQPGVDYIloGcONJy2DOsVRWZdCW7xURgXB26K0KHrS-p001xF4BJ2tgZAHfoTHnHngO-D1XnqSDnkELSIgFNHnyZp9Lka1RUMd8Ua7BSqzpgfi5Yf_bg6VQxE_NFlMtPmRMBNdHHoUYIiLXlbfR5gc-fjNeuA7fxCOsW72tokMjQP_czvQZqwP6MQxXwFzMsLe0Q"/>
+            <div class="absolute inset-0 bg-gray-900/70 rounded-full flex items-center justify-center" *ngIf="uploading">
+              <div class="w-20 h-20 rounded-full border-4 border-t-primary border-gray-600 animate-spin"></div>
+            </div>
+          </div>
+          <div class="flex-grow text-center sm:text-left">
+            <div class="flex flex-col sm:flex-row gap-4 items-center">
+              <label class="cursor-pointer px-6 py-2.5 text-sm font-semibold text-gray-900 bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center" for="profile-picture-upload">
+                <span class="material-symbols-outlined mr-2">upload</span> Upload Picture
+              </label>
+              <input (change)="onFileUpload($event)" class="hidden" id="profile-picture-upload" type="file"/>
+              <button class="px-6 py-2.5 text-sm font-semibold text-muted-foreground bg-gray-700/50 rounded-full hover:bg-gray-700/80 transition-colors flex items-center justify-center">
+                <span class="material-symbols-outlined mr-2 text-destructive">delete</span> Remove
+              </button>
+            </div>
+            <p class="text-xs text-muted-foreground mt-3">PNG, JPG, GIF up to 5MB. Recommended: 400x400px.</p>
+            <div class="w-full bg-gray-700 rounded-full h-2.5 mt-4" *ngIf="uploading">
+              <div [style.width]="progress + '%'" class="bg-secondary h-2.5 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="glassmorphism rounded-xl p-6 sm:p-8">
+        <h2 class="text-xl font-semibold mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">badge</span> Personal Information
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground" for="first-name">First Name</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="first-name" name="first-name" type="text" value="Jane"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground" for="last-name">Last Name</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="last-name" name="last-name" type="text" value="Doe"/>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-muted-foreground" for="email">Email Address</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="email" name="email" type="email" value="jane.doe@example.com"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground" for="phone">Phone Number</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="phone" name="phone" type="text" value="+1 (555) 123-4567"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground" for="location">Location</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="location" name="location" type="text" value="San Francisco, CA"/>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-muted-foreground" for="address">Address</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="address" name="address" type="text" value="123 Market St, Suite 456"/>
+          </div>
+        </div>
+      </div>
+      <div class="glassmorphism rounded-xl p-6 sm:p-8">
+        <h2 class="text-xl font-semibold mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">article</span> Professional Summary
+        </h2>
+        <div>
+          <label class="block text-sm font-medium text-muted-foreground" for="summary">Summary</label>
+          <textarea class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="summary" name="summary" rows="6">Highly motivated and experienced Frontend Developer with a passion for creating beautiful, responsive, and user-friendly web applications. Proficient in React, TypeScript, and modern JavaScript frameworks. Seeking to leverage my skills to build innovative products at a forward-thinking company.</textarea>
+        </div>
+      </div>
+      <div class="flex justify-end pt-4">
+        <button class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out disabled:opacity-50">
+          <span class="material-symbols-outlined mr-2">save</span> Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
