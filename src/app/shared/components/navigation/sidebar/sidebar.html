@@ -4,50 +4,100 @@
          'w-20 p-3': isMinimized
        }">
   <div class="flex justify-end mb-4">
-    <button (click)="toggleMinimize()" class="text-muted-foreground hover:text-foreground focus:outline-none hidden md:block"
-            matTooltip="{{ isMinimized ? 'Expand Sidebar' : 'Collapse Sidebar' }}" matTooltipPosition="after">
+    <button (click)="toggleMinimize()" class="text-muted-foreground hover:text-foreground focus:outline-none hidden md:block">
       <span class="material-symbols-outlined">
         {{ isMinimized ? 'chevron_right' : 'chevron_left' }}
       </span>
     </button>
   </div>
   <nav class="flex flex-col space-y-2">
-    <a [routerLink]="['/talent/job-list']" routerLinkActive #rlaJobPosts="routerLinkActive"
-       [ngClass]="{
-         'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaJobPosts.isActive,
-         'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaJobPosts.isActive
-       }"
-       class="flex items-center px-4 py-3 rounded-lg transition-colors">
-      <span class="material-symbols-outlined mr-3">work</span>
-      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Job Posts</span>
-    </a>
-    <a [routerLink]="['/talent/applications']" routerLinkActive #rlaApplications="routerLinkActive"
-       [ngClass]="{
-         'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaApplications.isActive,
-         'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaApplications.isActive
-       }"
-       class="flex items-center px-4 py-3 rounded-lg transition-colors">
-      <span class="material-symbols-outlined mr-3">description</span>
-      <span class="flex-grow min-w-0" *ngIf="!isMinimized">My Applications</span>
-    </a>
-    <a [routerLink]="['/talent/offers']" routerLinkActive #rlaOffers="routerLinkActive"
-       [ngClass]="{
-         'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaOffers.isActive,
-         'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaOffers.isActive
-       }"
-       class="flex items-center px-4 py-3 rounded-lg transition-colors">
-      <span class="material-symbols-outlined mr-3">request_quote</span>
-      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Job Offers/Contracts</span>
-    </a>
-    <a [routerLink]="['/talent/notifications']" routerLinkActive #rlaNotifications="routerLinkActive"
-       [ngClass]="{
-         'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaNotifications.isActive,
-         'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaNotifications.isActive
-       }"
-       class="flex items-center px-4 py-3 rounded-lg transition-colors">
-      <span class="material-symbols-outlined mr-3">notifications</span>
-      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Notifications</span>
-      <span class="ml-auto inline-block bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">3</span>
-    </a>
+    <ng-container *ngIf="context === 'talent-dashboard'">
+      <a [routerLink]="['/talent/job-list']" routerLinkActive #rlaJobPosts="routerLinkActive"
+         [ngClass]="{
+           'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaJobPosts.isActive,
+           'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaJobPosts.isActive
+         }"
+         class="flex items-center px-4 py-3 rounded-lg transition-colors">
+        <span class="material-symbols-outlined mr-3">work</span>
+        <span class="flex-grow min-w-0" *ngIf="!isMinimized">Job Posts</span>
+      </a>
+      <a [routerLink]="['/talent/applications']" routerLinkActive #rlaApplications="routerLinkActive"
+         [ngClass]="{
+           'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaApplications.isActive,
+           'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaApplications.isActive
+         }"
+         class="flex items-center px-4 py-3 rounded-lg transition-colors">
+        <span class="material-symbols-outlined mr-3">description</span>
+        <span class="flex-grow min-w-0" *ngIf="!isMinimized">My Applications</span>
+      </a>
+      <a [routerLink]="['/talent/offers']" routerLinkActive #rlaOffers="routerLinkActive"
+         [ngClass]="{
+           'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaOffers.isActive,
+           'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaOffers.isActive
+         }"
+         class="flex items-center px-4 py-3 rounded-lg transition-colors">
+        <span class="material-symbols-outlined mr-3">request_quote</span>
+        <span class="flex-grow min-w-0" *ngIf="!isMinimized">Job Offers/Contracts</span>
+      </a>
+      <a [routerLink]="['/talent/notifications']" routerLinkActive #rlaNotifications="routerLinkActive"
+         [ngClass]="{
+           'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaNotifications.isActive,
+           'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaNotifications.isActive
+         }"
+         class="flex items-center px-4 py-3 rounded-lg transition-colors">
+        <span class="material-symbols-outlined mr-3">notifications</span>
+        <span class="flex-grow min-w-0" *ngIf="!isMinimized">Notifications</span>
+        <span class="ml-auto inline-block bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">3</span>
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="context === 'talent-profile'">
+      <a [routerLink]="['/talent/profile']" routerLinkActive #rlaMyProfile="routerLinkActive"
+         [ngClass]="{
+           'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaMyProfile.isActive,
+           'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaMyProfile.isActive
+         }"
+         class="flex items-center px-4 py-3 rounded-lg transition-colors">
+        <span class="material-symbols-outlined mr-3">person</span>
+        <span class="flex-grow min-w-0" *ngIf="!isMinimized">My Profile</span>
+      </a>
+      <a [routerLink]="['/talent/documents']" routerLinkActive #rlaDocuments="routerLinkActive"
+         [ngClass]="{
+           'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaDocuments.isActive,
+           'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaDocuments.isActive
+         }"
+         class="flex items-center px-4 py-3 rounded-lg transition-colors">
+        <span class="material-symbols-outlined mr-3">folder_shared</span>
+        <span class="flex-grow min-w-0" *ngIf="!isMinimized">CV & Documents</span>
+      </a>
+      <hr class="border-border my-4"/>
+      <a [routerLink]="['/talent/privacy']" routerLinkActive #rlaPrivacy="routerLinkActive"
+         [ngClass]="{
+           'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaPrivacy.isActive,
+           'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaPrivacy.isActive
+         }"
+         class="flex items-center px-4 py-3 rounded-lg transition-colors">
+        <span class="material-symbols-outlined mr-3">privacy_tip</span>
+        <span class="flex-grow min-w-0" *ngIf="!isMinimized">Privacy Settings</span>
+      </a>
+      <a [routerLink]="['/talent/notifications-settings']" routerLinkActive #rlaNotificationsSettings="routerLinkActive"
+         [ngClass]="{
+           'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaNotificationsSettings.isActive,
+           'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaNotificationsSettings.isActive
+         }"
+         class="flex items-center px-4 py-3 rounded-lg transition-colors">
+        <span class="material-symbols-outlined mr-3">notifications_active</span>
+        <span class="flex-grow min-w-0" *ngIf="!isMinimized">Notifications Settings</span>
+      </a>
+      <a [routerLink]="['/talent/help']" routerLinkActive #rlaHelp="routerLinkActive"
+         [ngClass]="{
+           'bg-[var(--secondary-color)]/20 text-primary font-semibold': rlaHelp.isActive,
+           'text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-foreground': !rlaHelp.isActive
+         }"
+         class="flex items-center px-4 py-3 rounded-lg transition-colors">
+        <span class="material-symbols-outlined mr-3">help</span>
+        <span class="flex-grow min-w-0" *ngIf="!isMinimized">Help & Support</span>
+      </a>
+    </ng-container>
   </nav>
 </aside>

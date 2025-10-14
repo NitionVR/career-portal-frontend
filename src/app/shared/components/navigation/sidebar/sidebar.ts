@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class SidebarComponent implements OnInit {
   @Input() isMinimized: boolean = false;
   @Input() isMobile: boolean = false; // New input for mobile state
+  @Input() context: 'talent-dashboard' | 'talent-profile' = 'talent-dashboard'; // New input for sidebar context
   @Output() minimizedStateChange = new EventEmitter<boolean>();
   @Output() closeMobileSidebar = new EventEmitter<void>();
 

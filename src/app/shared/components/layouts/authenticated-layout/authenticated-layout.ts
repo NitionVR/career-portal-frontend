@@ -1,8 +1,10 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit, HostListener, inject, OnDestroy } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from '../../navigation/header/header';
 import { SidebarComponent } from '../../navigation/sidebar/sidebar';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../core/services/auth';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-authenticated-layout',
@@ -11,14 +13,44 @@ import { CommonModule } from '@angular/common';
   templateUrl: './authenticated-layout.html',
   styleUrls: ['./authenticated-layout.css']
 })
-export class AuthenticatedLayoutComponent implements OnInit {
+export class AuthenticatedLayoutComponent implements OnInit, OnDestroy {
   isSidebarMinimized: boolean = false;
   isMobileSidebarOpen: boolean = false;
   isMobile: boolean = false;
-  mockUser = { name: 'Jane Doe', role: 'Talent' };
+  isLoggedIn: boolean = false;
+  user: any | null = null;
+  sidebarContext: 'talent-dashboard' | 'talent-profile' = 'talent-dashboard';
+
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private routerSubscription: Subscription | undefined;
 
   ngOnInit(): void {
     this.checkIsMobile();
+    this.isLoggedIn = this.authService.isLoggedIn();
+    this.user = this.authService.getUser();
+
+    // Mock user data for development if not logged in
+    if (!this.user) {
+      this.isLoggedIn = true;
+      this.user = {
+        name: 'Jane Doe',
+        role: 'Talent',
+        profileImageUrl: 'https://avatars.githubusercontent.com/u/12968861?v=4'
+      };
+    }
+
+    this.routerSubscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.updateSidebarContext();
+    });
+    this.updateSidebarContext(); // Initial context set
+  }
+
+  ngOnDestroy(): void {
+    this.routerSubscription?.unsubscribe();
   }
 
   @HostListener('window:resize', ['$event'])
@@ -32,6 +64,14 @@ export class AuthenticatedLayoutComponent implements OnInit {
       this.isMobileSidebarOpen = false; // Ensure sidebar is closed on mobile by default
     } else {
       this.isMobileSidebarOpen = false; // Close sidebar if resizing to desktop
+    }
+  }
+
+  private updateSidebarContext(): void {
+    if (this.router.url.includes('/talent/profile')) {
+      this.sidebarContext = 'talent-profile';
+    } else {
+      this.sidebarContext = 'talent-dashboard';
     }
   }
 
