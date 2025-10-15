@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, tap, switchMap } from 'rxjs/operators';
@@ -23,6 +23,8 @@ export class AuthService {
   private http = inject(HttpClient);
   private authenticationControllerService = inject(AuthenticationControllerService);
   private router = inject(Router);
+
+  constructor(@Inject('environment') private environment: any) {}
 
   initiateRegistration(email: string, role: 'CANDIDATE' | 'HIRING_MANAGER'): Observable<{
     [key: string]: string;
@@ -117,6 +119,22 @@ export class AuthService {
   logout(): void {
     this.removeToken();
     this.router.navigate(['/']);
+  }
+
+  loginForTesting(): Observable<any> {
+    if (this.environment.testUser) {
+      return this.login(this.environment.testUser.email).pipe(
+        switchMap((response: any) => {
+          // In a real scenario, you might need to handle the magic link verification.
+          // For now, we'll assume the backend returns a token directly for testing.
+          if (response.token) {
+            this.setToken(response.token);
+          }
+          return of(response);
+        })
+      );
+    }
+    return of(null);
   }
 }
 

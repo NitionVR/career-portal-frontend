@@ -5,6 +5,7 @@ import { routes } from './app.routes';
 import { LucideAngularModule, Mail, ArrowRight, CheckCircle, User } from 'lucide-angular';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { blobToJsonInterceptor } from './core/interceptors/blob-to-json.interceptor';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,5 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     importProvidersFrom(LucideAngularModule.pick({ Mail, ArrowRight, CheckCircle, User })),
     provideHttpClient(withInterceptors([blobToJsonInterceptor])),
+    { provide: 'environment', useValue: environment }
   ],
 };

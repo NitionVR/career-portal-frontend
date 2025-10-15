@@ -43,12 +43,26 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "test": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.test.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -62,6 +76,9 @@
             "development": {
               "buildTarget": "etalente-clone-frontend:build:development",
               "proxyConfig": "proxy.conf.json"
+            },
+            "test": {
+              "buildTarget": "etalente-clone-frontend:build:test"
             }
           },
           "defaultConfiguration": "development"
