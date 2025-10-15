@@ -11,6 +11,7 @@ import { ValidateRegistrationToken$Params } from '../../api/fn/authentication-co
 import { CompleteCandiateRegistration$Params } from '../../api/fn/authentication-controller/complete-candiate-registration';
 import { CompleteHiringManagerRegistration$Params } from '../../api/fn/authentication-controller/complete-hiring-manager-registration';
 import { Verify$Params } from '../../api/fn/authentication-controller/verify';
+import { RegistrationResponse } from '../../api/models/registration-response';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
@@ -73,15 +74,13 @@ export class AuthService {
     return this.authenticationControllerService.login(params);
   }
 
-  verify(token: string): Observable<{
-    [key: string]: string;
-  }> {
+  verify(token: string): Observable<RegistrationResponse> {
     const params: Verify$Params = { token };
     return this.authenticationControllerService.verify(params).pipe(
       tap(response => {
-        if (response['token']) {
-          this.setToken(response['token']);
-          this.router.navigate(['/dashboard']);
+        if (response.token) {
+          console.log('AuthService.verify: Token received from backend', response.token);
+          this.setToken(response.token);
         }
       })
     );

@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 
 interface JwtPayload {
   is_new_user?: boolean;
+  role?: 'CANDIDATE' | 'HIRING_MANAGER';
 }
 
 @Component({
@@ -56,12 +57,23 @@ export class MagicLinkPage implements OnInit {
         // This is a login/session verification magic link
         this.authService.verify(token).subscribe({
           next: (response) => {
-            if (response['token']) {
-              this.authService.setToken(response['token']);
+            if (response.token) {
+              this.authService.setToken(response.token);
               this.message = 'Successfully logged in! Redirecting...';
               // Clean the URL before navigating
               this.router.navigate([], { relativeTo: this.route, replaceUrl: true, queryParams: {} });
-              this.router.navigate(['/']); // Redirect to dashboard or home
+
+              const decodedToken = jwtDecode<JwtPayload>(response.token);
+
+              if (decodedToken.is_new_user) {
+                this.router.navigate(['/profile/create']);
+              } else if (decodedToken.role === 'CANDIDATE') {
+                this.router.navigate(['/talent/job-list']);
+              } else if (decodedToken.role === 'HIRING_MANAGER') {
+                this.router.navigate(['/employer/dashboard']);
+              } else {
+                this.router.navigate(['/']); // Default redirect
+              }
             } else {
               this.error = 'Login failed. No token received.';
             }
