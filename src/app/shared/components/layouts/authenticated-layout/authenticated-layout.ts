@@ -31,16 +31,6 @@ export class AuthenticatedLayoutComponent implements OnInit, OnDestroy {
     this.isLoggedIn = this.authService.isLoggedIn();
     this.user = this.authService.getUser();
 
-    // Mock user data for development if not logged in
-    if (!this.user) {
-      this.isLoggedIn = true;
-      this.user = {
-        name: 'Jane Doe',
-        role: 'Talent',
-        profileImageUrl: 'https://avatars.githubusercontent.com/u/12968861?v=4'
-      };
-    }
-
     this.routerSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {

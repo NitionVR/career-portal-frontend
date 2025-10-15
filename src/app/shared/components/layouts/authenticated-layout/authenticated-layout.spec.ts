@@ -1,9 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticatedLayoutComponent } from './authenticated-layout';
 import { AuthService } from '../../../../core/services/auth';
-import { environment } from '../../../../../environments/environment';
 
 describe('AuthenticatedLayoutComponent', () => {
   let component: AuthenticatedLayoutComponent;
@@ -19,13 +18,14 @@ describe('AuthenticatedLayoutComponent', () => {
           useValue: {},
         },
         AuthService,
-        { provide: 'environment', useValue: environment }
+        { provide: 'environment', useValue: { testUser: { email: 'test@example.com' } } }
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AuthenticatedLayoutComponent);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService);
+    const environment = TestBed.inject('environment');
 
     // Log in the test user
     if (environment.testUser) {
