@@ -214,64 +214,112 @@
           </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4">
+        <!-- Publications Section -->
+        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="publications">
           <mat-expansion-panel-header>
             <mat-panel-title class="flex items-center">
               <span class="material-symbols-outlined mr-3">book</span>
               Publications
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <p class="text-muted-foreground">Publications form fields will go here.</p>
+          <div *ngFor="let publicationFormGroup of publications.controls; let i = index" [formGroupName]="i">
+            <app-publication [publicationFormGroup]="publicationFormGroup" (remove)="removePublication(i)"></app-publication>
+          </div>
+          <div class="flex justify-end mt-4">
+            <button type="button" (click)="addPublication()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+              <span class="material-symbols-outlined mr-2">add</span> Add Publication
+            </button>
+          </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4">
+        <!-- Skills Section -->
+        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="skills">
           <mat-expansion-panel-header>
             <mat-panel-title class="flex items-center">
               <span class="material-symbols-outlined mr-3">psychology</span>
               Skills
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <p class="text-muted-foreground">Skills form fields will go here.</p>
+          <div *ngFor="let skillFormGroup of skills.controls; let i = index" [formGroupName]="i">
+            <app-skill [skillFormGroup]="skillFormGroup" (remove)="removeSkill(i)"></app-skill>
+          </div>
+          <div class="flex justify-end mt-4">
+            <button type="button" (click)="addSkill()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+              <span class="material-symbols-outlined mr-2">add</span> Add Skill
+            </button>
+          </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4">
+        <!-- Languages Section -->
+        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="languages">
           <mat-expansion-panel-header>
             <mat-panel-title class="flex items-center">
               <span class="material-symbols-outlined mr-3">language</span>
               Languages
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <p class="text-muted-foreground">Languages form fields will go here.</p>
+          <div *ngFor="let languageFormGroup of languages.controls; let i = index" [formGroupName]="i">
+            <app-language [languageFormGroup]="languageFormGroup" (remove)="removeLanguage(i)"></app-language>
+          </div>
+          <div class="flex justify-end mt-4">
+            <button type="button" (click)="addLanguage()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+              <span class="material-symbols-outlined mr-2">add</span> Add Language
+            </button>
+          </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4">
+        <!-- Interests Section -->
+        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="interests">
           <mat-expansion-panel-header>
             <mat-panel-title class="flex items-center">
               <span class="material-symbols-outlined mr-3">interests</span>
               Interests
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <p class="text-muted-foreground">Interests form fields will go here.</p>
+          <div *ngFor="let interestFormGroup of interests.controls; let i = index" [formGroupName]="i">
+            <app-interest [interestFormGroup]="interestFormGroup" (remove)="removeInterest(i)"></app-interest>
+          </div>
+          <div class="flex justify-end mt-4">
+            <button type="button" (click)="addInterest()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+              <span class="material-symbols-outlined mr-2">add</span> Add Interest
+            </button>
+          </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4">
+        <!-- References Section -->
+        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="references">
           <mat-expansion-panel-header>
             <mat-panel-title class="flex items-center">
               <span class="material-symbols-outlined mr-3">group</span>
               References
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <p class="text-muted-foreground">References form fields will go here.</p>
+          <div *ngFor="let referenceFormGroup of references.controls; let i = index" [formGroupName]="i">
+            <app-reference [referenceFormGroup]="referenceFormGroup" (remove)="removeReference(i)"></app-reference>
+          </div>
+          <div class="flex justify-end mt-4">
+            <button type="button" (click)="addReference()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+              <span class="material-symbols-outlined mr-2">add</span> Add Reference
+            </button>
+          </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4">
+        <!-- Projects Section -->
+        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="projects">
           <mat-expansion-panel-header>
             <mat-panel-title class="flex items-center">
               <span class="material-symbols-outlined mr-3">workspaces</span>
               Projects
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <p class="text-muted-foreground">Projects form fields will go here.</p>
+          <div *ngFor="let projectFormGroup of projects.controls; let i = index" [formGroupName]="i">
+            <app-project [projectFormGroup]="projectFormGroup" (remove)="removeProject(i)"></app-project>
+          </div>
+          <div class="flex justify-end mt-4">
+            <button type="button" (click)="addProject()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+              <span class="material-symbols-outlined mr-2">add</span> Add Project
+            </button>
+          </div>
         </mat-expansion-panel>
       </mat-accordion>
 

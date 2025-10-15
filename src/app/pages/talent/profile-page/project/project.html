@@ -1,0 +1,32 @@
+<div [formGroup]="projectFormGroup" class="glassmorphism rounded-xl p-6 sm:p-8 mb-4 relative">
+  <button type="button" (click)="onRemove()" class="absolute top-3 right-3 text-muted-foreground hover:text-destructive focus:outline-none">
+    <span class="material-symbols-outlined">close</span>
+  </button>
+  <h3 class="text-lg font-semibold mb-4 text-foreground">Project</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <label class="block text-sm font-medium text-muted-foreground" for="project-name">Name</label>
+      <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="project-name" formControlName="name" type="text"/>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-muted-foreground" for="project-url">URL</label>
+      <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="project-url" formControlName="url" type="url"/>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-muted-foreground" for="project-start-date">Start Date</label>
+      <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="project-start-date" formControlName="startDate" type="date"/>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-muted-foreground" for="project-end-date">End Date</label>
+      <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="project-end-date" formControlName="endDate" type="date"/>
+    </div>
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-muted-foreground" for="project-description">Description</label>
+      <textarea class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="project-description" formControlName="description" rows="4"></textarea>
+    </div>
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-muted-foreground" for="project-highlights">Highlights (comma separated)</label>
+      <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="project-highlights" formControlName="highlights" type="text"/>
+    </div>
+  </div>
+</div>
