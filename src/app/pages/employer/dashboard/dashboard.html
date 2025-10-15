@@ -1,0 +1,30 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold tracking-tight">Dashboard</h1>
+      <p class="text-lg text-muted-foreground mt-1">Manage your job posts and view applicants.</p>
+    </div>
+    <a routerLink="/employer/jobs/create" class="mt-4 sm:mt-0 inline-flex items-center px-6 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary/90 transition-colors">
+      <span class="material-symbols-outlined mr-2">add</span>
+      Create Job Post
+    </a>
+  </div>
+
+  <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center bg-card/80 z-10">
+    <span class="material-symbols-outlined animate-spin text-primary text-4xl">progress_activity</span>
+  </div>
+
+  <div *ngIf="!isLoading && paginatedJobs.length === 0" class="glassmorphism rounded-xl p-8 text-center">
+    <span class="material-symbols-outlined text-6xl text-muted-foreground mb-4">work_outline</span>
+    <p class="text-xl font-semibold">You haven't created any job posts yet.</p>
+    <p class="text-base text-muted-foreground mt-2">Get started by creating your first job post to attract top talent.</p>
+    <a routerLink="/employer/jobs/create" class="mt-6 inline-flex items-center px-6 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary/90 transition-colors">
+      Create Your First Job Post
+    </a>
+  </div>
+
+  <div *ngIf="!isLoading && paginatedJobs.length > 0">
+    <app-job-posts-list [jobs]="paginatedJobs" [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)" [isEmployer]="true"></app-job-posts-list>
+  </div>
+
+</div>

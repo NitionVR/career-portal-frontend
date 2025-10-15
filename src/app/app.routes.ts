@@ -10,6 +10,7 @@ import { MyApplicationsPageComponent } from './pages/talent/my-applications/my-a
 import { ApplicationDetailsPageComponent } from './pages/talent/application-details/application-details-page.component';
 import { JobPostDetailsPageComponent } from './pages/job-post-details/job-post-details-page.component';
 import { ProfilePageComponent } from './pages/talent/profile-page/profile-page'; // Import ProfilePageComponent
+import { EmployerDashboardComponent } from './pages/employer/dashboard/dashboard'; // Import EmployerDashboardComponent
 
 export const routes: Routes = [
   { path: '', redirectTo: '/homepage', pathMatch: 'full' },
@@ -31,6 +32,14 @@ export const routes: Routes = [
       // { path: 'applications', component: MyApplicationsComponent },
       // { path: 'offers', component: JobOffersComponent },
       // { path: 'notifications', component: NotificationsComponent },
+    ]
+  },
+  {
+    path: 'employer',
+    component: AuthenticatedLayoutComponent,
+    children: [
+      { path: 'dashboard', component: EmployerDashboardComponent },
+      // Add other employer routes here
     ]
   },
 ];

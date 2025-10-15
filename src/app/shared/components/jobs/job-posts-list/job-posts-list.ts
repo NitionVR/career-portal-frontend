@@ -14,6 +14,7 @@ export class JobPostsListComponent {
   @Input() jobs: JobPostResponse[] = [];
   @Input() currentPage: number = 0;
   @Input() totalPages: number = 1;
+  @Input() isEmployer: boolean = false;
   @Output() pageChange = new EventEmitter<number>();
 
   constructor() { }
