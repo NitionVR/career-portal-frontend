@@ -3,6 +3,8 @@
 
 export { ProfileControllerService } from './services/profile-controller.service';
 export { JobPostControllerService } from './services/job-post-controller.service';
+export { WorkflowControllerService } from './services/workflow-controller.service';
+export { NotificationControllerService } from './services/notification-controller.service';
 export { JobApplicationControllerService } from './services/job-application-controller.service';
 export { InvitationControllerService } from './services/invitation-controller.service';
 export { AuthenticationControllerService } from './services/authentication-controller.service';

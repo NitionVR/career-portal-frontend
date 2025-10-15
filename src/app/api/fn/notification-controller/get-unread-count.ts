@@ -7,16 +7,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { RegistrationResponse } from '../../models/registration-response';
 
-export interface Verify$Params {
-  token: string;
+export interface GetUnreadCount$Params {
+  userId: string;
 }
 
-export function verify(http: HttpClient, rootUrl: string, params: Verify$Params, context?: HttpContext): Observable<StrictHttpResponse<RegistrationResponse>> {
-  const rb = new RequestBuilder(rootUrl, verify.PATH, 'get');
+export function getUnreadCount(http: HttpClient, rootUrl: string, params: GetUnreadCount$Params, context?: HttpContext): Observable<StrictHttpResponse<number>> {
+  const rb = new RequestBuilder(rootUrl, getUnreadCount.PATH, 'get');
   if (params) {
-    rb.query('token', params.token, {});
+    rb.path('userId', params.userId, {});
   }
 
   return http.request(
@@ -24,9 +23,9 @@ export function verify(http: HttpClient, rootUrl: string, params: Verify$Params,
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<RegistrationResponse>;
+      return (r as HttpResponse<any>).clone({ body: parseFloat(String((r as HttpResponse<any>).body)) }) as StrictHttpResponse<number>;
     })
   );
 }
 
-verify.PATH = '/api/auth/verify';
+getUnreadCount.PATH = '/api/v1/notifications/user/{userId}/unread-count';

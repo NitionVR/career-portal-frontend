@@ -18,6 +18,7 @@ import { initiateRegistration } from '../fn/authentication-controller/initiate-r
 import { InitiateRegistration$Params } from '../fn/authentication-controller/initiate-registration';
 import { login } from '../fn/authentication-controller/login';
 import { Login$Params } from '../fn/authentication-controller/login';
+import { RegistrationResponse } from '../models/registration-response';
 import { validateRegistrationToken } from '../fn/authentication-controller/validate-registration-token';
 import { ValidateRegistrationToken$Params } from '../fn/authentication-controller/validate-registration-token';
 import { verify } from '../fn/authentication-controller/verify';
@@ -170,9 +171,7 @@ export class AuthenticationControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  verify$Response(params: Verify$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: string;
-}>> {
+  verify$Response(params: Verify$Params, context?: HttpContext): Observable<StrictHttpResponse<RegistrationResponse>> {
     const obs = verify(this.http, this.rootUrl, params, context);
     return obs;
   }
@@ -183,16 +182,10 @@ export class AuthenticationControllerService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  verify(params: Verify$Params, context?: HttpContext): Observable<{
-[key: string]: string;
-}> {
+  verify(params: Verify$Params, context?: HttpContext): Observable<RegistrationResponse> {
     const resp = this.verify$Response(params, context);
     return resp.pipe(
-      map((r: StrictHttpResponse<{
-[key: string]: string;
-}>): {
-[key: string]: string;
-} => r.body)
+      map((r: StrictHttpResponse<RegistrationResponse>): RegistrationResponse => r.body)
     );
   }
 

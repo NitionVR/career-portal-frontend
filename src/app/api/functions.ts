@@ -31,6 +31,18 @@ export type { GetAvailableTransitions$Params } from './fn/job-post-controller/ge
 export { getAvailableTransitions } from './fn/job-post-controller/get-available-transitions';
 export type { ListMyJobPosts$Params } from './fn/job-post-controller/list-my-job-posts';
 export { listMyJobPosts } from './fn/job-post-controller/list-my-job-posts';
+export type { TriggerWorkflow$Params } from './fn/workflow-controller/trigger-workflow';
+export { triggerWorkflow } from './fn/workflow-controller/trigger-workflow';
+export type { CreateNotification$Params } from './fn/notification-controller/create-notification';
+export { createNotification } from './fn/notification-controller/create-notification';
+export type { MarkAsRead$Params } from './fn/notification-controller/mark-as-read';
+export { markAsRead } from './fn/notification-controller/mark-as-read';
+export type { MarkAllAsRead$Params } from './fn/notification-controller/mark-all-as-read';
+export { markAllAsRead } from './fn/notification-controller/mark-all-as-read';
+export type { GetUserNotifications$Params } from './fn/notification-controller/get-user-notifications';
+export { getUserNotifications } from './fn/notification-controller/get-user-notifications';
+export type { GetUnreadCount$Params } from './fn/notification-controller/get-unread-count';
+export { getUnreadCount } from './fn/notification-controller/get-unread-count';
 export type { ApplyForJob$Params } from './fn/job-application-controller/apply-for-job';
 export { applyForJob } from './fn/job-application-controller/apply-for-job';
 export type { GetApplicationDetails$Params } from './fn/job-application-controller/get-application-details';
