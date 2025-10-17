@@ -10,19 +10,18 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { completeCandiateRegistration } from '../fn/authentication-controller/complete-candiate-registration';
-import { CompleteCandiateRegistration$Params } from '../fn/authentication-controller/complete-candiate-registration';
-import { completeHiringManagerRegistration } from '../fn/authentication-controller/complete-hiring-manager-registration';
-import { CompleteHiringManagerRegistration$Params } from '../fn/authentication-controller/complete-hiring-manager-registration';
-import { exchangeOtt } from '../fn/authentication-controller/exchange-ott';
-import { ExchangeOtt$Params } from '../fn/authentication-controller/exchange-ott';
-import { initiateRegistration } from '../fn/authentication-controller/initiate-registration';
-import { InitiateRegistration$Params } from '../fn/authentication-controller/initiate-registration';
+import { checkSession } from '../fn/authentication-controller/check-session';
+import { CheckSession$Params } from '../fn/authentication-controller/check-session';
 import { login } from '../fn/authentication-controller/login';
 import { Login$Params } from '../fn/authentication-controller/login';
-import { RegistrationResponse } from '../models/registration-response';
-import { validateRegistrationToken } from '../fn/authentication-controller/validate-registration-token';
-import { ValidateRegistrationToken$Params } from '../fn/authentication-controller/validate-registration-token';
+import { logout } from '../fn/authentication-controller/logout';
+import { Logout$Params } from '../fn/authentication-controller/logout';
+import { refreshToken } from '../fn/authentication-controller/refresh-token';
+import { RefreshToken$Params } from '../fn/authentication-controller/refresh-token';
+import { SessionResponse } from '../models/session-response';
+import { verifyToken } from '../fn/authentication-controller/verify-token';
+import { VerifyToken$Params } from '../fn/authentication-controller/verify-token';
+import { VerifyTokenResponse } from '../models/verify-token-response';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationControllerService extends BaseService {
@@ -30,102 +29,67 @@ export class AuthenticationControllerService extends BaseService {
     super(config, http);
   }
 
-  /** Path part for operation `initiateRegistration()` */
-  static readonly InitiateRegistrationPath = '/api/auth/register';
+  /** Path part for operation `refreshToken()` */
+  static readonly RefreshTokenPath = '/api/auth/refresh';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `initiateRegistration()` instead.
+   * To access only the response body, use `refreshToken()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
-  initiateRegistration$Response(params: InitiateRegistration$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: string;
+  refreshToken$Response(params: RefreshToken$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+[key: string]: any;
 }>> {
-    const obs = initiateRegistration(this.http, this.rootUrl, params, context);
+    const obs = refreshToken(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `initiateRegistration$Response()` instead.
+   * To access the full response (for headers, for example), `refreshToken$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
-  initiateRegistration(params: InitiateRegistration$Params, context?: HttpContext): Observable<{
-[key: string]: string;
+  refreshToken(params: RefreshToken$Params, context?: HttpContext): Observable<{
+[key: string]: any;
 }> {
-    const resp = this.initiateRegistration$Response(params, context);
+    const resp = this.refreshToken$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<{
-[key: string]: string;
+[key: string]: any;
 }>): {
-[key: string]: string;
+[key: string]: any;
 } => r.body)
     );
   }
 
-  /** Path part for operation `completeHiringManagerRegistration()` */
-  static readonly CompleteHiringManagerRegistrationPath = '/api/auth/register/hiring-manager';
+  /** Path part for operation `logout()` */
+  static readonly LogoutPath = '/api/auth/logout';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `completeHiringManagerRegistration()` instead.
+   * To access only the response body, use `logout()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
-  completeHiringManagerRegistration$Response(params: CompleteHiringManagerRegistration$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+  logout$Response(params?: Logout$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: string;
 }>> {
-    const obs = completeHiringManagerRegistration(this.http, this.rootUrl, params, context);
+    const obs = logout(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `completeHiringManagerRegistration$Response()` instead.
+   * To access the full response (for headers, for example), `logout$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
-  completeHiringManagerRegistration(params: CompleteHiringManagerRegistration$Params, context?: HttpContext): Observable<{
+  logout(params?: Logout$Params, context?: HttpContext): Observable<{
 [key: string]: string;
 }> {
-    const resp = this.completeHiringManagerRegistration$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<{
-[key: string]: string;
-}>): {
-[key: string]: string;
-} => r.body)
-    );
-  }
-
-  /** Path part for operation `completeCandiateRegistration()` */
-  static readonly CompleteCandiateRegistrationPath = '/api/auth/register/candidate';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `completeCandiateRegistration()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  completeCandiateRegistration$Response(params: CompleteCandiateRegistration$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: string;
-}>> {
-    const obs = completeCandiateRegistration(this.http, this.rootUrl, params, context);
-    return obs;
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `completeCandiateRegistration$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  completeCandiateRegistration(params: CompleteCandiateRegistration$Params, context?: HttpContext): Observable<{
-[key: string]: string;
-}> {
-    const resp = this.completeCandiateRegistration$Response(params, context);
+    const resp = this.logout$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<{
 [key: string]: string;
@@ -144,7 +108,9 @@ export class AuthenticationControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  login$Response(params: Login$Params, context?: HttpContext): Observable<StrictHttpResponse<string>> {
+  login$Response(params: Login$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+[key: string]: string;
+}>> {
     const obs = login(this.http, this.rootUrl, params, context);
     return obs;
   }
@@ -155,72 +121,70 @@ export class AuthenticationControllerService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  login(params: Login$Params, context?: HttpContext): Observable<string> {
+  login(params: Login$Params, context?: HttpContext): Observable<{
+[key: string]: string;
+}> {
     const resp = this.login$Response(params, context);
     return resp.pipe(
-      map((r: StrictHttpResponse<string>): string => r.body)
-    );
-  }
-
-  /** Path part for operation `exchangeOtt()` */
-  static readonly ExchangeOttPath = '/api/auth/exchange-ott';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `exchangeOtt()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  exchangeOtt$Response(params: ExchangeOtt$Params, context?: HttpContext): Observable<StrictHttpResponse<RegistrationResponse>> {
-    const obs = exchangeOtt(this.http, this.rootUrl, params, context);
-    return obs;
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `exchangeOtt$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  exchangeOtt(params: ExchangeOtt$Params, context?: HttpContext): Observable<RegistrationResponse> {
-    const resp = this.exchangeOtt$Response(params, context);
-    return resp.pipe(
-      map((r: StrictHttpResponse<RegistrationResponse>): RegistrationResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `validateRegistrationToken()` */
-  static readonly ValidateRegistrationTokenPath = '/api/auth/validate-registration-token';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `validateRegistrationToken()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  validateRegistrationToken$Response(params: ValidateRegistrationToken$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: any;
-}>> {
-    const obs = validateRegistrationToken(this.http, this.rootUrl, params, context);
-    return obs;
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `validateRegistrationToken$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  validateRegistrationToken(params: ValidateRegistrationToken$Params, context?: HttpContext): Observable<{
-[key: string]: any;
-}> {
-    const resp = this.validateRegistrationToken$Response(params, context);
-    return resp.pipe(
       map((r: StrictHttpResponse<{
-[key: string]: any;
+[key: string]: string;
 }>): {
-[key: string]: any;
+[key: string]: string;
 } => r.body)
+    );
+  }
+
+  /** Path part for operation `verifyToken()` */
+  static readonly VerifyTokenPath = '/api/auth/verify';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `verifyToken()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  verifyToken$Response(params: VerifyToken$Params, context?: HttpContext): Observable<StrictHttpResponse<VerifyTokenResponse>> {
+    const obs = verifyToken(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `verifyToken$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  verifyToken(params: VerifyToken$Params, context?: HttpContext): Observable<VerifyTokenResponse> {
+    const resp = this.verifyToken$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<VerifyTokenResponse>): VerifyTokenResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `checkSession()` */
+  static readonly CheckSessionPath = '/api/auth/session';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `checkSession()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  checkSession$Response(params?: CheckSession$Params, context?: HttpContext): Observable<StrictHttpResponse<SessionResponse>> {
+    const obs = checkSession(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `checkSession$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  checkSession(params?: CheckSession$Params, context?: HttpContext): Observable<SessionResponse> {
+    const resp = this.checkSession$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<SessionResponse>): SessionResponse => r.body)
     );
   }
 

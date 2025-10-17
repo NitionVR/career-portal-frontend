@@ -7,18 +7,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { LoginRequest } from '../../models/login-request';
+import { VerifyTokenResponse } from '../../models/verify-token-response';
 
-export interface Login$Params {
-      body: LoginRequest
+export interface VerifyToken$Params {
+  token: string;
 }
 
-export function login(http: HttpClient, rootUrl: string, params: Login$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: string;
-}>> {
-  const rb = new RequestBuilder(rootUrl, login.PATH, 'post');
+export function verifyToken(http: HttpClient, rootUrl: string, params: VerifyToken$Params, context?: HttpContext): Observable<StrictHttpResponse<VerifyTokenResponse>> {
+  const rb = new RequestBuilder(rootUrl, verifyToken.PATH, 'get');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.query('token', params.token, {});
   }
 
   return http.request(
@@ -26,11 +24,9 @@ export function login(http: HttpClient, rootUrl: string, params: Login$Params, c
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<{
-      [key: string]: string;
-      }>;
+      return r as StrictHttpResponse<VerifyTokenResponse>;
     })
   );
 }
 
-login.PATH = '/api/auth/login';
+verifyToken.PATH = '/api/auth/verify';

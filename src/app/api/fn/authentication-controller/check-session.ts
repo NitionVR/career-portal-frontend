@@ -7,16 +7,16 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { RegistrationResponse } from '../../models/registration-response';
+import { SessionResponse } from '../../models/session-response';
 
-export interface ExchangeOtt$Params {
-      body: string
+export interface CheckSession$Params {
+  Authorization?: string;
 }
 
-export function exchangeOtt(http: HttpClient, rootUrl: string, params: ExchangeOtt$Params, context?: HttpContext): Observable<StrictHttpResponse<RegistrationResponse>> {
-  const rb = new RequestBuilder(rootUrl, exchangeOtt.PATH, 'post');
+export function checkSession(http: HttpClient, rootUrl: string, params?: CheckSession$Params, context?: HttpContext): Observable<StrictHttpResponse<SessionResponse>> {
+  const rb = new RequestBuilder(rootUrl, checkSession.PATH, 'get');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.header('Authorization', params.Authorization, {});
   }
 
   return http.request(
@@ -24,9 +24,9 @@ export function exchangeOtt(http: HttpClient, rootUrl: string, params: ExchangeO
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return r as StrictHttpResponse<RegistrationResponse>;
+      return r as StrictHttpResponse<SessionResponse>;
     })
   );
 }
 
-exchangeOtt.PATH = '/api/auth/exchange-ott';
+checkSession.PATH = '/api/auth/session';

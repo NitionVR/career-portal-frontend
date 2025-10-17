@@ -7,19 +7,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { HiringManagerRegistrationDto } from '../../models/hiring-manager-registration-dto';
+import { RegistrationRequest } from '../../models/registration-request';
 
-export interface CompleteHiringManagerRegistration$Params {
-  token: string;
-      body: HiringManagerRegistrationDto
+export interface InitiateRegistration$Params {
+      body: RegistrationRequest
 }
 
-export function completeHiringManagerRegistration(http: HttpClient, rootUrl: string, params: CompleteHiringManagerRegistration$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function initiateRegistration(http: HttpClient, rootUrl: string, params: InitiateRegistration$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: string;
 }>> {
-  const rb = new RequestBuilder(rootUrl, completeHiringManagerRegistration.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, initiateRegistration.PATH, 'post');
   if (params) {
-    rb.query('token', params.token, {});
     rb.body(params.body, 'application/json');
   }
 
@@ -35,4 +33,4 @@ export function completeHiringManagerRegistration(http: HttpClient, rootUrl: str
   );
 }
 
-completeHiringManagerRegistration.PATH = '/api/auth/register/hiring-manager';
+initiateRegistration.PATH = '/api/register';

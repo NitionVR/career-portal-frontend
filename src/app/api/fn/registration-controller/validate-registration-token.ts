@@ -7,18 +7,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { LoginRequest } from '../../models/login-request';
 
-export interface Login$Params {
-      body: LoginRequest
+export interface ValidateRegistrationToken$Params {
+  token: string;
 }
 
-export function login(http: HttpClient, rootUrl: string, params: Login$Params, context?: HttpContext): Observable<StrictHttpResponse<{
-[key: string]: string;
+export function validateRegistrationToken(http: HttpClient, rootUrl: string, params: ValidateRegistrationToken$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+[key: string]: any;
 }>> {
-  const rb = new RequestBuilder(rootUrl, login.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, validateRegistrationToken.PATH, 'get');
   if (params) {
-    rb.body(params.body, 'application/json');
+    rb.query('token', params.token, {});
   }
 
   return http.request(
@@ -27,10 +26,10 @@ export function login(http: HttpClient, rootUrl: string, params: Login$Params, c
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
       return r as StrictHttpResponse<{
-      [key: string]: string;
+      [key: string]: any;
       }>;
     })
   );
 }
 
-login.PATH = '/api/auth/login';
+validateRegistrationToken.PATH = '/api/register/validate-token';

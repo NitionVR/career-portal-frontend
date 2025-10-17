@@ -7,17 +7,17 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CandidateRegistrationDto } from '../../models/candidate-registration-dto';
+import { HiringManagerRegistrationDto } from '../../models/hiring-manager-registration-dto';
 
-export interface CompleteCandiateRegistration$Params {
+export interface CompleteHiringManagerRegistration$Params {
   token: string;
-      body: CandidateRegistrationDto
+      body: HiringManagerRegistrationDto
 }
 
-export function completeCandiateRegistration(http: HttpClient, rootUrl: string, params: CompleteCandiateRegistration$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function completeHiringManagerRegistration(http: HttpClient, rootUrl: string, params: CompleteHiringManagerRegistration$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: string;
 }>> {
-  const rb = new RequestBuilder(rootUrl, completeCandiateRegistration.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, completeHiringManagerRegistration.PATH, 'post');
   if (params) {
     rb.query('token', params.token, {});
     rb.body(params.body, 'application/json');
@@ -35,4 +35,4 @@ export function completeCandiateRegistration(http: HttpClient, rootUrl: string, 
   );
 }
 
-completeCandiateRegistration.PATH = '/api/auth/register/candidate';
+completeHiringManagerRegistration.PATH = '/api/register/hiring-manager';

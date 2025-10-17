@@ -7,17 +7,19 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { LoginRequest } from '../../models/login-request';
+import { CandidateRegistrationDto } from '../../models/candidate-registration-dto';
 
-export interface Login$Params {
-      body: LoginRequest
+export interface CompleteCandidateRegistration$Params {
+  token: string;
+      body: CandidateRegistrationDto
 }
 
-export function login(http: HttpClient, rootUrl: string, params: Login$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function completeCandidateRegistration(http: HttpClient, rootUrl: string, params: CompleteCandidateRegistration$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: string;
 }>> {
-  const rb = new RequestBuilder(rootUrl, login.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, completeCandidateRegistration.PATH, 'post');
   if (params) {
+    rb.query('token', params.token, {});
     rb.body(params.body, 'application/json');
   }
 
@@ -33,4 +35,4 @@ export function login(http: HttpClient, rootUrl: string, params: Login$Params, c
   );
 }
 
-login.PATH = '/api/auth/login';
+completeCandidateRegistration.PATH = '/api/register/candidate';

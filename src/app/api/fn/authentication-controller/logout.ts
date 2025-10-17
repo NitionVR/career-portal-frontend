@@ -7,18 +7,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { RegistrationRequest } from '../../models/registration-request';
 
-export interface InitiateRegistration$Params {
-      body: RegistrationRequest
+export interface Logout$Params {
 }
 
-export function initiateRegistration(http: HttpClient, rootUrl: string, params: InitiateRegistration$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function logout(http: HttpClient, rootUrl: string, params?: Logout$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: string;
 }>> {
-  const rb = new RequestBuilder(rootUrl, initiateRegistration.PATH, 'post');
+  const rb = new RequestBuilder(rootUrl, logout.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -33,4 +30,4 @@ export function initiateRegistration(http: HttpClient, rootUrl: string, params: 
   );
 }
 
-initiateRegistration.PATH = '/api/auth/register';
+logout.PATH = '/api/auth/logout';

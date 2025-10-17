@@ -8,16 +8,16 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface ValidateRegistrationToken$Params {
-  token: string;
+export interface RefreshToken$Params {
+  Authorization: string;
 }
 
-export function validateRegistrationToken(http: HttpClient, rootUrl: string, params: ValidateRegistrationToken$Params, context?: HttpContext): Observable<StrictHttpResponse<{
+export function refreshToken(http: HttpClient, rootUrl: string, params: RefreshToken$Params, context?: HttpContext): Observable<StrictHttpResponse<{
 [key: string]: any;
 }>> {
-  const rb = new RequestBuilder(rootUrl, validateRegistrationToken.PATH, 'get');
+  const rb = new RequestBuilder(rootUrl, refreshToken.PATH, 'post');
   if (params) {
-    rb.query('token', params.token, {});
+    rb.header('Authorization', params.Authorization, {});
   }
 
   return http.request(
@@ -32,4 +32,4 @@ export function validateRegistrationToken(http: HttpClient, rootUrl: string, par
   );
 }
 
-validateRegistrationToken.PATH = '/api/auth/validate-registration-token';
+refreshToken.PATH = '/api/auth/refresh';
