@@ -9,37 +9,55 @@ import { TalentJobListPageComponent } from './pages/talent/job-list/talent-job-l
 import { MyApplicationsPageComponent } from './pages/talent/my-applications/my-applications-page.component';
 import { ApplicationDetailsPageComponent } from './pages/talent/application-details/application-details-page.component';
 import { JobPostDetailsPageComponent } from './pages/job-post-details/job-post-details-page.component';
-import { ProfilePageComponent } from './pages/talent/profile-page/profile-page'; // Import ProfilePageComponent
-import { EmployerDashboardComponent } from './pages/employer/dashboard/dashboard'; // Import EmployerDashboardComponent
+import { ProfilePageComponent } from './pages/talent/profile-page/profile-page';
+import { EmployerDashboardComponent } from './pages/employer/dashboard/dashboard';
+
+// Import the new guards
+import { authGuard } from './core/guards/auth.guard';
+import { guestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
-  { path: 'homepage', component: HomepageComponent },
-  { path: 'sign-up', component: RegisterPage },
-  { path: 'auth/callback', component: MagicLinkPage },
-  { path: 'profile/create', component: ProfileCreate },
-  { path: 'job-posts/:id', component: JobPostDetailsPageComponent }, // New route for job post details
+  // The homepage will handle its own redirection logic if the user is authenticated.
+  { path: '', component: HomepageComponent },
+  { path: 'homepage', redirectTo: '', pathMatch: 'full' }, // Redirect legacy homepage path
+
+  // Guest-only routes
+  { path: 'sign-up', component: RegisterPage, canActivate: [guestGuard] },
+  { path: 'auth/callback', component: MagicLinkPage }, // This will be replaced by the new callback component logic
+
+  // Protected routes that require authentication
+  {
+    path: 'profile/create',
+    component: ProfileCreate,
+    canActivate: [authGuard] // Protect the profile creation page
+  },
+  {
+    path: 'job-posts/:id',
+    component: JobPostDetailsPageComponent // Publicly viewable job details
+  },
   {
     path: 'talent',
     component: AuthenticatedLayoutComponent,
+    canActivate: [authGuard], // Protect the entire talent section
+    data: { role: 'CANDIDATE' }, // Specify the required role for this section
     children: [
       { path: 'dashboard', component: CandidateDashboardComponent },
       { path: 'job-list', component: TalentJobListPageComponent },
       { path: 'applications', component: MyApplicationsPageComponent, pathMatch: 'full' },
       { path: 'applications/:id', component: ApplicationDetailsPageComponent },
-      { path: 'profile', component: ProfilePageComponent }, // New route for profile page
-      // Add other authenticated routes here
-      // { path: 'applications', component: MyApplicationsComponent },
-      // { path: 'offers', component: JobOffersComponent },
-      // { path: 'notifications', component: NotificationsComponent },
+      { path: 'profile', component: ProfilePageComponent },
     ]
   },
   {
     path: 'employer',
     component: AuthenticatedLayoutComponent,
+    canActivate: [authGuard], // Protect the entire employer section
+    data: { role: 'HIRING_MANAGER' }, // Specify the required role for this section
     children: [
       { path: 'dashboard', component: EmployerDashboardComponent },
-      // Add other employer routes here
     ]
   },
+
+  // Fallback route if no other route matches
+  { path: '**', redirectTo: '' }
 ];
