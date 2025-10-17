@@ -71,7 +71,7 @@ export type { CompleteCandiateRegistration$Params } from './fn/authentication-co
 export { completeCandiateRegistration } from './fn/authentication-controller/complete-candiate-registration';
 export type { Login$Params } from './fn/authentication-controller/login';
 export { login } from './fn/authentication-controller/login';
-export type { Verify$Params } from './fn/authentication-controller/verify';
-export { verify } from './fn/authentication-controller/verify';
+export type { ExchangeOtt$Params } from './fn/authentication-controller/exchange-ott';
+export { exchangeOtt } from './fn/authentication-controller/exchange-ott';
 export type { ValidateRegistrationToken$Params } from './fn/authentication-controller/validate-registration-token';
 export { validateRegistrationToken } from './fn/authentication-controller/validate-registration-token';

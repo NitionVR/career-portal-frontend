@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { JobPostsListComponent } from '../../../shared/components/jobs/job-posts-list/job-posts-list';
+import { EmployerJobPostsListComponent } from '../../../shared/components/jobs/employer-job-posts-list/employer-job-posts-list';
 import { JobPostResponse } from '../../../api/models/job-post-response';
 import { JobPostControllerService } from '../../../api/services/job-post-controller.service';
 import { PageJobPostResponse } from '../../../api/models/page-job-post-response';
@@ -9,10 +9,11 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, JobPostsListComponent, RouterLink],
+  imports: [CommonModule, EmployerJobPostsListComponent, RouterLink],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
+
 export class EmployerDashboardComponent implements OnInit {
   paginatedJobs: JobPostResponse[] = [];
   isLoading: boolean = false;
@@ -29,7 +30,7 @@ export class EmployerDashboardComponent implements OnInit {
   fetchJobs(): void {
     this.isLoading = true;
     // NOTE: Using listMyJobPosts() for employer-specific jobs
-    this.jobPostService.listMyJobPosts({ 
+    this.jobPostService.listMyJobPosts({
       pageable: { page: this.currentPage, size: this.pageSize, sort: ['datePosted,desc'] }
     }).subscribe({
       next: (page: PageJobPostResponse) => {

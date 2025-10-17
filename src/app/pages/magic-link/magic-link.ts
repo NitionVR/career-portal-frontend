@@ -31,31 +31,38 @@ export class MagicLinkPage implements OnInit {
   private authService = inject(AuthService);
 
   ngOnInit(): void {
-    const token = this.route.snapshot.queryParamMap.get('token');
+    const ott = this.route.snapshot.queryParamMap.get('ott');
     const action = this.route.snapshot.queryParamMap.get('action');
 
-    if (token) {
+    if (ott) {
       if (action === 'register') {
         // This is a registration magic link
-        this.authService.validateRegistrationToken(token).subscribe({
-          next: (response) => {
-            if (response['valid']) {
-              this.message = 'Registration token valid. Redirecting to profile creation...';
-              // Clean the URL before navigating
-              this.router.navigate([], { relativeTo: this.route, replaceUrl: true, queryParams: {} });
-              this.router.navigate(['/profile/create'], { queryParams: { token } });
-            } else {
-              this.error = 'Invalid or expired registration token.';
-            }
-          },
-          error: (err) => {
-            console.error('Error from validateRegistrationToken:', err);
-            this.error = 'Error validating registration token. Please try again.';
-          },
-        });
+        // This path might need to be re-evaluated if registration also uses OTT
+        // For now, assuming validateRegistrationToken still uses 'token'
+        const token = this.route.snapshot.queryParamMap.get('token'); // Still look for 'token' for registration
+        if (token) {
+          this.authService.validateRegistrationToken(token).subscribe({
+            next: (response) => {
+              if (response['valid']) {
+                this.message = 'Registration token valid. Redirecting to profile creation...';
+                // Clean the URL before navigating
+                this.router.navigate([], { relativeTo: this.route, replaceUrl: true, queryParams: {} });
+                this.router.navigate(['/profile/create'], { queryParams: { token } });
+              } else {
+                this.error = 'Invalid or expired registration token.';
+              }
+            },
+            error: (err) => {
+              console.error('Error from validateRegistrationToken:', err);
+              this.error = 'Error validating registration token. Please try again.';
+            },
+          });
+        } else {
+          this.error = 'No registration token provided. Please try again.';
+        }
       } else {
-        // This is a login/session verification magic link
-        this.authService.verify(token).subscribe({
+        // This is a login/session verification magic link using OTT
+        this.authService.exchangeOtt(ott).subscribe({
           next: (response) => {
             if (response.token) {
               this.authService.setToken(response.token);
@@ -85,7 +92,7 @@ export class MagicLinkPage implements OnInit {
         });
       }
     } else {
-      this.error = 'No token provided. Please try again.';
+      this.error = 'No OTT provided. Please try again.';
     }
   }
 }

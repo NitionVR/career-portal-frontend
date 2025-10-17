@@ -9,14 +9,14 @@ import { RequestBuilder } from '../../request-builder';
 
 import { RegistrationResponse } from '../../models/registration-response';
 
-export interface Verify$Params {
-  token: string;
+export interface ExchangeOtt$Params {
+      body: string
 }
 
-export function verify(http: HttpClient, rootUrl: string, params: Verify$Params, context?: HttpContext): Observable<StrictHttpResponse<RegistrationResponse>> {
-  const rb = new RequestBuilder(rootUrl, verify.PATH, 'get');
+export function exchangeOtt(http: HttpClient, rootUrl: string, params: ExchangeOtt$Params, context?: HttpContext): Observable<StrictHttpResponse<RegistrationResponse>> {
+  const rb = new RequestBuilder(rootUrl, exchangeOtt.PATH, 'post');
   if (params) {
-    rb.query('token', params.token, {});
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -29,4 +29,4 @@ export function verify(http: HttpClient, rootUrl: string, params: Verify$Params,
   );
 }
 
-verify.PATH = '/api/auth/verify';
+exchangeOtt.PATH = '/api/auth/exchange-ott';

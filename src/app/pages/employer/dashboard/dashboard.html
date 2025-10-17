@@ -24,7 +24,7 @@
   </div>
 
   <div *ngIf="!isLoading && paginatedJobs.length > 0">
-    <app-job-posts-list [jobs]="paginatedJobs" [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)" [isEmployer]="true"></app-job-posts-list>
+    <app-employer-job-posts-list [jobs]="paginatedJobs" [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></app-employer-job-posts-list>
   </div>
 
 </div>

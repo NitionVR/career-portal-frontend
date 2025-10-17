@@ -14,6 +14,8 @@ import { completeCandiateRegistration } from '../fn/authentication-controller/co
 import { CompleteCandiateRegistration$Params } from '../fn/authentication-controller/complete-candiate-registration';
 import { completeHiringManagerRegistration } from '../fn/authentication-controller/complete-hiring-manager-registration';
 import { CompleteHiringManagerRegistration$Params } from '../fn/authentication-controller/complete-hiring-manager-registration';
+import { exchangeOtt } from '../fn/authentication-controller/exchange-ott';
+import { ExchangeOtt$Params } from '../fn/authentication-controller/exchange-ott';
 import { initiateRegistration } from '../fn/authentication-controller/initiate-registration';
 import { InitiateRegistration$Params } from '../fn/authentication-controller/initiate-registration';
 import { login } from '../fn/authentication-controller/login';
@@ -21,8 +23,6 @@ import { Login$Params } from '../fn/authentication-controller/login';
 import { RegistrationResponse } from '../models/registration-response';
 import { validateRegistrationToken } from '../fn/authentication-controller/validate-registration-token';
 import { ValidateRegistrationToken$Params } from '../fn/authentication-controller/validate-registration-token';
-import { verify } from '../fn/authentication-controller/verify';
-import { Verify$Params } from '../fn/authentication-controller/verify';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationControllerService extends BaseService {
@@ -162,28 +162,28 @@ export class AuthenticationControllerService extends BaseService {
     );
   }
 
-  /** Path part for operation `verify()` */
-  static readonly VerifyPath = '/api/auth/verify';
+  /** Path part for operation `exchangeOtt()` */
+  static readonly ExchangeOttPath = '/api/auth/exchange-ott';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `verify()` instead.
+   * To access only the response body, use `exchangeOtt()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  verify$Response(params: Verify$Params, context?: HttpContext): Observable<StrictHttpResponse<RegistrationResponse>> {
-    const obs = verify(this.http, this.rootUrl, params, context);
+  exchangeOtt$Response(params: ExchangeOtt$Params, context?: HttpContext): Observable<StrictHttpResponse<RegistrationResponse>> {
+    const obs = exchangeOtt(this.http, this.rootUrl, params, context);
     return obs;
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `verify$Response()` instead.
+   * To access the full response (for headers, for example), `exchangeOtt$Response()` instead.
    *
-   * This method doesn't expect any request body.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  verify(params: Verify$Params, context?: HttpContext): Observable<RegistrationResponse> {
-    const resp = this.verify$Response(params, context);
+  exchangeOtt(params: ExchangeOtt$Params, context?: HttpContext): Observable<RegistrationResponse> {
+    const resp = this.exchangeOtt$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<RegistrationResponse>): RegistrationResponse => r.body)
     );

@@ -7,10 +7,11 @@ import { RegistrationRequest } from '../../api/models/registration-request';
 import { CandidateRegistrationDto } from '../../api/models/candidate-registration-dto';
 import { HiringManagerRegistrationDto } from '../../api/models/hiring-manager-registration-dto';
 import { Login$Params } from '../../api/fn/authentication-controller/login';
+import { ExchangeOtt$Params } from '../../api/fn/authentication-controller/exchange-ott';
+import { exchangeOtt } from '../../api/fn/authentication-controller/exchange-ott';
 import { ValidateRegistrationToken$Params } from '../../api/fn/authentication-controller/validate-registration-token';
 import { CompleteCandiateRegistration$Params } from '../../api/fn/authentication-controller/complete-candiate-registration';
 import { CompleteHiringManagerRegistration$Params } from '../../api/fn/authentication-controller/complete-hiring-manager-registration';
-import { Verify$Params } from '../../api/fn/authentication-controller/verify';
 import { RegistrationResponse } from '../../api/models/registration-response';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
@@ -74,12 +75,12 @@ export class AuthService {
     return this.authenticationControllerService.login(params);
   }
 
-  verify(token: string): Observable<RegistrationResponse> {
-    const params: Verify$Params = { token };
-    return this.authenticationControllerService.verify(params).pipe(
+  exchangeOtt(ott: string): Observable<RegistrationResponse> {
+    const body = ott;
+    return this.http.post<RegistrationResponse>(`${this.authenticationControllerService.rootUrl}/api/auth/exchange-ott`, body).pipe(
       tap(response => {
         if (response.token) {
-          console.log('AuthService.verify: Token received from backend', response.token);
+          console.log('AuthService.exchangeOtt: Token received from backend', response.token);
           this.setToken(response.token);
         }
       })
@@ -116,6 +117,11 @@ export class AuthService {
   }
 
   logout(): void {
+    // Call backend logout endpoint if it exists
+    // For now, we'll just log it and proceed with client-side logout
+    console.log('AuthService: Calling backend logout endpoint (if implemented)...');
+    // Example: this.http.post('/api/auth/logout', {}).pipe(finalize(() => { ... })).subscribe();
+
     this.removeToken();
     this.router.navigate(['/']);
   }
