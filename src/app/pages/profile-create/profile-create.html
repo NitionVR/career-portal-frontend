@@ -6,11 +6,19 @@
       <p class="text-muted-foreground">Just a few more details to get started.</p>
     </div>
 
-    <div *ngIf="errorMessage" class="bg-destructive/20 text-destructive p-4 rounded-md mb-6">
-      {{ errorMessage }}
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <p class="mt-4 text-muted-foreground">Loading your profile...</p>
     </div>
 
-    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Error Message -->
+    <div *ngIf="errorMessage && !isLoading" class="bg-destructive/20 text-destructive p-4 rounded-md mb-6" role="alert">
+      <p class="font-medium">{{ errorMessage }}</p>
+    </div>
+
+    <!-- Form -->
+    <form *ngIf="!isLoading && profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
       <ng-container *ngIf="userRole === 'CANDIDATE'">
         <div>
           <label class="block text-sm font-medium text-muted-foreground" for="username">Username</label>
@@ -75,9 +83,21 @@
         </div>
       </ng-container>
 
-      <button type="submit" [disabled]="profileForm.invalid" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out disabled:opacity-50">
-        Complete Registration
-      </button>
+  <!-- Submit Button -->
+  <button
+    type="submit"
+    [disabled]="profileForm.invalid || isSubmitting"
+    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    <span *ngIf="!isSubmitting">Complete Registration</span>
+    <span *ngIf="isSubmitting" class="flex items-center">
+      <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      Processing...
+    </span>
+  </button>
     </form>
   </div>
 </div>

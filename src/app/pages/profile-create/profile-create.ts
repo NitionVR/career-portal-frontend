@@ -25,6 +25,7 @@ export class ProfileCreate implements OnInit {
   user: User | null = null;
   errorMessage: string | null = null;
   isLoading = true;
+  isSubmitting = false;
 
   genderOptions = GENDER_OPTIONS;
   raceOptions = RACE_OPTIONS;
@@ -82,20 +83,34 @@ export class ProfileCreate implements OnInit {
   }
 
   private initForm(): void {
-    this.profileForm = this.fb.group({
+    // Common fields for both roles
+    const commonControls = {
+      username: ['', [Validators.required, Validators.minLength(3)]],
       firstName: [this.user?.firstName || '', Validators.required],
       lastName: [this.user?.lastName || '', Validators.required],
-      gender: [''],
-      race: [''],
-      disability: [''],
-      companyName: [''],
-      industry: [''],
-    });
+    };
 
-    if (this.userRole === 'HIRING_MANAGER') {
-      this.profileForm.get('companyName')?.setValidators([Validators.required]);
-      this.profileForm.get('industry')?.setValidators([Validators.required]);
-      this.profileForm.updateValueAndValidity();
+    // Role-specific fields
+    if (this.userRole === 'CANDIDATE') {
+      this.profileForm = this.fb.group({
+        ...commonControls,
+        gender: [''],
+        race: [''],
+        disability: [''],
+        contactNumber: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+        alternateContactNumber: ['', Validators.pattern(/^\+?[1-9]\d{1,14}$/)],
+      });
+    } else if (this.userRole === 'HIRING_MANAGER') {
+      this.profileForm = this.fb.group({
+        ...commonControls,
+        companyName: ['', Validators.required],
+        industry: ['', Validators.required],
+        contactPerson: ['', Validators.required],
+        contactNumber: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+      });
+    } else {
+      // Fallback for unknown role
+      this.profileForm = this.fb.group(commonControls);
     }
   }
 
@@ -104,6 +119,13 @@ export class ProfileCreate implements OnInit {
       this.errorMessage = 'Please fill in all required fields.';
       return;
     }
+
+    if (this.isSubmitting) {
+      return; // Prevent double submission
+    }
+
+    this.isSubmitting = true;
+    this.errorMessage = null;
 
     if (this.registrationToken) {
       this.completeWithToken();
@@ -146,6 +168,7 @@ export class ProfileCreate implements OnInit {
   }
 
   private handleError(err: any): void {
+    this.isSubmitting = false;
     this.errorMessage = err.error?.message || 'An error occurred.';
   }
 
