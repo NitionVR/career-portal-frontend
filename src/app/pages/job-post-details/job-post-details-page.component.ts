@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { JobPostResponse } from '../../api/models/job-post-response';
 import { HeaderComponent } from '../../shared/components/navigation/header/header';
 import { SignInComponent } from '../../shared/components/sign-in/sign-in.component';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth';
 import { JobPostControllerService } from '../../api/services/job-post-controller.service';
-import { Observable, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-job-post-details-page',
@@ -17,51 +17,47 @@ import { Observable, switchMap } from 'rxjs';
   styleUrls: ['./job-post-details-page.component.css']
 })
 export class JobPostDetailsPageComponent implements OnInit {
-  job: JobPostResponse | undefined;
+  isLoggedIn$: Observable<boolean>;
+  user$: Observable<any | null>;
+  jobPost: JobPostResponse | null = null;
+  isLoading = true;
+  error: string | null = null;
   showSignInModal = false;
-  isLoggedIn: boolean = false;
-  user: any | null = null;
   showAllSkills = false;
-  readonly initialSkillsToShow = 6;
+  initialSkillsToShow = 10;
 
-  constructor(
-    private route: ActivatedRoute, 
-    private authService: AuthService,
-    private jobPostService: JobPostControllerService
-  ) { }
+  private route = inject(ActivatedRoute);
+  private jobPostService = inject(JobPostControllerService);
+  private authService = inject(AuthService);
+
+  constructor() {
+    this.isLoggedIn$ = this.authService.isAuthenticated$;
+    this.user$ = this.authService.currentUser$;
+  }
 
   ngOnInit(): void {
-    this.route.paramMap.pipe(
-      switchMap(params => {
-        const jobId = params.get('id');
-        if (jobId) {
-          return this.jobPostService.getJobPost({ id: jobId });
-        } else {
-          return new Observable<JobPostResponse | undefined>(observer => observer.next(undefined));
-        }
-      })
-    ).subscribe({
+    const jobId = this.route.snapshot.paramMap.get('id');
+    if (jobId) {
+      this.fetchJobPost(jobId);
+    } else {
+      this.error = 'No job ID provided.';
+      this.isLoading = false;
+    }
+  }
+
+  fetchJobPost(id: string): void {
+    this.isLoading = true;
+    this.jobPostService.getJobPost({ id }).subscribe({
       next: (job) => {
-        if (job) {
-          this.job = job;
-        }
+        this.jobPost = job;
+        this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error fetching job details', err);
+        this.error = 'Failed to load job post.';
+        this.isLoading = false;
+        console.error(err);
       }
     });
-
-    this.isLoggedIn = this.authService.isLoggedIn();
-    this.user = this.authService.getUser();
-    if (!this.user) {
-        // Mock user data for development
-        this.isLoggedIn = true;
-        this.user = {
-          name: 'Nition',
-          role: 'Software Engineer',
-          profileImageUrl: 'https://avatars.githubusercontent.com/u/12968861?v=4'
-        };
-      }
   }
 
   openSignInModal(event: Event): void {
