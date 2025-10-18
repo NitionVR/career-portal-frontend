@@ -18,7 +18,7 @@ export const guestGuard: CanActivateFn = (): Observable<boolean | UrlTree> | Pro
     console.log('GuestGuard: User is already authenticated. Redirecting...');
 
     if (user?.isNewUser) {
-      return router.createUrlTree(['/profile/create']); // Or a dedicated '/onboarding' page
+      return router.createUrlTree(['/profile/create']);
     }
 
     // Redirect to the appropriate dashboard based on role

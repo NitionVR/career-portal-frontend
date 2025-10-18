@@ -1,13 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth';
 import { CommonModule } from '@angular/common';
-import { jwtDecode } from 'jwt-decode';
-
-interface JwtPayload {
-  is_new_user?: boolean;
-  role?: 'CANDIDATE' | 'HIRING_MANAGER';
-}
+import { AuthService } from '../../core/services/auth';
+import { User } from '../../core/services/auth';
+import { RegistrationControllerService } from '../../api/services/registration-controller.service';
 
 @Component({
   selector: 'app-magic-link',
@@ -15,84 +11,90 @@ interface JwtPayload {
   imports: [CommonModule],
   template: `
     <div class="flex justify-center items-center h-screen">
-      <div class="text-center">
-        <p *ngIf="!error">{{ message }}</p>
-        <p *ngIf="error" class="text-destructive">{{ error }}</p>
+      <div class="text-center p-8">
+        <p *ngIf="!error" class="text-lg">Verifying your magic link...</p>
+        <div *ngIf="error">
+          <p class="text-lg text-destructive">Authentication Failed</p>
+          <p class="text-muted-foreground mt-2">{{ error }}</p>
+          <button (click)="navigateToRegister()" class="mt-6 bg-primary text-primary-foreground py-2 px-4 rounded-md">
+            Back to Sign Up
+          </button>
+        </div>
       </div>
     </div>
   `,
 })
 export class MagicLinkPage implements OnInit {
-  message = 'Verifying your magic link...';
   error: string | null = null;
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private registrationService = inject(RegistrationControllerService);
 
   ngOnInit(): void {
-    const ott = this.route.snapshot.queryParamMap.get('ott');
+    const token = this.route.snapshot.queryParamMap.get('token');
     const action = this.route.snapshot.queryParamMap.get('action');
 
-    if (ott) {
-      if (action === 'register') {
-        // This is a registration magic link
-        // This path might need to be re-evaluated if registration also uses OTT
-        // For now, assuming validateRegistrationToken still uses 'token'
-        const token = this.route.snapshot.queryParamMap.get('token'); // Still look for 'token' for registration
-        if (token) {
-          this.authService.validateRegistrationToken(token).subscribe({
-            next: (response) => {
-              if (response['valid']) {
-                this.message = 'Registration token valid. Redirecting to profile creation...';
-                // Clean the URL before navigating
-                this.router.navigate([], { relativeTo: this.route, replaceUrl: true, queryParams: {} });
-                this.router.navigate(['/profile/create'], { queryParams: { token } });
-              } else {
-                this.error = 'Invalid or expired registration token.';
-              }
-            },
-            error: (err) => {
-              console.error('Error from validateRegistrationToken:', err);
-              this.error = 'Error validating registration token. Please try again.';
-            },
-          });
-        } else {
-          this.error = 'No registration token provided. Please try again.';
-        }
-      } else {
-        // This is a login/session verification magic link using OTT
-        this.authService.exchangeOtt(ott).subscribe({
-          next: (response) => {
-            if (response.token) {
-              this.authService.setToken(response.token);
-              this.message = 'Successfully logged in! Redirecting...';
-              // Clean the URL before navigating
-              this.router.navigate([], { relativeTo: this.route, replaceUrl: true, queryParams: {} });
-
-              const decodedToken = jwtDecode<JwtPayload>(response.token);
-
-              if (decodedToken.is_new_user) {
-                this.router.navigate(['/profile/create']);
-              } else if (decodedToken.role === 'CANDIDATE') {
-                this.router.navigate(['/talent/job-list']);
-              } else if (decodedToken.role === 'HIRING_MANAGER') {
-                this.router.navigate(['/employer/dashboard']);
-              } else {
-                this.router.navigate(['/']); // Default redirect
-              }
-            } else {
-              this.error = 'Login failed. No token received.';
-            }
-          },
-          error: (err) => {
-            console.error(err);
-            this.error = 'Invalid or expired login link. Please try again.';
-          },
-        });
-      }
-    } else {
-      this.error = 'No OTT provided. Please try again.';
+    if (!token) {
+      this.error = 'No authentication token was provided. Please try again.';
+      return;
     }
+
+    if (action === 'register') {
+      this.handleRegistrationLink(token);
+    } else {
+      this.handleLoginLink(token);
+    }
+  }
+
+  private handleRegistrationLink(token: string): void {
+    this.registrationService.validateRegistrationToken({ token }).subscribe({
+      next: (response: { [key: string]: any }) => {
+        if (response['valid']) {
+          this.router.navigate(['/profile/create'], { queryParams: { token } });
+        } else {
+          this.error = 'This registration link is invalid or has expired.';
+        }
+      },
+      error: (err) => {
+        this.error = 'Failed to validate registration link. It may have expired.';
+        console.error('Registration link validation error:', err);
+      },
+    });
+  }
+
+  private handleLoginLink(token: string): void {
+    this.authService.verifyMagicLink(token).subscribe({
+      next: (response) => {
+        this.redirectUser(response.user as User);
+      },
+      error: (err) => {
+        this.error = err.message || 'Failed to verify magic link. It may be invalid or expired.';
+        console.error('Magic link login error:', err);
+      },
+    });
+  }
+
+  private redirectUser(user: User): void {
+    const dashboardUrl = user.isNewUser
+      ? '/profile/create'
+      : this.getDashboardUrl(user.role);
+    this.router.navigate([dashboardUrl]);
+  }
+
+  private getDashboardUrl(role?: string): string {
+    switch (role) {
+      case 'CANDIDATE':
+        return '/talent/dashboard';
+      case 'HIRING_MANAGER':
+        return '/employer/dashboard';
+      default:
+        return '/';
+    }
+  }
+
+  navigateToRegister(): void {
+    this.router.navigate(['/sign-up']);
   }
 }

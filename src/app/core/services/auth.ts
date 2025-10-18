@@ -10,7 +10,6 @@ import { UserDto } from '../../api/models/user-dto';
 import { LoginRequest } from '../../api/models/login-request';
 import { VerifyTokenResponse } from '../../api/models/verify-token-response';
 import { SessionResponse } from '../../api/models/session-response';
-import { RefreshTokenResponse } from '../../api/models';
 
 // Re-defining User interface locally for convenience, mapping from UserDto
 export interface User extends UserDto {}
@@ -88,6 +87,7 @@ export class AuthService {
             firstName: this.getCurrentUser()?.firstName,
             lastName: this.getCurrentUser()?.lastName,
           };
+          this.storeUser(user); // Update the user in localStorage
           this.currentUserSubject.next(user);
           this.isAuthenticatedSubject.next(true);
           this.scheduleTokenRefresh();
@@ -106,11 +106,17 @@ export class AuthService {
    * Refreshes the current JWT to extend the session.
    * POST /api/auth/refresh
    */
-  refreshToken(): Observable<RefreshTokenResponse> {
-    return this.authController.refreshToken().pipe(
-      tap(response => {
-        if (response.token) {
-          this.storeToken(response.token);
+  refreshToken(): Observable<any> {
+    const token = this.getToken();
+    if (!token) {
+      return throwError(() => new Error('No token available for refresh'));
+    }
+
+    return this.authController.refreshToken({ Authorization: `Bearer ${token}` }).pipe(
+      tap((response: any) => {
+        const newToken = response['token'];
+        if (newToken) {
+          this.storeToken(newToken);
           this.scheduleTokenRefresh();
           console.log('Token refreshed successfully');
         }

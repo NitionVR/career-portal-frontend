@@ -1,93 +1,101 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../core/services/auth';
-import { JwtDecoderService } from '../../core/services/jwt-decoder.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RegistrationControllerService } from '../../api/services/registration-controller.service';
+import { ProfileControllerService } from '../../api/services/profile-controller.service';
 import { CandidateRegistrationDto } from '../../api/models/candidate-registration-dto';
 import { HiringManagerRegistrationDto } from '../../api/models/hiring-manager-registration-dto';
-import { CustomSelectComponent, SelectOption } from '../../shared/components/custom-select/custom-select.component';
+import { AuthService, User } from '../../core/services/auth';
+import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
 import { GENDER_OPTIONS, RACE_OPTIONS, DISABILITY_OPTIONS, INDUSTRY_OPTIONS } from '../../shared/data/form-options';
-
-interface JwtPayload {
-  role: 'CANDIDATE' | 'HIRING_MANAGER';
-}
+import { VerifyTokenResponse } from '../../api/models';
+import { CompleteProfileRequest } from '../../api/models/complete-profile-request';
 
 @Component({
   selector: 'app-profile-create',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    CustomSelectComponent,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent],
   templateUrl: './profile-create.html',
-  styleUrl: './profile-create.css'
+  styleUrls: ['./profile-create.css'],
 })
 export class ProfileCreate implements OnInit {
-  registrationToken: string | null = null;
   profileForm!: FormGroup;
-  userRole: 'CANDIDATE' | 'HIRING_MANAGER' | null = null;
+  registrationToken: string | null = null;
+  user: User | null = null;
   errorMessage: string | null = null;
+  isLoading = true;
 
-  // Use imported options
-  genderOptions: SelectOption[] = GENDER_OPTIONS;
-  raceOptions: SelectOption[] = RACE_OPTIONS;
-  disabilityOptions: SelectOption[] = DISABILITY_OPTIONS;
-  industryOptions: SelectOption[] = INDUSTRY_OPTIONS;
+  genderOptions = GENDER_OPTIONS;
+  raceOptions = RACE_OPTIONS;
+  disabilityOptions = DISABILITY_OPTIONS;
+  industryOptions = INDUSTRY_OPTIONS;
+
+  get userRole(): string | null {
+    return this.user?.role ?? null;
+  }
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private fb = inject(FormBuilder);
+  private registrationService = inject(RegistrationControllerService);
+  private profileService = inject(ProfileControllerService);
   private authService = inject(AuthService);
-  private jwtDecoderService = inject(JwtDecoderService);
+  private fb = inject(FormBuilder);
 
   ngOnInit(): void {
     this.registrationToken = this.route.snapshot.queryParamMap.get('token');
+    const authenticatedUser = this.authService.getCurrentUser();
 
-    if (!this.registrationToken) {
-      this.errorMessage = 'Registration token missing.';
-      return;
+    if (this.registrationToken) {
+      this.handleTokenFlow(this.registrationToken);
+    } else if (authenticatedUser && authenticatedUser.isNewUser) {
+      this.handleSessionFlow(authenticatedUser);
+    } else {
+      this.errorMessage = "Invalid access. No registration token found and you don't appear to be a new user.";
+      this.isLoading = false;
     }
+  }
 
-    try {
-      const decodedToken: JwtPayload = this.jwtDecoderService.decode(this.registrationToken);
-      this.userRole = decodedToken.role;
-    } catch (e) {
-      console.error('Error decoding JWT', e);
-      this.errorMessage = 'Invalid registration token.';
-      return;
-    }
+  private handleTokenFlow(token: string): void {
+    this.registrationService.validateRegistrationToken({ token }).subscribe({
+      next: (response: { [key: string]: any }) => {
+        if (!response['valid']) {
+          this.errorMessage = 'This registration link is invalid or has expired.';
+          this.isLoading = false;
+          return;
+        }
+        this.user = response as User; // Assuming the response contains user role
+        this.initForm();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Invalid or expired registration token.';
+        this.isLoading = false;
+      },
+    });
+  }
 
-    // Clean the URL after extracting the token
-    this.router.navigate([], { relativeTo: this.route, replaceUrl: true, queryParams: {} });
-
+  private handleSessionFlow(authenticatedUser: User): void {
+    this.user = authenticatedUser;
     this.initForm();
+    this.isLoading = false;
   }
 
   private initForm(): void {
-    if (this.userRole === 'CANDIDATE') {
-      this.profileForm = this.fb.group({
-        username: ['', Validators.required],
-        firstName: ['', Validators.required],
-        lastName: ['', Validators.required],
-        gender: ['', Validators.required],
-        race: ['', Validators.required],
-        disability: ['', Validators.required],
-        contactNumber: ['', Validators.required],
-        alternateContactNumber: [''],
-      });
-    } else if (this.userRole === 'HIRING_MANAGER') {
-      this.profileForm = this.fb.group({
-        username: ['', Validators.required],
-        companyName: ['', Validators.required],
-        industry: ['', Validators.required],
-        contactPerson: ['', Validators.required],
-        contactNumber: ['', Validators.required],
-      });
-    } else {
-      this.errorMessage = 'Unknown user role.';
-      this.profileForm = this.fb.group({}); // Initialize empty form to prevent errors
+    this.profileForm = this.fb.group({
+      firstName: [this.user?.firstName || '', Validators.required],
+      lastName: [this.user?.lastName || '', Validators.required],
+      gender: [''],
+      race: [''],
+      disability: [''],
+      companyName: [''],
+      industry: [''],
+    });
+
+    if (this.userRole === 'HIRING_MANAGER') {
+      this.profileForm.get('companyName')?.setValidators([Validators.required]);
+      this.profileForm.get('industry')?.setValidators([Validators.required]);
+      this.profileForm.updateValueAndValidity();
     }
   }
 
@@ -97,33 +105,55 @@ export class ProfileCreate implements OnInit {
       return;
     }
 
-    if (!this.registrationToken) {
-      this.errorMessage = 'Registration token missing.';
-      return;
+    if (this.registrationToken) {
+      this.completeWithToken();
+    } else {
+      this.completeWithSession();
     }
+  }
 
+  private completeWithToken(): void {
     if (this.userRole === 'CANDIDATE') {
       const body: CandidateRegistrationDto = this.profileForm.value;
-      this.authService.completeCandidateRegistration(this.registrationToken, body).subscribe({
-        next: () => {
-          this.router.navigate(['/']); // Redirect to homepage after successful registration
-        },
-        error: (err) => {
-          console.error('Candidate registration failed:', err);
-          this.errorMessage = 'Candidate registration failed: ' + (err.error?.message || err.message);
-        }
-      });
+      this.registrationService.completeCandidateRegistration({ token: this.registrationToken!, body })
+        .subscribe({
+          next: (res) => this.handleSuccess(res),
+          error: (err) => this.handleError(err)
+        });
     } else if (this.userRole === 'HIRING_MANAGER') {
       const body: HiringManagerRegistrationDto = this.profileForm.value;
-      this.authService.completeHiringManagerRegistration(this.registrationToken, body).subscribe({
-        next: () => {
-          this.router.navigate(['/']); // Redirect to homepage after successful registration
-        },
-        error: (err) => {
-          console.error('Hiring Manager registration failed:', err);
-          this.errorMessage = 'Hiring Manager registration failed: ' + (err.error?.message || err.message);
-        }
+      this.registrationService.completeHiringManagerRegistration({ token: this.registrationToken!, body })
+        .subscribe({
+          next: (res) => this.handleSuccess(res),
+          error: (err) => this.handleError(err)
+        });
+    }
+  }
+
+  private completeWithSession(): void {
+    const body: CompleteProfileRequest = this.profileForm.value;
+    this.profileService.completeProfile({ body })
+      .subscribe({
+        next: (res) => this.handleSuccess(res),
+        error: (err) => this.handleError(err)
       });
+  }
+
+  private handleSuccess(response: VerifyTokenResponse): void {
+    this.authService['handleSuccessfulAuth'](response);
+    const dashboardUrl = this.getDashboardUrl(response.user?.role);
+    this.router.navigate([dashboardUrl]);
+  }
+
+  private handleError(err: any): void {
+    this.errorMessage = err.error?.message || 'An error occurred.';
+  }
+
+  private getDashboardUrl(role?: string): string {
+    switch (role) {
+      case 'CANDIDATE': return '/talent/dashboard';
+      case 'HIRING_MANAGER': return '/employer/dashboard';
+      default: return '/';
     }
   }
 }
