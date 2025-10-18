@@ -23,7 +23,6 @@ import {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent, NgxIntlTelInputModule],
   templateUrl: './profile-create.html',
-  styleUrls: ['./profile-create.css'],
 })
 export class ProfileCreate implements OnInit {
   // Add these public properties for the template
