@@ -22,7 +22,7 @@ export class SignInComponent {
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
-      this.authService.login(this.email).subscribe({
+      this.authService.requestMagicLink(this.email).subscribe({
         next: (response: string) => {
           this.modalState = 'sent';
           // Optionally, display a message from the response
