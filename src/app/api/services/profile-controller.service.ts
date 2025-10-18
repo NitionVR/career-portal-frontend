@@ -10,8 +10,11 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
+import { completeProfile } from '../fn/profile-controller/complete-profile';
+import { CompleteProfile$Params } from '../fn/profile-controller/complete-profile';
 import { updateProfile } from '../fn/profile-controller/update-profile';
 import { UpdateProfile$Params } from '../fn/profile-controller/update-profile';
+import { VerifyTokenResponse } from '../models/verify-token-response';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileControllerService extends BaseService {
@@ -20,7 +23,7 @@ export class ProfileControllerService extends BaseService {
   }
 
   /** Path part for operation `updateProfile()` */
-  static readonly UpdateProfilePath = '/api/profile';
+  static readonly UpdateProfilePath = '/api/profile/update';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -43,6 +46,33 @@ export class ProfileControllerService extends BaseService {
     const resp = this.updateProfile$Response(params, context);
     return resp.pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `completeProfile()` */
+  static readonly CompleteProfilePath = '/api/profile/complete';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `completeProfile()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  completeProfile$Response(params: CompleteProfile$Params, context?: HttpContext): Observable<StrictHttpResponse<VerifyTokenResponse>> {
+    const obs = completeProfile(this.http, this.rootUrl, params, context);
+    return obs;
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `completeProfile$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  completeProfile(params: CompleteProfile$Params, context?: HttpContext): Observable<VerifyTokenResponse> {
+    const resp = this.completeProfile$Response(params, context);
+    return resp.pipe(
+      map((r: StrictHttpResponse<VerifyTokenResponse>): VerifyTokenResponse => r.body)
     );
   }
 

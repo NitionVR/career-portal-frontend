@@ -30,4 +30,4 @@ export function updateProfile(http: HttpClient, rootUrl: string, params: UpdateP
   );
 }
 
-updateProfile.PATH = '/api/profile';
+updateProfile.PATH = '/api/profile/update';

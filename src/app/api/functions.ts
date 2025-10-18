@@ -3,6 +3,8 @@
 
 export type { UpdateProfile$Params } from './fn/profile-controller/update-profile';
 export { updateProfile } from './fn/profile-controller/update-profile';
+export type { CompleteProfile$Params } from './fn/profile-controller/complete-profile';
+export { completeProfile } from './fn/profile-controller/complete-profile';
 export type { GetJobPost$Params } from './fn/job-post-controller/get-job-post';
 export { getJobPost } from './fn/job-post-controller/get-job-post';
 export type { UpdateJobPost$Params } from './fn/job-post-controller/update-job-post';
