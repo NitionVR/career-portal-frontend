@@ -25,11 +25,10 @@ export const routes: Routes = [
   { path: 'sign-up', component: RegisterPage, canActivate: [guestGuard] },
   { path: 'auth/callback', component: MagicLinkPage }, // This will be replaced by the new callback component logic
 
-  // Protected routes that require authentication
+  // This route is now public, but the component itself validates the token.
   {
     path: 'profile/create',
     component: ProfileCreate,
-    canActivate: [authGuard] // Protect the profile creation page
   },
   {
     path: 'job-posts/:id',
