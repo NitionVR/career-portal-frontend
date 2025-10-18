@@ -36,6 +36,7 @@ export class ProfileCreate implements OnInit {
   errorMessage: string | null = null;
   isLoading = true;
   isSubmitting = false;
+  isSubmitted = false;
 
   genderOptions = GENDER_OPTIONS;
   raceOptions = RACE_OPTIONS;
@@ -96,14 +97,14 @@ export class ProfileCreate implements OnInit {
     // Common fields for both roles
     const commonControls = {
       username: ['', [Validators.required, Validators.minLength(3)]],
-      firstName: [this.user?.firstName || '', Validators.required],
-      lastName: [this.user?.lastName || '', Validators.required],
     };
 
     // Role-specific fields
     if (this.userRole === 'CANDIDATE') {
       this.profileForm = this.fb.group({
         ...commonControls,
+        firstName: [this.user?.firstName || '', Validators.required],
+        lastName: [this.user?.lastName || '', Validators.required],
         gender: [''],
         race: [''],
         disability: [''],
@@ -127,7 +128,7 @@ export class ProfileCreate implements OnInit {
   // Helper to check if a field has errors
   hasError(fieldName: string): boolean {
     const field = this.profileForm.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched));
+    return !!(field && field.invalid && (field.dirty || this.isSubmitted));
   }
 
   // Helper to get error message for a field
@@ -148,6 +149,7 @@ export class ProfileCreate implements OnInit {
   }
 
   onSubmit(): void {
+    this.isSubmitted = true; // Mark form as submitted
     if (this.profileForm.invalid) {
       // Mark all fields as touched to show validation errors
       Object.keys(this.profileForm.controls).forEach(key => {

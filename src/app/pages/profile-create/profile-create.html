@@ -312,39 +312,39 @@
 
                 <div>
 
-                  <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_contactPerson">
+                            <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_contactPerson">
 
-                    Contact Person <span class="text-destructive">*</span>
+                              Contact Person <span class="text-destructive">*</span>
 
-                  </label>
+                            </label>
 
-                  <input
+                            <input
 
-                    id="hm_contactPerson"
+                                                                                    id="hm_contactPerson"
 
-                    formControlName="contactPerson"
+                                                                                    formControlName="contactPerson"
 
-                    type="text"
+                                                                                    type="text"
 
-                    autocomplete="name"
+                                                                                    autocomplete="name"
 
-                    placeholder="Enter contact person's name"
+                                                                                    placeholder="Enter contact person's name"
 
-                    class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+                                                                                    class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
 
-                    [class.border-destructive]="hasError('contactPerson')"
+                                                                                    [class.border-destructive]="hasError('contactPerson')"
 
-                    [class.border-border]="!hasError('contactPerson')"
+                                                                                    [class.border-border]="!hasError('contactPerson')"
 
-                  />
+                                                                                  />
 
-                  <p *ngIf="hasError('contactPerson')" class="mt-1 text-sm text-destructive">
+                                                                                  <p *ngIf="hasError('contactPerson')" class="mt-1 text-sm text-destructive">
 
-                    {{ getErrorMessage('contactPerson') }}
+                                                                                    {{ getErrorMessage('contactPerson') }}
 
-                  </p>
+                                                                                  </p>
 
-                </div>
+                          </div>
 
                 <div>
 
