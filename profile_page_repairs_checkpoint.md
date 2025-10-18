@@ -24,8 +24,8 @@ This document tracks the incremental fixes being applied to the Profile Create p
 
 ### 4. CSS Variables Inconsistency
 
-*   **Issue:** The `custom-select.component.css` uses hardcoded color values instead of the application's design system variables (e.g., `hsl(var(--border))`).
-*   **Status:** 🔲 **To Do**
+*   **Status:** ✅ **Done**
+*   **Details:** Replaced all hardcoded color values in `custom-select.component.css` with the appropriate `hsl(var(--...))` variables from the design system.
 
 ---
 
@@ -34,7 +34,8 @@ This document tracks the incremental fixes being applied to the Profile Create p
 ### 5. Field-Level Error Messages
 
 *   **Issue:** The component lacks helper methods and template logic to display specific validation errors next to each invalid field.
-*   **Status:** 🔲 **To Do**
+*   **Status:** ✅ **Done**
+*   **Details:** Added `hasError` and `getErrorMessage` helpers to the component. The template now uses these methods to display specific error messages under each field and applies a `border-destructive` class to invalid inputs. The `onSubmit` method was also updated to mark all fields as touched to trigger validation display.
 
 ---
 *This document will be updated as each repair is completed.*

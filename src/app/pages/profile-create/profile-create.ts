@@ -114,9 +114,36 @@ export class ProfileCreate implements OnInit {
     }
   }
 
+  // Helper to check if a field has errors
+  hasError(fieldName: string): boolean {
+    const field = this.profileForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  // Helper to get error message for a field
+  getErrorMessage(fieldName: string): string {
+    const field = this.profileForm.get(fieldName);
+    if (!field || !field.errors) return '';
+
+    if (field.hasError('required')) {
+      return 'This field is required';
+    }
+    if (field.hasError('minlength')) {
+      return `Minimum ${field.errors['minlength'].requiredLength} characters required`;
+    }
+    if (field.hasError('pattern')) {
+      return 'Please enter a valid phone number (e.g., +1234567890)';
+    }
+    return 'Invalid input';
+  }
+
   onSubmit(): void {
     if (this.profileForm.invalid) {
-      this.errorMessage = 'Please fill in all required fields.';
+      // Mark all fields as touched to show validation errors
+      Object.keys(this.profileForm.controls).forEach(key => {
+        this.profileForm.get(key)?.markAsTouched();
+      });
+      this.errorMessage = 'Please fix the errors in the form before submitting.';
       return;
     }
 

@@ -19,85 +19,223 @@
 
     <!-- Form -->
     <form *ngIf="!isLoading && profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+      <!-- CANDIDATE FORM -->
       <ng-container *ngIf="userRole === 'CANDIDATE'">
         <div>
-          <label class="block text-sm font-medium text-muted-foreground" for="username">Username</label>
-          <input id="username" formControlName="username" type="text" placeholder="Enter your username" class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="username">
+            Username <span class="text-destructive">*</span>
+          </label>
+          <input
+            id="username"
+            formControlName="username"
+            type="text"
+            placeholder="Enter your username"
+            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+            [class.border-destructive]="hasError('username')"
+            [class.border-border]="!hasError('username')"
+          />
+          <p *ngIf="hasError('username')" class="mt-1 text-sm text-destructive">
+            {{ getErrorMessage('username') }}
+          </p>
         </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-muted-foreground" for="firstName">First Name</label>
-            <input id="firstName" formControlName="firstName" type="text" placeholder="Enter your first name" class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="firstName">
+              First Name <span class="text-destructive">*</span>
+            </label>
+            <input
+              id="firstName"
+              formControlName="firstName"
+              type="text"
+              placeholder="Enter your first name"
+              class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+              [class.border-destructive]="hasError('firstName')"
+              [class.border-border]="!hasError('firstName')"
+            />
+            <p *ngIf="hasError('firstName')" class="mt-1 text-sm text-destructive">
+              {{ getErrorMessage('firstName') }}
+            </p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-muted-foreground" for="lastName">Last Name</label>
-            <input id="lastName" formControlName="lastName" type="text" placeholder="Enter your last name" class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="lastName">
+              Last Name <span class="text-destructive">*</span>
+            </label>
+            <input
+              id="lastName"
+              formControlName="lastName"
+              type="text"
+              placeholder="Enter your last name"
+              class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+              [class.border-destructive]="hasError('lastName')"
+              [class.border-border]="!hasError('lastName')"
+            />
+            <p *ngIf="hasError('lastName')" class="mt-1 text-sm text-destructive">
+              {{ getErrorMessage('lastName') }}
+            </p>
           </div>
         </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-muted-foreground" for="gender">Gender</label>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="gender">Gender</label>
             <app-custom-select id="gender" formControlName="gender" [options]="genderOptions" placeholder="Select your gender"></app-custom-select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-muted-foreground" for="race">Race</label>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="race">Race</label>
             <app-custom-select id="race" formControlName="race" [options]="raceOptions" placeholder="Select your race"></app-custom-select>
           </div>
         </div>
+
         <div>
-          <label class="block text-sm font-medium text-muted-foreground" for="disability">Disability</label>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="disability">Disability Status</label>
           <app-custom-select id="disability" formControlName="disability" [options]="disabilityOptions" placeholder="Select an option"></app-custom-select>
         </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-muted-foreground" for="contactNumber">Contact Number</label>
-            <input id="contactNumber" formControlName="contactNumber" type="tel" placeholder="e.g., +1234567890" class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactNumber">
+              Contact Number <span class="text-destructive">*</span>
+            </label>
+            <input
+              id="contactNumber"
+              formControlName="contactNumber"
+              type="tel"
+              placeholder="e.g., +1234567890"
+              class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+              [class.border-destructive]="hasError('contactNumber')"
+              [class.border-border]="!hasError('contactNumber')"
+            />
+            <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
+              {{ getErrorMessage('contactNumber') }}
+            </p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-muted-foreground" for="alternateContactNumber">Alternate Contact (Optional)</label>
-            <input id="alternateContactNumber" formControlName="alternateContactNumber" type="tel" placeholder="e.g., +1987654321" class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="alternateContactNumber">
+              Alternate Contact <span class="text-muted-foreground text-xs">(Optional)</span>
+            </label>
+            <input
+              id="alternateContactNumber"
+              formControlName="alternateContactNumber"
+              type="tel"
+              placeholder="e.g., +1987654321"
+              class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+              [class.border-destructive]="hasError('alternateContactNumber')"
+              [class.border-border]="!hasError('alternateContactNumber')"
+            />
+            <p *ngIf="hasError('alternateContactNumber')" class="mt-1 text-sm text-destructive">
+              {{ getErrorMessage('alternateContactNumber') }}
+            </p>
           </div>
         </div>
       </ng-container>
 
+      <!-- HIRING MANAGER FORM -->
       <ng-container *ngIf="userRole === 'HIRING_MANAGER'">
         <div>
-          <label class="block text-sm font-medium text-muted-foreground" for="username">Username</label>
-          <input id="username" formControlName="username" type="text" placeholder="Enter your username" class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="username">
+            Username <span class="text-destructive">*</span>
+          </label>
+          <input
+            id="username"
+            formControlName="username"
+            type="text"
+            placeholder="Enter your username"
+            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+            [class.border-destructive]="hasError('username')"
+            [class.border-border]="!hasError('username')"
+          />
+          <p *ngIf="hasError('username')" class="mt-1 text-sm text-destructive">
+            {{ getErrorMessage('username') }}
+          </p>
         </div>
+
         <div>
-          <label class="block text-sm font-medium text-muted-foreground" for="companyName">Company Name</label>
-          <input id="companyName" formControlName="companyName" type="text" placeholder="Enter your company name" class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="companyName">
+            Company Name <span class="text-destructive">*</span>
+          </label>
+          <input
+            id="companyName"
+            formControlName="companyName"
+            type="text"
+            placeholder="Enter your company name"
+            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+            [class.border-destructive]="hasError('companyName')"
+            [class.border-border]="!hasError('companyName')"
+          />
+          <p *ngIf="hasError('companyName')" class="mt-1 text-sm text-destructive">
+            {{ getErrorMessage('companyName') }}
+          </p>
         </div>
+
         <div>
-          <label class="block text-sm font-medium text-muted-foreground" for="industry">Industry</label>
-          <app-custom-select id="industry" formControlName="industry" [options]="industryOptions" placeholder="Select your industry"></app-custom-select>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="industry">
+            Industry <span class="text-destructive">*</span>
+          </label>
+          <app-custom-select
+            id="industry"
+            formControlName="industry"
+            [options]="industryOptions"
+            placeholder="Select your industry">
+          </app-custom-select>
+          <p *ngIf="hasError('industry')" class="mt-1 text-sm text-destructive">
+            {{ getErrorMessage('industry') }}
+          </p>
         </div>
+
         <div>
-          <label class="block text-sm font-medium text-muted-foreground" for="contactPerson">Contact Person</label>
-          <input id="contactPerson" formControlName="contactPerson" type="text" placeholder="Enter contact person's name" class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactPerson">
+            Contact Person <span class="text-destructive">*</span>
+          </label>
+          <input
+            id="contactPerson"
+            formControlName="contactPerson"
+            type="text"
+            placeholder="Enter contact person's name"
+            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+            [class.border-destructive]="hasError('contactPerson')"
+            [class.border-border]="!hasError('contactPerson')"
+          />
+          <p *ngIf="hasError('contactPerson')" class="mt-1 text-sm text-destructive">
+            {{ getErrorMessage('contactPerson') }}
+          </p>
         </div>
+
         <div>
-          <label class="block text-sm font-medium text-muted-foreground" for="contactNumber">Contact Number</label>
-          <input id="contactNumber" formControlName="contactNumber" type="tel" placeholder="e.g., +1234567890" class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactNumber">
+            Contact Number <span class="text-destructive">*</span>
+          </label>
+          <input
+            id="contactNumber"
+            formControlName="contactNumber"
+            type="tel"
+            placeholder="e.g., +1234567890"
+            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+            [class.border-destructive]="hasError('contactNumber')"
+            [class.border-border]="!hasError('contactNumber')"
+          />
+          <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
+            {{ getErrorMessage('contactNumber') }}
+          </p>
         </div>
       </ng-container>
 
-  <!-- Submit Button -->
-  <button
-    type="submit"
-    [disabled]="profileForm.invalid || isSubmitting"
-    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    <span *ngIf="!isSubmitting">Complete Registration</span>
-    <span *ngIf="isSubmitting" class="flex items-center">
-      <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      Processing...
-    </span>
-  </button>
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="isSubmitting"
+        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <span *ngIf="!isSubmitting">Complete Registration</span>
+        <span *ngIf="isSubmitting" class="flex items-center">
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Processing...
+        </span>
+      </button>
     </form>
   </div>
 </div>
