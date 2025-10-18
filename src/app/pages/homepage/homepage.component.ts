@@ -43,10 +43,10 @@ export class HomepageComponent implements OnInit {
       pageable: { page: this.currentPage, size: this.pageSize },
       search: this.searchQuery,
       skillSearch: this.currentFilters.skillSearch,
-      experienceLevels: experienceLevels,
-      jobTypes: jobTypes,
-      workTypes: workTypes
-    }).subscribe({
+      experienceLevels: experienceLevels.join(','),
+      jobTypes: jobTypes.join(','),
+      workTypes: workTypes.join(',')
+    } as any).subscribe({
       next: (page: PageJobPostResponse) => {
         this.paginatedJobs = page.content || [];
         this.totalPages = page.totalPages || 1;

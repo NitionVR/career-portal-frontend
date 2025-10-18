@@ -67,6 +67,7 @@ export class MagicLinkPage implements OnInit {
   private handleLoginLink(token: string): void {
     this.authService.verifyMagicLink(token).subscribe({
       next: (response) => {
+        console.log('User object from backend:', response.user); // --- DEBUGGING LINE ---
         this.redirectUser(response.user as User);
       },
       error: (err) => {
