@@ -23,6 +23,8 @@ export interface SelectOption {
   ],
 })
 export class CustomSelectComponent implements OnInit, ControlValueAccessor {
+  @Input() id!: string;
+  @Input() labelForId!: string;
   @Input() formControlName!: string;
   @Input() placeholder: string = '';
   @Input() options: SelectOption[] = [];
