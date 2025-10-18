@@ -13,24 +13,31 @@ import { UserMenuModalComponent } from '../../user-menu-modal/user-menu-modal.co
 })
 export class HeaderComponent implements OnInit {
   @Input() isLoggedIn: boolean = false;
-  private _user: any = null;
+  @Input() user: any | null = null;
 
-  @Input()
-  set user(value: any) {
-    this._user = value;
-    console.log('HeaderComponent user (setter):', this._user);
-  }
-  get user(): any {
-    return this._user;
-  }
   @Output() openSignInModal = new EventEmitter<Event>();
-  @Output() toggleMobileSidebar = new EventEmitter<void>();  
-  showUserMenu: boolean = false; // New property to control user menu visibility
+  @Output() toggleMobileSidebar = new EventEmitter<void>();
+  showUserMenu: boolean = false;
 
   private authService = inject(AuthService);
-  
+
+  get fullName(): string {
+    if (!this.user) {
+      return 'User';
+    }
+    return `${this.user.firstName || ''} ${this.user.lastName || ''}`.trim();
+  }
+
+  get userInitials(): string {
+    if (!this.user) {
+      return '?';
+    }
+    const firstNameInitial = this.user.firstName ? this.user.firstName[0] : '';
+    const lastNameInitial = this.user.lastName ? this.user.lastName[0] : '';
+    return `${firstNameInitial}${lastNameInitial}`.toUpperCase();
+  }
+
   ngOnInit(): void {
-    console.log('HeaderComponent ngOnInit user:', this.user);
   }
 
   onOpenSignInModal(event: Event): void {
