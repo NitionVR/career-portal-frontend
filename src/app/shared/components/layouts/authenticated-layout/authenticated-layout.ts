@@ -4,7 +4,7 @@ import { HeaderComponent } from '../../navigation/header/header';
 import { SidebarComponent } from '../../navigation/sidebar/sidebar';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth';
-import { filter, Subscription } from 'rxjs';
+import { filter, Subscription, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-authenticated-layout',
@@ -17,8 +17,8 @@ export class AuthenticatedLayoutComponent implements OnInit, OnDestroy {
   isSidebarMinimized: boolean = false;
   isMobileSidebarOpen: boolean = false;
   isMobile: boolean = false;
-  isLoggedIn: boolean = false;
-  user: any | null = null;
+  isLoggedIn$: Observable<boolean>;
+  user$: Observable<any | null>;
   sidebarContext: 'talent-dashboard' | 'talent-profile' = 'talent-dashboard';
 
   private authService = inject(AuthService);
@@ -26,11 +26,13 @@ export class AuthenticatedLayoutComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private routerSubscription: Subscription | undefined;
 
+  constructor() {
+    this.isLoggedIn$ = this.authService.isAuthenticated$;
+    this.user$ = this.authService.currentUser$;
+  }
+
   ngOnInit(): void {
     this.checkIsMobile();
-    this.isLoggedIn = this.authService.isLoggedIn();
-    this.user = this.authService.getUser();
-
     this.routerSubscription = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {

@@ -17,17 +17,15 @@ export class App implements OnInit, OnDestroy {
   user: any | null = null;
 
   private authService = inject(AuthService);
-  private userMenuSubscription: Subscription | undefined;
+  private userSubscription: Subscription | undefined;
 
   ngOnInit(): void {
-    this.user = this.authService.getUser();
-    // The user menu modal is now handled within the HeaderComponent, so we no longer need to subscribe here.
-    // this.userMenuSubscription = this.userMenuService.onOpenMenu().subscribe(() => {
-    //   this.toggleUserMenuModal();
-    // });
+    this.userSubscription = this.authService.currentUser$.subscribe(user => {
+      this.user = user;
+    });
   }
 
   ngOnDestroy(): void {
-    this.userMenuSubscription?.unsubscribe();
+    this.userSubscription?.unsubscribe();
   }
 }
