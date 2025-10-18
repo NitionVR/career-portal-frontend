@@ -1,0 +1,48 @@
+<aside class="w-64 bg-card border-r border-border p-6 fixed top-20 bottom-0 z-30 transition-all duration-300 ease-in-out"
+       [ngClass]="{
+         'w-64 p-6': !isMinimized,
+         'w-20 p-3': isMinimized
+       }">
+  <div class="flex justify-end mb-4">
+    <button (click)="toggleMinimize()" class="text-muted-foreground hover:text-foreground focus:outline-none hidden md:block">
+      <span class="material-symbols-outlined">
+        {{ isMinimized ? 'chevron_right' : 'chevron_left' }}
+      </span>
+    </button>
+  </div>
+  <nav class="flex flex-col space-y-2">
+    <a routerLink="/employer/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="onNavLinkClick()"
+       class="flex items-center px-4 py-3 rounded-lg transition-colors"
+       [ngClass]="{
+         'bg-primary/10 text-primary font-semibold': rlaDashboard.isActive,
+         'text-muted-foreground hover:bg-muted hover:text-foreground': !rlaDashboard.isActive
+       }"
+       #rlaDashboard="routerLinkActive"
+       matTooltip="Dashboard" [matTooltipDisabled]="!isMinimized">
+      <span class="material-symbols-outlined mr-3">dashboard</span>
+      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Dashboard</span>
+    </a>
+    <a routerLink="/employer/jobs" routerLinkActive="active" (click)="onNavLinkClick()"
+       class="flex items-center px-4 py-3 rounded-lg transition-colors"
+       [ngClass]="{
+         'bg-primary/10 text-primary font-semibold': rlaJobs.isActive,
+         'text-muted-foreground hover:bg-muted hover:text-foreground': !rlaJobs.isActive
+       }"
+       #rlaJobs="routerLinkActive"
+       matTooltip="Job Posts" [matTooltipDisabled]="!isMinimized">
+      <span class="material-symbols-outlined mr-3">work</span>
+      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Job Posts</span>
+    </a>
+    <a routerLink="/employer/settings/company" routerLinkActive="active" (click)="onNavLinkClick()"
+       class="flex items-center px-4 py-3 rounded-lg transition-colors"
+       [ngClass]="{
+         'bg-primary/10 text-primary font-semibold': rlaCompany.isActive,
+         'text-muted-foreground hover:bg-muted hover:text-foreground': !rlaCompany.isActive
+       }"
+       #rlaCompany="routerLinkActive"
+       matTooltip="Company Profile" [matTooltipDisabled]="!isMinimized">
+      <span class="material-symbols-outlined mr-3">business</span>
+      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Company Profile</span>
+    </a>
+  </nav>
+</aside>

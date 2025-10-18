@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener, inject, OnDestroy } from '@angular/cor
 import { RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from '../../navigation/header/header';
 import { SidebarComponent } from '../../navigation/sidebar/sidebar';
+import { EmployerSidebarComponent } from '../../navigation/employer-sidebar/employer-sidebar.component';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth';
 import { filter, Subscription, Observable } from 'rxjs';
@@ -9,7 +10,7 @@ import { filter, Subscription, Observable } from 'rxjs';
 @Component({
   selector: 'app-authenticated-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderComponent, SidebarComponent],
+  imports: [CommonModule, RouterOutlet, HeaderComponent, SidebarComponent, EmployerSidebarComponent],
   templateUrl: './authenticated-layout.html',
   styleUrls: ['./authenticated-layout.css']
 })
@@ -19,11 +20,14 @@ export class AuthenticatedLayoutComponent implements OnInit, OnDestroy {
   isMobile: boolean = false;
   isLoggedIn$: Observable<boolean>;
   user$: Observable<any | null>;
-  sidebarContext: 'talent-dashboard' | 'talent-profile' = 'talent-dashboard';
+
+  get userRole(): string | null {
+    // This is a synchronous way to get the role for the template's *ngIf
+    return this.authService.getCurrentUser()?.role ?? null;
+  }
 
   private authService = inject(AuthService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
   private routerSubscription: Subscription | undefined;
 
   constructor() {
@@ -33,12 +37,6 @@ export class AuthenticatedLayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.checkIsMobile();
-    this.routerSubscription = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.updateSidebarContext();
-    });
-    this.updateSidebarContext(); // Initial context set
   }
 
   ngOnDestroy(): void {
@@ -56,14 +54,6 @@ export class AuthenticatedLayoutComponent implements OnInit, OnDestroy {
       this.isMobileSidebarOpen = false; // Ensure sidebar is closed on mobile by default
     } else {
       this.isMobileSidebarOpen = false; // Close sidebar if resizing to desktop
-    }
-  }
-
-  private updateSidebarContext(): void {
-    if (this.router.url.includes('/talent/profile')) {
-      this.sidebarContext = 'talent-profile';
-    } else {
-      this.sidebarContext = 'talent-dashboard';
     }
   }
 
