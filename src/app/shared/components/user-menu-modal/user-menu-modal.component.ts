@@ -16,6 +16,22 @@ export class UserMenuModalComponent {
 
   constructor(private authService: AuthService) { }
 
+  get fullName(): string {
+    if (!this.user) {
+      return 'User';
+    }
+    return `${this.user.firstName || ''} ${this.user.lastName || ''}`.trim();
+  }
+
+  get userInitials(): string {
+    if (!this.user) {
+      return '?';
+    }
+    const firstNameInitial = this.user.firstName ? this.user.firstName[0] : '';
+    const lastNameInitial = this.user.lastName ? this.user.lastName[0] : '';
+    return `${firstNameInitial}${lastNameInitial}`.toUpperCase();
+  }
+
   onLogout(): void {
     this.authService.logout();
     this.closeModal.emit();

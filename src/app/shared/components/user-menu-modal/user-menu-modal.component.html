@@ -3,9 +3,17 @@
       <span class="material-symbols-outlined">close</span>
     </button>
     <div class="flex items-center space-x-3 mb-4">
-      <img alt="User avatar" class="h-10 w-10 rounded-full" [src]="user?.profileImageUrl || 'https://via.placeholder.com/150'"/>
+      <!-- Profile Picture with Fallback -->
+      <ng-container *ngIf="user?.profileImageUrl; else initialsAvatar">
+        <img alt="User avatar" class="h-10 w-10 rounded-full" [src]="user.profileImageUrl"/>
+      </ng-container>
+      <ng-template #initialsAvatar>
+        <div class="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-semibold text-lg">
+          {{ userInitials }}
+        </div>
+      </ng-template>
       <div>
-        <p class="font-semibold text-lg text-foreground">{{ user?.name || 'User' }}</p>
+        <p class="font-semibold text-lg text-foreground">{{ fullName }}</p>
         <p class="text-sm text-muted-foreground">{{ user?.email || 'email@example.com' }}</p>
       </div>
     </div>
