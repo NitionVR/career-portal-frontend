@@ -11,15 +11,26 @@ import { CustomSelectComponent } from '../../shared/components/custom-select/cus
 import { GENDER_OPTIONS, RACE_OPTIONS, DISABILITY_OPTIONS, INDUSTRY_OPTIONS } from '../../shared/data/form-options';
 import { VerifyTokenResponse } from '../../api/models';
 import { CompleteProfileRequest } from '../../api/models/complete-profile-request';
+import {
+  NgxIntlTelInputModule,
+  SearchCountryField,
+  CountryISO,
+  PhoneNumberFormat
+} from 'ngx-intl-tel-input';
 
 @Component({
   selector: 'app-profile-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent, NgxIntlTelInputModule],
   templateUrl: './profile-create.html',
   styleUrls: ['./profile-create.css'],
 })
 export class ProfileCreate implements OnInit {
+  // Add these public properties for the template
+  SearchCountryField = SearchCountryField;
+  CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+
   profileForm!: FormGroup;
   registrationToken: string | null = null;
   user: User | null = null;
@@ -97,7 +108,7 @@ export class ProfileCreate implements OnInit {
         gender: [''],
         race: [''],
         disability: [''],
-        contactNumber: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+        contactNumber: [undefined, [Validators.required]],
         alternateContactNumber: ['', Validators.pattern(/^\+?[1-9]\d{1,14}$/)],
       });
     } else if (this.userRole === 'HIRING_MANAGER') {
@@ -106,7 +117,7 @@ export class ProfileCreate implements OnInit {
         companyName: ['', Validators.required],
         industry: ['', Validators.required],
         contactPerson: ['', Validators.required],
-        contactNumber: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+        contactNumber: [undefined, [Validators.required]],
       });
     } else {
       // Fallback for unknown role

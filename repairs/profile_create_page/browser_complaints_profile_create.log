@@ -1,0 +1,49 @@
+1.
+
+A form field element should have an id or name attribute
+A form field element has neither an id nor a name attribute. This might prevent the browser from correctly autofilling the form.
+
+To fix this issue, add a unique id or name attribute to a form field. This is not strictly needed, but still recommended even if you have an autocomplete attribute on the same element.
+
+6 resources
+Violating node
+Violating node
+Violating node
+Violating node
+Violating node
+Violating node
+Learn more: The form input element
+
+https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input
+
+2.
+
+An element doesn't have an autocomplete attribute
+A form field has an id or name attribute that the browser's autofill recognizes. However, it doesn't have an autocomplete attribute assigned. This might prevent the browser from correctly autofilling the form.
+
+To fix this issue, provide an autocomplete attribute.
+
+2 resources
+Learn more: HTML attribute: autocomplete
+
+https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete#values
+3.
+
+
+Incorrect use of <label for=FORM_ELEMENT>
+The label's for attribute doesn't match any element id. This might prevent the browser from correctly autofilling the form and accessibility tools from working correctly.
+
+To fix this issue, make sure the label's for attribute references the correct id of a form field.
+
+6 resources
+Violating node
+Violating node
+Violating node
+Violating node
+Violating node
+Violating node
+Learn more: The label elements
+
+https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label
+
+

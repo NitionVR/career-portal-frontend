@@ -1,0 +1,364 @@
+Fix for ngx-intl-tel-input Country Selector Placement
+The issue is that the country selector dropdown is rendering outside the input field. This is a common CSS positioning problem with ngx-intl-tel-input.
+
+✅ SOLUTION
+1. Update profile-create.html (Fix Input Structure)
+Replace both phone number input sections with this corrected structure:
+
+html
+<!-- For CANDIDATE Contact Number -->
+<div>
+  <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactNumber">
+    Contact Number <span class="text-destructive">*</span>
+  </label>
+  <div class="phone-input-wrapper">
+    <ngx-intl-tel-input
+      [cssClass]="'custom-phone-input'"
+      [preferredCountries]="['us', 'gb', 'za']"
+      [enableAutoCountrySelect]="true"
+      [enablePlaceholder]="true"
+      [searchCountryFlag]="true"
+      [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+      [selectFirstCountry]="false"
+      [selectedCountryISO]="CountryISO.UnitedStates"
+      [maxLength]="15"
+      [phoneValidation]="true"
+      [separateDialCode]="true"
+      [numberFormat]="PhoneNumberFormat.International"
+      name="phone"
+      formControlName="contactNumber">
+    </ngx-intl-tel-input>
+  </div>
+  <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
+    {{ getErrorMessage('contactNumber') }}
+  </p>
+</div>
+2. Update profile-create.ts (Add Required Imports)
+Add these imports at the top:
+
+typescript
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RegistrationControllerService } from '../../api/services/registration-controller.service';
+import { ProfileControllerService } from '../../api/services/profile-controller.service';
+import { CandidateRegistrationDto } from '../../api/models/candidate-registration-dto';
+import { HiringManagerRegistrationDto } from '../../api/models/hiring-manager-registration-dto';
+import { AuthService, User } from '../../core/services/auth';
+import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
+import { GENDER_OPTIONS, RACE_OPTIONS, DISABILITY_OPTIONS, INDUSTRY_OPTIONS } from '../../shared/data/form-options';
+import { VerifyTokenResponse } from '../../api/models';
+import { CompleteProfileRequest } from '../../api/models/complete-profile-request';
+import {
+  NgxIntlTelInputModule,
+  SearchCountryField,
+  CountryISO,
+  PhoneNumberFormat
+} from 'ngx-intl-tel-input';
+
+@Component({
+  selector: 'app-profile-create',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent, NgxIntlTelInputModule],
+  templateUrl: './profile-create.html',
+  styleUrls: ['./profile-create.css'],
+})
+export class ProfileCreate implements OnInit {
+  // Add these public properties for the template
+  SearchCountryField = SearchCountryField;
+  CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
+
+  profileForm!: FormGroup;
+  registrationToken: string | null = null;
+  user: User | null = null;
+  errorMessage: string | null = null;
+  isLoading = true;
+  isSubmitting = false;
+
+  genderOptions = GENDER_OPTIONS;
+  raceOptions = RACE_OPTIONS;
+  disabilityOptions = DISABILITY_OPTIONS;
+  industryOptions = INDUSTRY_OPTIONS;
+
+  // ... rest of your code stays the same
+}
+3. Create profile-create.css (Component-Specific Styles)
+Create a new file profile-create.css with these styles:
+
+css
+/* Phone Input Wrapper */
+.phone-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Override ngx-intl-tel-input default styles */
+:host ::ng-deep .iti {
+  display: block;
+  width: 100% !important;
+  position: relative;
+}
+
+:host ::ng-deep .iti__flag-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .iti__selected-flag {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 0 0 12px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+:host ::ng-deep .iti__arrow {
+  margin-left: 6px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid hsl(var(--muted-foreground));
+}
+
+:host ::ng-deep input[type="tel"].custom-phone-input {
+  width: 100% !important;
+  height: 48px;
+  padding: 0.75rem 1rem 0.75rem 70px !important;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep input[type="tel"].custom-phone-input:focus {
+  border-color: hsl(var(--primary));
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+:host ::ng-deep input[type="tel"].custom-phone-input.ng-invalid.ng-touched {
+  border-color: hsl(var(--destructive));
+}
+
+/* Dropdown styling */
+:host ::ng-deep .iti__country-list {
+  position: absolute;
+  z-index: 50;
+  background-color: hsl(var(--popover));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  max-height: 200px;
+  overflow-y: scroll;
+  margin-top: 4px;
+  width: 300px !important;
+}
+
+:host ::ng-deep .iti__country {
+  padding: 8px 12px;
+  color: hsl(var(--popover-foreground));
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+:host ::ng-deep .iti__country:hover,
+:host ::ng-deep .iti__country.iti__highlight {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+:host ::ng-deep .iti__dial-code {
+  color: hsl(var(--muted-foreground));
+}
+
+:host ::ng-deep .iti__divider {
+  border-bottom: 1px solid hsl(var(--border));
+  margin: 4px 0;
+}
+
+/* Search box in dropdown */
+:host ::ng-deep .iti__search-input {
+  width: calc(100% - 24px);
+  margin: 8px 12px;
+  padding: 6px 10px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.25rem;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+:host ::ng-deep .iti__search-input:focus {
+  border-color: hsl(var(--primary));
+  outline: none;
+}
+
+/* Flag styling */
+:host ::ng-deep .iti__flag {
+  background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/img/flags.png");
+  background-size: 5652px 15px;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  :host ::ng-deep .iti__flag {
+    background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/img/flags@2x.png");
+  }
+}
+
+/* Separate dial code styling */
+:host ::ng-deep .iti__selected-dial-code {
+  margin-left: 6px;
+  color: hsl(var(--foreground));
+  font-weight: 500;
+}
+4. Update styles.css (Remove conflicting styles)
+Replace the ngx-intl-tel-input section in your styles.css with this simplified version:
+
+css
+/* === START ngx-intl-tel-input Global Overrides === */
+
+/* Ensure the component respects the parent width */
+.iti {
+  display: block;
+  width: 100%;
+}
+
+/* Basic input field styling - let component CSS handle details */
+.iti input[type="tel"] {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* === END ngx-intl-tel-input Global Overrides === */
+5. Complete HTML for Both Phone Fields
+Replace the entire phone number sections in your HTML:
+
+For CANDIDATE Section:
+html
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div>
+    <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactNumber">
+      Contact Number <span class="text-destructive">*</span>
+    </label>
+    <div class="phone-input-wrapper">
+      <ngx-intl-tel-input
+        [cssClass]="'custom-phone-input'"
+        [preferredCountries]="['us', 'gb', 'za']"
+        [enableAutoCountrySelect]="true"
+        [enablePlaceholder]="true"
+        [searchCountryFlag]="true"
+        [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+        [selectFirstCountry]="false"
+        [selectedCountryISO]="CountryISO.UnitedStates"
+        [maxLength]="15"
+        [phoneValidation]="true"
+        [separateDialCode]="true"
+        [numberFormat]="PhoneNumberFormat.International"
+        name="phone"
+        formControlName="contactNumber">
+      </ngx-intl-tel-input>
+    </div>
+    <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
+      {{ getErrorMessage('contactNumber') }}
+    </p>
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-muted-foreground mb-1" for="alternateContactNumber">
+      Alternate Contact <span class="text-muted-foreground text-xs">(Optional)</span>
+    </label>
+    <input
+      id="alternateContactNumber"
+      formControlName="alternateContactNumber"
+      type="tel"
+      autocomplete="tel-national"
+      placeholder="e.g., +1987654321"
+      class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+      [class.border-destructive]="hasError('alternateContactNumber')"
+      [class.border-border]="!hasError('alternateContactNumber')"
+    />
+    <p *ngIf="hasError('alternateContactNumber')" class="mt-1 text-sm text-destructive">
+      {{ getErrorMessage('alternateContactNumber') }}
+    </p>
+  </div>
+</div>
+For HIRING_MANAGER Section:
+html
+<div>
+  <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_contactNumber">
+    Contact Number <span class="text-destructive">*</span>
+  </label>
+  <div class="phone-input-wrapper">
+    <ngx-intl-tel-input
+      [cssClass]="'custom-phone-input'"
+      [preferredCountries]="['us', 'gb', 'za']"
+      [enableAutoCountrySelect]="true"
+      [enablePlaceholder]="true"
+      [searchCountryFlag]="true"
+      [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+      [selectFirstCountry]="false"
+      [selectedCountryISO]="CountryISO.UnitedStates"
+      [maxLength]="15"
+      [phoneValidation]="true"
+      [separateDialCode]="true"
+      [numberFormat]="PhoneNumberFormat.International"
+      name="phone"
+      formControlName="contactNumber">
+    </ngx-intl-tel-input>
+  </div>
+  <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
+    {{ getErrorMessage('contactNumber') }}
+  </p>
+</div>
+6. Update Form Validation in TypeScript
+Since ngx-intl-tel-input returns an object, not a string, update your validation:
+
+typescript
+private initForm(): void {
+  // Common fields for both roles
+  const commonControls = {
+    username: ['', [Validators.required, Validators.minLength(3)]],
+    firstName: [this.user?.firstName || '', Validators.required],
+    lastName: [this.user?.lastName || '', Validators.required],
+  };
+
+  // Role-specific fields
+  if (this.userRole === 'CANDIDATE') {
+    this.profileForm = this.fb.group({
+      ...commonControls,
+      gender: [''],
+      race: [''],
+      disability: [''],
+      contactNumber: [undefined, [Validators.required]], // Changed
+      alternateContactNumber: ['', Validators.pattern(/^\+?[1-9]\d{1,14}$/)],
+    });
+  } else if (this.userRole === 'HIRING_MANAGER') {
+    this.profileForm = this.fb.group({
+      ...commonControls,
+      companyName: ['', Validators.required],
+      industry: ['', Validators.required],
+      contactPerson: ['', Validators.required],
+      contactNumber: [undefined, [Validators.required]], // Changed
+    });
+  } else {
+    // Fallback for unknown role
+    this.profileForm = this.fb.group(commonControls);
+  }
+}
+🎯 Summary of Changes
+Wrapped phone input in a div.phone-input-wrapper for better positioning control
+Added component-specific CSS in profile-create.css with proper ::ng-deep selectors
+Imported required enums (SearchCountryField, CountryISO, PhoneNumberFormat) from ngx-intl-tel-input
+Fixed positioning using absolute positioning for the flag container
+Adjusted padding on the input to make room for the flag (70px left padding)
+Styled dropdown to match your design system
+The country selector should now appear correctly inside the input field on the left side! 🎉

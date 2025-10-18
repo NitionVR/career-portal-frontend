@@ -1,0 +1,121 @@
+/* Phone Input Wrapper */
+.phone-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Override ngx-intl-tel-input default styles */
+:host ::ng-deep .iti {
+  display: block;
+  width: 100% !important;
+  position: relative;
+}
+
+:host ::ng-deep .iti__flag-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .iti__selected-flag {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 0 0 12px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+:host ::ng-deep .iti__arrow {
+  margin-left: 6px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid hsl(var(--muted-foreground));
+}
+
+:host ::ng-deep input[type="tel"].custom-phone-input {
+  width: 100% !important;
+  height: 48px;
+  padding: 0.75rem 1rem 0.75rem 70px !important;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+
+:host ::ng-deep input[type="tel"].custom-phone-input:focus {
+  border-color: hsl(var(--primary));
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+:host ::ng-deep input[type="tel"].custom-phone-input.ng-invalid.ng-touched {
+  border-color: hsl(var(--destructive));
+}
+
+/* Dropdown styling */
+:host ::ng-deep .iti__country-list {
+  position: absolute;
+  z-index: 50;
+  background-color: hsl(var(--popover));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  max-height: 200px;
+  overflow-y: scroll;
+  margin-top: 4px;
+  width: 300px !important;
+}
+
+:host ::ng-deep .iti__country {
+  padding: 8px 12px;
+  color: hsl(var(--popover-foreground));
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+:host ::ng-deep .iti__country:hover,
+:host ::ng-deep .iti__country.iti__highlight {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+:host ::ng-deep .iti__dial-code {
+  color: hsl(var(--muted-foreground));
+}
+
+:host ::ng-deep .iti__divider {
+  border-bottom: 1px solid hsl(var(--border));
+  margin: 4px 0;
+}
+
+/* Search box in dropdown */
+:host ::ng-deep .iti__search-input {
+  width: calc(100% - 24px);
+  margin: 8px 12px;
+  padding: 6px 10px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.25rem;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+:host ::ng-deep .iti__search-input:focus {
+  border-color: hsl(var(--primary));
+  outline: none;
+}
+
+/* Separate dial code styling */
+:host ::ng-deep .iti__selected-dial-code {
+  margin-left: 6px;
+  color: hsl(var(--foreground));
+  font-weight: 500;
+}

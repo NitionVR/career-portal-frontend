@@ -1,3 +1,4 @@
+@import 'intl-tel-input/build/css/intlTelInput.css';
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 @tailwind base;
@@ -132,5 +133,22 @@ input:-webkit-autofill:active {
   border-radius: 0.25rem; /* rounded-sm */
   background-color: hsl(var(--card)); /* Use app's card background */
   color: hsl(var(--foreground)); /* Use app's foreground text color */
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* subtle shadow */
-}
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* subtle shadow */
+  }
+  
+  /* === START ngx-intl-tel-input Global Overrides === */
+  
+  /* Ensure the component respects the parent width */
+  .iti {
+    display: block;
+    width: 100%;
+  }
+  
+  /* Basic input field styling - let component CSS handle details */
+  .iti input[type="tel"] {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* === END ngx-intl-tel-input Global Overrides === */
+  

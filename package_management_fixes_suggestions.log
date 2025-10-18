@@ -1,0 +1,165 @@
+Fixed package.json
+Here's your corrected package.json with all issues resolved:
+
+json
+{
+  "name": "etalente-clone-frontend",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "generate:api": "ng-openapi-gen"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^20.3.2",
+    "@angular/cdk": "^20.2.3",
+    "@angular/common": "^20.3.0",
+    "@angular/compiler": "^20.3.0",
+    "@angular/core": "^20.3.0",
+    "@angular/forms": "^20.3.0",
+    "@angular/material": "^20.2.3",
+    "@angular/platform-browser": "^20.3.0",
+    "@angular/router": "^20.3.0",
+    "@ng-select/ng-select": "^13.9.1",
+    "jwt-decode": "^4.0.0",
+    "lucide-angular": "^0.469.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^20.3.3",
+    "@angular/cli": "^20.3.3",
+    "@angular/compiler-cli": "^20.3.0",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.10",
+    "@types/jasmine": "~5.1.0",
+    "autoprefixer": "^10.4.19",
+    "jasmine-core": "~5.1.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "ng-openapi-gen": "^0.51.0",
+    "postcss": "^8.4.40",
+    "tailwindcss": "^3.4.7",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "~5.7.2"
+  }
+}
+🔧 Key Changes Made:
+1. Fixed lucide-angular
+❌ Old: "lucide-angular": "^0.417.0" (only supports Angular 13-18)
+✅ New: "lucide-angular": "^0.469.0" (supports Angular 20)
+2. Fixed ng-openapi
+❌ Old: "ng-openapi": "^0.33.0" (WRONG package - doesn't exist)
+✅ New: "ng-openapi-gen": "^0.51.0" (correct package)
+3. Fixed @ng-select/ng-select
+❌ Old: "@ng-select/ng-select": "^20.2.2" (doesn't exist)
+✅ New: "@ng-select/ng-select": "^13.9.1" (latest stable)
+4. Moved build tools to devDependencies
+Moved @angular-devkit/build-angular to devDependencies
+Moved @angular/cli to devDependencies
+Moved autoprefixer, postcss, tailwindcss to devDependencies
+5. Updated TypeScript
+❌ Old: "typescript": "~5.8.0" (too new, doesn't exist)
+✅ New: "typescript": "~5.7.2" (latest stable)
+6. Updated generate script
+❌ Old: "generate:api": "sh scripts/generate-api.sh"
+✅ New: "generate:api": "ng-openapi-gen"
+📋 Installation Steps
+Step 1: Clean everything
+bash
+rm -rf node_modules package-lock.json
+npm cache clean --force
+Step 2: Replace your package.json with the fixed version above
+Step 3: Install dependencies
+bash
+npm install --legacy-peer-deps
+If that fails, try:
+
+bash
+npm install --force
+🔧 Configure ng-openapi-gen
+Create ng-openapi-gen.json in your project root:
+
+json
+{
+  "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
+  "input": "./openapi.json",
+  "output": "./src/app/api",
+  "ignoreUnusedModels": false,
+  "removeStaleFiles": true,
+  "modelIndex": true,
+  "serviceIndex": true,
+  "apiModule": false
+}
+Or if you have the OpenAPI spec at a URL:
+
+json
+{
+  "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
+  "input": "http://localhost:8080/v3/api-docs",
+  "output": "./src/app/api",
+  "ignoreUnusedModels": false,
+  "removeStaleFiles": true,
+  "modelIndex": true,
+  "serviceIndex": true,
+  "apiModule": false
+}
+🚀 Generate API Services
+After installation, generate your API:
+
+bash
+npm run generate:api
+This will create services in ./src/app/api/ based on your OpenAPI specification.
+
+🎯 If You Still Have Issues with lucide-angular
+If lucide-angular@0.469.0 still doesn't work with Angular 20, you have two options:
+
+Option A: Downgrade to a stable version
+bash
+npm install lucide-angular@0.454.0 --legacy-peer-deps
+Option B: Use lucide-static (recommended)
+bash
+npm uninstall lucide-angular
+npm install lucide-static --save
+Then import icons as SVG strings:
+
+typescript
+import { Menu, X, User } from 'lucide-static';
+
+// In your component
+menuIcon = Menu;
+html
+<div [innerHTML]="menuIcon"></div>
+✅ Verification
+After installation, verify everything works:
+
+bash
+# Check versions
+npm list @angular/core lucide-angular ng-openapi-gen
+
+# Start dev server
+npm start
+
+# Generate API (if you have OpenAPI spec)
+npm run generate:api
+Let me know if you encounter any errors after running the installation! 🚀

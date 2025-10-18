@@ -103,138 +103,300 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactNumber">
-              Contact Number <span class="text-destructive">*</span>
-            </label>
-            <input
-              id="contactNumber"
-              formControlName="contactNumber"
-              type="tel"
-              autocomplete="tel"
-              placeholder="e.g., +1234567890"
-              class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
-              [class.border-destructive]="hasError('contactNumber')"
-              [class.border-border]="!hasError('contactNumber')"
-            />
-            <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
-              {{ getErrorMessage('contactNumber') }}
-            </p>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-muted-foreground mb-1" for="alternateContactNumber">
-              Alternate Contact <span class="text-muted-foreground text-xs">(Optional)</span>
-            </label>
-            <input
-              id="alternateContactNumber"
-              formControlName="alternateContactNumber"
-              type="tel"
-              autocomplete="tel-national"
-              placeholder="e.g., +1987654321"
-              class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
-              [class.border-destructive]="hasError('alternateContactNumber')"
-              [class.border-border]="!hasError('alternateContactNumber')"
-            />
-            <p *ngIf="hasError('alternateContactNumber')" class="mt-1 text-sm text-destructive">
-              {{ getErrorMessage('alternateContactNumber') }}
-            </p>
-          </div>
-        </div>
-      </ng-container>
 
-      <!-- HIRING MANAGER FORM -->
-      <ng-container *ngIf="userRole === 'HIRING_MANAGER'">
-        <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_username">
-            Username <span class="text-destructive">*</span>
-          </label>
-          <input
-            id="hm_username"
-            formControlName="username"
-            type="text"
-            autocomplete="username"
-            placeholder="Enter your username"
-            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
-            [class.border-destructive]="hasError('username')"
-            [class.border-border]="!hasError('username')"
-          />
-          <p *ngIf="hasError('username')" class="mt-1 text-sm text-destructive">
-            {{ getErrorMessage('username') }}
-          </p>
-        </div>
+                  <div>
 
-        <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_companyName">
-            Company Name <span class="text-destructive">*</span>
-          </label>
-          <input
-            id="hm_companyName"
-            formControlName="companyName"
-            type="text"
-            autocomplete="organization"
-            placeholder="Enter your company name"
-            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
-            [class.border-destructive]="hasError('companyName')"
-            [class.border-border]="!hasError('companyName')"
-          />
-          <p *ngIf="hasError('companyName')" class="mt-1 text-sm text-destructive">
-            {{ getErrorMessage('companyName') }}
-          </p>
-        </div>
+                    <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactNumber">
 
-        <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1">
-            Industry <span class="text-destructive">*</span>
-          
-            <app-custom-select
-              id="hm_industry"
-              formControlName="industry"
-              [options]="industryOptions"
-              placeholder="Select your industry">
-            </app-custom-select>
-          </label>
-          <p *ngIf="hasError('industry')" class="mt-1 text-sm text-destructive">
-            {{ getErrorMessage('industry') }}
-          </p>
-        </div>
+                      Contact Number <span class="text-destructive">*</span>
 
-        <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_contactPerson">
-            Contact Person <span class="text-destructive">*</span>
-          </label>
-          <input
-            id="hm_contactPerson"
-            formControlName="contactPerson"
-            type="text"
-            autocomplete="name"
-            placeholder="Enter contact person's name"
-            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
-            [class.border-destructive]="hasError('contactPerson')"
-            [class.border-border]="!hasError('contactPerson')"
-          />
-          <p *ngIf="hasError('contactPerson')" class="mt-1 text-sm text-destructive">
-            {{ getErrorMessage('contactPerson') }}
-          </p>
-        </div>
+                    </label>
 
-        <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_contactNumber">
-            Contact Number <span class="text-destructive">*</span>
-          </label>
-          <input
-            id="hm_contactNumber"
-            formControlName="contactNumber"
-            type="tel"
-            autocomplete="tel"
-            placeholder="e.g., +1234567890"
-            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
-            [class.border-destructive]="hasError('contactNumber')"
-            [class.border-border]="!hasError('contactNumber')"
-          />
-          <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
-            {{ getErrorMessage('contactNumber') }}
-          </p>
-        </div>
+                    <div class="phone-input-wrapper">
+
+                      <ngx-intl-tel-input
+
+                        [cssClass]="'custom-phone-input'"
+
+                        [preferredCountries]="['us', 'gb', 'za']"
+
+                        [enableAutoCountrySelect]="true"
+
+                        [enablePlaceholder]="true"
+
+                        [searchCountryFlag]="true"
+
+                        [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+
+                        [selectFirstCountry]="false"
+
+                        [selectedCountryISO]="CountryISO.UnitedStates"
+
+                        [maxLength]="15"
+
+                        [phoneValidation]="true"
+
+                        [separateDialCode]="true"
+
+                        [numberFormat]="PhoneNumberFormat.International"
+
+                        name="phone"
+
+                        formControlName="contactNumber">
+
+                      </ngx-intl-tel-input>
+
+                    </div>
+
+                    <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
+
+                      {{ getErrorMessage('contactNumber') }}
+
+                    </p>
+
+                  </div>
+
+                  <div>
+
+                    <label class="block text-sm font-medium text-muted-foreground mb-1" for="alternateContactNumber">
+
+                      Alternate Contact <span class="text-muted-foreground text-xs">(Optional)</span>
+
+                    </label>
+
+                    <input
+
+                      id="alternateContactNumber"
+
+                      formControlName="alternateContactNumber"
+
+                      type="tel"
+
+                      autocomplete="tel-national"
+
+                      placeholder="e.g., +1987654321"
+
+                      class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+
+                      [class.border-destructive]="hasError('alternateContactNumber')"
+
+                      [class.border-border]="!hasError('alternateContactNumber')"
+
+                    />
+
+                    <p *ngIf="hasError('alternateContactNumber')" class="mt-1 text-sm text-destructive">
+
+                      {{ getErrorMessage('alternateContactNumber') }}
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </ng-container>
+
+        
+
+              <!-- HIRING MANAGER FORM -->
+
+              <ng-container *ngIf="userRole === 'HIRING_MANAGER'">
+
+                <div>
+
+                  <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_username">
+
+                    Username <span class="text-destructive">*</span>
+
+                  </label>
+
+                  <input
+
+                    id="hm_username"
+
+                    formControlName="username"
+
+                    type="text"
+
+                    autocomplete="username"
+
+                    placeholder="Enter your username"
+
+                    class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+
+                    [class.border-destructive]="hasError('username')"
+
+                    [class.border-border]="!hasError('username')"
+
+                  />
+
+                  <p *ngIf="hasError('username')" class="mt-1 text-sm text-destructive">
+
+                    {{ getErrorMessage('username') }}
+
+                  </p>
+
+                </div>
+
+        
+
+                <div>
+
+                  <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_companyName">
+
+                    Company Name <span class="text-destructive">*</span>
+
+                  </label>
+
+                  <input
+
+                    id="hm_companyName"
+
+                    formControlName="companyName"
+
+                    type="text"
+
+                    autocomplete="organization"
+
+                    placeholder="Enter your company name"
+
+                    class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+
+                    [class.border-destructive]="hasError('companyName')"
+
+                    [class.border-border]="!hasError('companyName')"
+
+                  />
+
+                  <p *ngIf="hasError('companyName')" class="mt-1 text-sm text-destructive">
+
+                    {{ getErrorMessage('companyName') }}
+
+                  </p>
+
+                </div>
+
+        
+
+                <div>
+
+                  <label class="block text-sm font-medium text-muted-foreground mb-1">
+
+                    Industry <span class="text-destructive">*</span>
+
+                  
+
+                    <app-custom-select
+
+                      id="hm_industry"
+
+                      formControlName="industry"
+
+                      [options]="industryOptions"
+
+                      placeholder="Select your industry">
+
+                    </app-custom-select>
+
+                  </label>
+
+                  <p *ngIf="hasError('industry')" class="mt-1 text-sm text-destructive">
+
+                    {{ getErrorMessage('industry') }}
+
+                  </p>
+
+                </div>
+
+        
+
+                <div>
+
+                  <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_contactPerson">
+
+                    Contact Person <span class="text-destructive">*</span>
+
+                  </label>
+
+                  <input
+
+                    id="hm_contactPerson"
+
+                    formControlName="contactPerson"
+
+                    type="text"
+
+                    autocomplete="name"
+
+                    placeholder="Enter contact person's name"
+
+                    class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+
+                    [class.border-destructive]="hasError('contactPerson')"
+
+                    [class.border-border]="!hasError('contactPerson')"
+
+                  />
+
+                  <p *ngIf="hasError('contactPerson')" class="mt-1 text-sm text-destructive">
+
+                    {{ getErrorMessage('contactPerson') }}
+
+                  </p>
+
+                </div>
+
+                <div>
+
+                  <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_contactNumber">
+
+                    Contact Number <span class="text-destructive">*</span>
+
+                  </label>
+
+                  <div class="phone-input-wrapper">
+
+                    <ngx-intl-tel-input
+
+                      [cssClass]="'custom-phone-input'"
+
+                      [preferredCountries]="['us', 'gb', 'za']"
+
+                      [enableAutoCountrySelect]="true"
+
+                      [enablePlaceholder]="true"
+
+                      [searchCountryFlag]="true"
+
+                      [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+
+                      [selectFirstCountry]="false"
+
+                      [selectedCountryISO]="CountryISO.UnitedStates"
+
+                      [maxLength]="15"
+
+                      [phoneValidation]="true"
+
+                      [separateDialCode]="true"
+
+                      [numberFormat]="PhoneNumberFormat.International"
+
+                      name="phone"
+
+                      formControlName="contactNumber">
+
+                    </ngx-intl-tel-input>
+
+                  </div>
+
+                  <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
+
+                    {{ getErrorMessage('contactNumber') }}
+
+                  </p>
+
+                </div>
       </ng-container>
 
       <!-- Submit Button -->

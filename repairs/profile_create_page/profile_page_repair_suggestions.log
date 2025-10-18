@@ -1,0 +1,823 @@
+Complete Analysis & Fixes for Profile Create Page
+🔴 CRITICAL ISSUES
+1. Form Control Mismatch - Will cause runtime errors!
+HTML references: username, contactNumber, alternateContactNumber, contactPerson
+TypeScript only has: firstName, lastName, gender, race, disability, companyName, industry
+
+2. Typo in Filename
+profiile-create.ts (3 i's) → should be profile-create.ts
+
+3. Missing Loading State Display
+Form shows even when isLoading = true
+
+4. CSS Variables Inconsistency
+custom-select.component.css uses hardcoded colors instead of your design system variables
+
+5. Missing Submission Loading State
+No protection against double submissions
+
+✅ FIXED CODE
+profile-create.ts (Fixed)
+typescript
+import { Component, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RegistrationControllerService } from '../../api/services/registration-controller.service';
+import { ProfileControllerService } from '../../api/services/profile-controller.service';
+import { CandidateRegistrationDto } from '../../api/models/candidate-registration-dto';
+import { HiringManagerRegistrationDto } from '../../api/models/hiring-manager-registration-dto';
+import { AuthService, User } from '../../core/services/auth';
+import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
+import { GENDER_OPTIONS, RACE_OPTIONS, DISABILITY_OPTIONS, INDUSTRY_OPTIONS } from '../../shared/data/form-options';
+import { VerifyTokenResponse } from '../../api/models';
+import { CompleteProfileRequest } from '../../api/models/complete-profile-request';
+
+@Component({
+  selector: 'app-profile-create',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent],
+  templateUrl: './profile-create.html',
+  styleUrls: ['./profile-create.css'],
+})
+export class ProfileCreate implements OnInit {
+  profileForm!: FormGroup;
+  registrationToken: string | null = null;
+  user: User | null = null;
+  errorMessage: string | null = null;
+  isLoading = true;
+  isSubmitting = false;
+
+  genderOptions = GENDER_OPTIONS;
+  raceOptions = RACE_OPTIONS;
+  disabilityOptions = DISABILITY_OPTIONS;
+  industryOptions = INDUSTRY_OPTIONS;
+
+  get userRole(): string | null {
+    return this.user?.role ?? null;
+  }
+
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private registrationService = inject(RegistrationControllerService);
+  private profileService = inject(ProfileControllerService);
+  private authService = inject(AuthService);
+  private fb = inject(FormBuilder);
+
+  ngOnInit(): void {
+    this.registrationToken = this.route.snapshot.queryParamMap.get('token');
+    const authenticatedUser = this.authService.getCurrentUser();
+
+    if (this.registrationToken) {
+      this.handleTokenFlow(this.registrationToken);
+    } else if (authenticatedUser && authenticatedUser.isNewUser) {
+      this.handleSessionFlow(authenticatedUser);
+    } else {
+      this.errorMessage = "Invalid access. No registration token found and you don't appear to be a new user.";
+      this.isLoading = false;
+    }
+  }
+
+  private handleTokenFlow(token: string): void {
+    this.registrationService.validateRegistrationToken({ token }).subscribe({
+      next: (response: any) => {
+        if (!response || !response.valid) {
+          this.errorMessage = 'This registration link is invalid or has expired.';
+          this.isLoading = false;
+          return;
+        }
+        // Extract user data from validation response
+        this.user = {
+          role: response.role,
+          email: response.email,
+          firstName: response.firstName || '',
+          lastName: response.lastName || '',
+        } as User;
+        this.initForm();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Invalid or expired registration token.';
+        this.isLoading = false;
+      },
+    });
+  }
+
+  private handleSessionFlow(authenticatedUser: User): void {
+    this.user = authenticatedUser;
+    this.initForm();
+    this.isLoading = false;
+  }
+
+  private initForm(): void {
+    // Common fields for both roles
+    const commonControls = {
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      firstName: [this.user?.firstName || '', Validators.required],
+      lastName: [this.user?.lastName || '', Validators.required],
+    };
+
+    // Role-specific fields
+    if (this.userRole === 'CANDIDATE') {
+      this.profileForm = this.fb.group({
+        ...commonControls,
+        gender: [''],
+        race: [''],
+        disability: [''],
+        contactNumber: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+        alternateContactNumber: ['', Validators.pattern(/^\+?[1-9]\d{1,14}$/)],
+      });
+    } else if (this.userRole === 'HIRING_MANAGER') {
+      this.profileForm = this.fb.group({
+        ...commonControls,
+        companyName: ['', Validators.required],
+        industry: ['', Validators.required],
+        contactPerson: ['', Validators.required],
+        contactNumber: ['', [Validators.required, Validators.pattern(/^\+?[1-9]\d{1,14}$/)]],
+      });
+    } else {
+      // Fallback for unknown role
+      this.profileForm = this.fb.group(commonControls);
+    }
+  }
+
+  // Helper to check if a field has errors
+  hasError(fieldName: string): boolean {
+    const field = this.profileForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
+  }
+
+  // Helper to get error message for a field
+  getErrorMessage(fieldName: string): string {
+    const field = this.profileForm.get(fieldName);
+    if (!field || !field.errors) return '';
+
+    if (field.hasError('required')) {
+      return 'This field is required';
+    }
+    if (field.hasError('minlength')) {
+      return `Minimum ${field.errors['minlength'].requiredLength} characters required`;
+    }
+    if (field.hasError('pattern')) {
+      return 'Please enter a valid phone number (e.g., +1234567890)';
+    }
+    return 'Invalid input';
+  }
+
+  onSubmit(): void {
+    if (this.profileForm.invalid) {
+      // Mark all fields as touched to show validation errors
+      Object.keys(this.profileForm.controls).forEach(key => {
+        this.profileForm.get(key)?.markAsTouched();
+      });
+      this.errorMessage = 'Please fix the errors in the form before submitting.';
+      return;
+    }
+
+    if (this.isSubmitting) {
+      return; // Prevent double submission
+    }
+
+    this.isSubmitting = true;
+    this.errorMessage = null;
+
+    if (this.registrationToken) {
+      this.completeWithToken();
+    } else {
+      this.completeWithSession();
+    }
+  }
+
+  private completeWithToken(): void {
+    if (this.userRole === 'CANDIDATE') {
+      const body: CandidateRegistrationDto = this.profileForm.value;
+      this.registrationService.completeCandidateRegistration({ token: this.registrationToken!, body })
+        .subscribe({
+          next: (res) => this.handleSuccess(res),
+          error: (err) => this.handleError(err)
+        });
+    } else if (this.userRole === 'HIRING_MANAGER') {
+      const body: HiringManagerRegistrationDto = this.profileForm.value;
+      this.registrationService.completeHiringManagerRegistration({ token: this.registrationToken!, body })
+        .subscribe({
+          next: (res) => this.handleSuccess(res),
+          error: (err) => this.handleError(err)
+        });
+    }
+  }
+
+  private completeWithSession(): void {
+    const body: CompleteProfileRequest = this.profileForm.value;
+    this.profileService.completeProfile({ body })
+      .subscribe({
+        next: (res) => this.handleSuccess(res),
+        error: (err) => this.handleError(err)
+      });
+  }
+
+  private handleSuccess(response: VerifyTokenResponse): void {
+    (this.authService as any).handleSuccessfulAuth?.(response);
+    const dashboardUrl = this.getDashboardUrl(response.user?.role);
+    this.router.navigate([dashboardUrl]);
+  }
+
+  private handleError(err: any): void {
+    this.isSubmitting = false;
+    this.errorMessage = err.error?.message || 'An error occurred during registration. Please try again.';
+  }
+
+  private getDashboardUrl(role?: string): string {
+    switch (role) {
+      case 'CANDIDATE': return '/talent/dashboard';
+      case 'HIRING_MANAGER': return '/employer/dashboard';
+      default: return '/';
+    }
+  }
+}
+profile-create.html (Fixed)
+html
+<div class="flex min-h-screen items-center justify-center p-6 sm:p-8 md:p-12 bg-background">
+  <div class="w-full max-w-lg bg-card p-8 rounded-xl shadow-lg">
+    <div class="text-center mb-8">
+      <img src="/assets/logo.png" alt="eTalente Logo" class="h-12 w-12 mx-auto mb-4"/>
+      <h1 class="text-3xl font-bold text-foreground mb-2">Complete Your Profile</h1>
+      <p class="text-muted-foreground">Just a few more details to get started.</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <p class="mt-4 text-muted-foreground">Loading your profile...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage && !isLoading" class="bg-destructive/20 text-destructive p-4 rounded-md mb-6" role="alert">
+      <p class="font-medium">{{ errorMessage }}</p>
+    </div>
+
+    <!-- Form -->
+    <form *ngIf="!isLoading && profileForm" [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+      <!-- CANDIDATE FORM -->
+      <ng-container *ngIf="userRole === 'CANDIDATE'">
+        <div>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="username">
+            Username <span class="text-destructive">*</span>
+          </label>
+          <input
+            id="username"
+            formControlName="username"
+            type="text"
+            placeholder="Enter your username"
+            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+            [class.border-destructive]="hasError('username')"
+            [class.border-border]="!hasError('username')"
+          />
+          <p *ngIf="hasError('username')" class="mt-1 text-sm text-destructive">
+            {{ getErrorMessage('username') }}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="firstName">
+              First Name <span class="text-destructive">*</span>
+            </label>
+            <input
+              id="firstName"
+              formControlName="firstName"
+              type="text"
+              placeholder="Enter your first name"
+              class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+              [class.border-destructive]="hasError('firstName')"
+              [class.border-border]="!hasError('firstName')"
+            />
+            <p *ngIf="hasError('firstName')" class="mt-1 text-sm text-destructive">
+              {{ getErrorMessage('firstName') }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="lastName">
+              Last Name <span class="text-destructive">*</span>
+            </label>
+            <input
+              id="lastName"
+              formControlName="lastName"
+              type="text"
+              placeholder="Enter your last name"
+              class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+              [class.border-destructive]="hasError('lastName')"
+              [class.border-border]="!hasError('lastName')"
+            />
+            <p *ngIf="hasError('lastName')" class="mt-1 text-sm text-destructive">
+              {{ getErrorMessage('lastName') }}
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="gender">Gender</label>
+            <app-custom-select id="gender" formControlName="gender" [options]="genderOptions" placeholder="Select your gender"></app-custom-select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="race">Race</label>
+            <app-custom-select id="race" formControlName="race" [options]="raceOptions" placeholder="Select your race"></app-custom-select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="disability">Disability Status</label>
+          <app-custom-select id="disability" formControlName="disability" [options]="disabilityOptions" placeholder="Select an option"></app-custom-select>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactNumber">
+              Contact Number <span class="text-destructive">*</span>
+            </label>
+            <input
+              id="contactNumber"
+              formControlName="contactNumber"
+              type="tel"
+              placeholder="e.g., +1234567890"
+              class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+              [class.border-destructive]="hasError('contactNumber')"
+              [class.border-border]="!hasError('contactNumber')"
+            />
+            <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
+              {{ getErrorMessage('contactNumber') }}
+            </p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="alternateContactNumber">
+              Alternate Contact <span class="text-muted-foreground text-xs">(Optional)</span>
+            </label>
+            <input
+              id="alternateContactNumber"
+              formControlName="alternateContactNumber"
+              type="tel"
+              placeholder="e.g., +1987654321"
+              class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+              [class.border-destructive]="hasError('alternateContactNumber')"
+              [class.border-border]="!hasError('alternateContactNumber')"
+            />
+            <p *ngIf="hasError('alternateContactNumber')" class="mt-1 text-sm text-destructive">
+              {{ getErrorMessage('alternateContactNumber') }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- HIRING MANAGER FORM -->
+      <ng-container *ngIf="userRole === 'HIRING_MANAGER'">
+        <div>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="username">
+            Username <span class="text-destructive">*</span>
+          </label>
+          <input
+            id="username"
+            formControlName="username"
+            type="text"
+            placeholder="Enter your username"
+            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+            [class.border-destructive]="hasError('username')"
+            [class.border-border]="!hasError('username')"
+          />
+          <p *ngIf="hasError('username')" class="mt-1 text-sm text-destructive">
+            {{ getErrorMessage('username') }}
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="companyName">
+            Company Name <span class="text-destructive">*</span>
+          </label>
+          <input
+            id="companyName"
+            formControlName="companyName"
+            type="text"
+            placeholder="Enter your company name"
+            class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+            [class.border-destructive]="hasError('companyName')"
+            [class.border-border]="!hasError('companyName')"
+          />
+          <p *ngIf="hasError('companyName')" class="mt-1 text-sm text-destructive">
+            {{ getErrorMessage('companyName') }}
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="industry
+Claude Sonnet 4.5
+continue
+
+
+Thought Process
+expand
+">
+Industry *
+
+<app-custom-select
+id="industry"
+formControlName="industry"
+[options]="industryOptions"
+placeholder="Select your industry">
+
+<p *ngIf="hasError('industry')" class="mt-1 text-sm text-destructive">
+{{ getErrorMessage('industry') }}
+
+
+text
+    <div>
+      <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactPerson">
+        Contact Person <span class="text-destructive">*</span>
+      </label>
+      <input
+        id="contactPerson"
+        formControlName="contactPerson"
+        type="text"
+        placeholder="Enter contact person's name"
+        class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+        [class.border-destructive]="hasError('contactPerson')"
+        [class.border-border]="!hasError('contactPerson')"
+      />
+      <p *ngIf="hasError('contactPerson')" class="mt-1 text-sm text-destructive">
+        {{ getErrorMessage('contactPerson') }}
+      </p>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactNumber">
+        Contact Number <span class="text-destructive">*</span>
+      </label>
+      <input
+        id="contactNumber"
+        formControlName="contactNumber"
+        type="tel"
+        placeholder="e.g., +1234567890"
+        class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
+        [class.border-destructive]="hasError('contactNumber')"
+        [class.border-border]="!hasError('contactNumber')"
+      />
+      <p *ngIf="hasError('contactNumber')" class="mt-1 text-sm text-destructive">
+        {{ getErrorMessage('contactNumber') }}
+      </p>
+    </div>
+  </ng-container>
+
+  <!-- Submit Button -->
+  <button
+    type="submit"
+    [disabled]="profileForm.invalid || isSubmitting"
+    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+  >
+    <span *ngIf="!isSubmitting">Complete Registration</span>
+    <span *ngIf="isSubmitting" class="flex items-center">
+      <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      Processing...
+    </span>
+  </button>
+</form>
+```
+custom-select.component.css (Fixed - Using Design System Variables)
+css
+/* Base styling for the ng-select container to match input fields */
+:host ::ng-deep .ng-select-container {
+  padding: 0.75rem 1rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  background-color: hsl(var(--background));
+  min-height: 48px;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus styles for ng-select */
+:host ::ng-deep .ng-select.ng-select-focused .ng-select-container {
+  border-color: hsl(var(--primary));
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+/* Placeholder styling */
+:host ::ng-deep .ng-placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+/* Selected value styling */
+:host ::ng-deep .ng-value {
+  background-color: transparent !important;
+  color: hsl(var(--foreground)) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+:host ::ng-deep .ng-value-label {
+  padding: 0 !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Ensure value container allows both placeholder and value */
+:host ::ng-deep .ng-value-container {
+  padding: 0 !important;
+}
+
+/* Arrow styling */
+:host ::ng-deep .ng-arrow-wrapper {
+  color: hsl(var(--muted-foreground));
+}
+
+:host ::ng-deep .ng-arrow-wrapper .ng-arrow {
+  border-color: hsl(var(--muted-foreground)) transparent transparent;
+}
+
+/* Dropdown panel styling */
+:host ::ng-deep .ng-dropdown-panel {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  background-color: hsl(var(--popover));
+  margin-top: 0.25rem;
+}
+
+:host ::ng-deep .ng-dropdown-panel .ng-option {
+  padding: 0.75rem 1rem;
+  color: hsl(var(--popover-foreground));
+  transition: background-color 0.15s ease-in-out;
+}
+
+:host ::ng-deep .ng-dropdown-panel .ng-option:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+:host ::ng-deep .ng-dropdown-panel .ng-option.ng-option-selected {
+  background-color: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
+
+:host ::ng-deep .ng-dropdown-panel .ng-option.ng-option-marked {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* Disabled state */
+:host ::ng-deep .ng-select.ng-select-disabled .ng-select-container {
+  background-color: hsl(var(--muted));
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Clear button (if clearable is enabled) */
+:host ::ng-deep .ng-clear-wrapper {
+  color: hsl(var(--muted-foreground));
+}
+
+:host ::ng-deep .ng-clear-wrapper:hover .ng-clear {
+  color: hsl(var(--destructive));
+}
+custom-select.component.ts (Minor Improvement)
+typescript
+import { Component, Input, OnInit, forwardRef, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { Subject, takeUntil } from 'rxjs';
+
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+@Component({
+  selector: 'app-custom-select',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, NgSelectModule],
+  templateUrl: './custom-select.component.html',
+  styleUrl: './custom-select.component.css',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CustomSelectComponent),
+      multi: true,
+    },
+  ],
+})
+export class CustomSelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
+  @Input() formControlName!: string;
+  @Input() placeholder: string = '';
+  @Input() options: SelectOption[] = [];
+
+  formControl: FormControl = new FormControl();
+
+  private destroy$ = new Subject<void>();
+  private onChange: any = () => {};
+  private onTouched: any = () => {};
+
+  ngOnInit(): void {
+    // Subscribe to value changes and propagate to parent
+    this.formControl.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(value => {
+        this.onChange(value);
+        this.onTouched();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  writeValue(value: any): void {
+    this.formControl.setValue(value, { emitEvent: false });
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    if (isDisabled) {
+      this.formControl.disable({ emitEvent: false });
+    } else {
+      this.formControl.enable({ emitEvent: false });
+    }
+  }
+}
+styles.css (Fix CSS Variable Inconsistency)
+css
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Modern Professional Design System - Etalente Theme */
+
+@layer base {
+  :root {
+    /* Base colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Primary - Professional Yellow/Gold */
+    --primary: 48 96% 53%;
+    --primary-hover: 45 96% 56%;
+    --primary-foreground: 222 41% 11%;
+
+    /* Secondary - Blue */
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 210 20% 98%;
+
+    /* Muted */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    /* Accent */
+    --accent: 217 91% 60%;
+    --accent-foreground: 210 20% 98%;
+
+    /* Success */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+
+    /* Destructive */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Borders and inputs */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 45 96% 53%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark theme colors */
+    --background: 215 41% 11%;
+    --foreground: 210 20% 98%;
+    --card: 215 41% 11%;
+    --card-foreground: 210 20% 98%;
+    --popover: 215 41% 11%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 45 96% 53%;
+    --primary-foreground: 215 41% 11%;
+    --primary-hover: 45 95% 56%;
+    --secondary: 217 91% 60%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 25% 27%;
+    --muted-foreground: 215 19% 65%;
+    --accent: 217 91% 60%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 25% 27%;
+    --input: 215 25% 27%;
+    --ring: 45 96% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Input focus effect */
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+.glassmorphism {
+  background: hsl(var(--card) / 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid hsl(var(--foreground) / 0.1);
+}
+
+.modal {
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: hsl(var(--background) / 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: hsl(var(--card));
+  padding: 2rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Custom Material Tooltip Styles */
+.mat-tooltip {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background-color: hsl(var(--card));
+  color: hsl(var(--foreground));
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+📋 SUMMARY OF ALL FIXES
+Critical Issues Fixed:
+✅ Form controls now match between TypeScript and HTML
+✅ File naming typo corrected
+✅ Loading state properly displayed
+✅ Double submission prevented with isSubmitting flag
+✅ CSS variables now consistent across all components
+Improvements Added:
+✅ Field-level validation with error messages
+✅ Visual error states (red borders on invalid fields)
+✅ Loading spinner on button during submission
+✅ Phone number validation with proper regex pattern
+✅ Username validation with minimum length
+✅ Better error handling with descriptive messages
+✅ Memory leak prevention in custom-select (OnDestroy)
+✅ Accessibility improvements (required field indicators, ARIA roles)
+✅ Responsive design maintained
+✅ Consistent styling using design system variables
+Testing Checklist:
+ Test with valid registration token
+ Test with invalid/expired token
+ Test as authenticated new user
+ Test form validation for all fields
+ Test phone number format validation
+ Test submission with missing required fields
+ Test successful registration flow for CANDIDATE
+ Test successful registration flow for HIRING_MANAGER
+ Test error handling on API failure
+ Test double-click submission prevention
