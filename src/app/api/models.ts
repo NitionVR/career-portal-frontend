@@ -4,9 +4,11 @@ export type { AcceptInvitationRequest } from './models/accept-invitation-request
 export type { ApplicationDetailsDto } from './models/application-details-dto';
 export type { ApplicationSummaryDto } from './models/application-summary-dto';
 export type { CandidateRegistrationDto } from './models/candidate-registration-dto';
+export type { CandidateRegistrationRequest } from './models/candidate-registration-request';
 export type { CommunicationHistoryDto } from './models/communication-history-dto';
 export type { CompleteProfileRequest } from './models/complete-profile-request';
 export type { HiringManagerRegistrationDto } from './models/hiring-manager-registration-dto';
+export type { HiringManagerRegistrationRequest } from './models/hiring-manager-registration-request';
 export type { JobPostDto } from './models/job-post-dto';
 export type { JobPostRequest } from './models/job-post-request';
 export type { JobPostResponse } from './models/job-post-response';
