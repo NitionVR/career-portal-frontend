@@ -30,6 +30,7 @@
             id="username"
             formControlName="username"
             type="text"
+            autocomplete="username"
             placeholder="Enter your username"
             class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
             [class.border-destructive]="hasError('username')"
@@ -49,6 +50,7 @@
               id="firstName"
               formControlName="firstName"
               type="text"
+              autocomplete="given-name"
               placeholder="Enter your first name"
               class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
               [class.border-destructive]="hasError('firstName')"
@@ -66,6 +68,7 @@
               id="lastName"
               formControlName="lastName"
               type="text"
+              autocomplete="family-name"
               placeholder="Enter your last name"
               class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
               [class.border-destructive]="hasError('lastName')"
@@ -102,6 +105,7 @@
               id="contactNumber"
               formControlName="contactNumber"
               type="tel"
+              autocomplete="tel"
               placeholder="e.g., +1234567890"
               class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
               [class.border-destructive]="hasError('contactNumber')"
@@ -119,6 +123,7 @@
               id="alternateContactNumber"
               formControlName="alternateContactNumber"
               type="tel"
+              autocomplete="tel-national"
               placeholder="e.g., +1987654321"
               class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
               [class.border-destructive]="hasError('alternateContactNumber')"
@@ -134,13 +139,14 @@
       <!-- HIRING MANAGER FORM -->
       <ng-container *ngIf="userRole === 'HIRING_MANAGER'">
         <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="username">
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_username">
             Username <span class="text-destructive">*</span>
           </label>
           <input
-            id="username"
+            id="hm_username"
             formControlName="username"
             type="text"
+            autocomplete="username"
             placeholder="Enter your username"
             class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
             [class.border-destructive]="hasError('username')"
@@ -152,13 +158,14 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="companyName">
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_companyName">
             Company Name <span class="text-destructive">*</span>
           </label>
           <input
-            id="companyName"
+            id="hm_companyName"
             formControlName="companyName"
             type="text"
+            autocomplete="organization"
             placeholder="Enter your company name"
             class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
             [class.border-destructive]="hasError('companyName')"
@@ -170,11 +177,11 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="industry">
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_industry">
             Industry <span class="text-destructive">*</span>
           </label>
           <app-custom-select
-            id="industry"
+            id="hm_industry"
             formControlName="industry"
             [options]="industryOptions"
             placeholder="Select your industry">
@@ -185,13 +192,14 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactPerson">
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_contactPerson">
             Contact Person <span class="text-destructive">*</span>
           </label>
           <input
-            id="contactPerson"
+            id="hm_contactPerson"
             formControlName="contactPerson"
             type="text"
+            autocomplete="name"
             placeholder="Enter contact person's name"
             class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
             [class.border-destructive]="hasError('contactPerson')"
@@ -203,13 +211,14 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="contactNumber">
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_contactNumber">
             Contact Number <span class="text-destructive">*</span>
           </label>
           <input
-            id="contactNumber"
+            id="hm_contactNumber"
             formControlName="contactNumber"
             type="tel"
+            autocomplete="tel"
             placeholder="e.g., +1234567890"
             class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary transition-all duration-200"
             [class.border-destructive]="hasError('contactNumber')"
