@@ -82,18 +82,24 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-muted-foreground mb-1" for="gender">Gender</label>
-            <app-custom-select id="gender" labelForId="gender" formControlName="gender" [options]="genderOptions" placeholder="Select your gender"></app-custom-select>
+            <label class="block text-sm font-medium text-muted-foreground mb-1">
+              Gender
+              <app-custom-select id="gender" formControlName="gender" [options]="genderOptions" placeholder="Select your gender"></app-custom-select>
+            </label>
           </div>
           <div>
-            <label class="block text-sm font-medium text-muted-foreground mb-1" for="race">Race</label>
-            <app-custom-select id="race" formControlName="race" [options]="raceOptions" placeholder="Select your race"></app-custom-select>
+            <label class="block text-sm font-medium text-muted-foreground mb-1">
+              Race
+              <app-custom-select id="race" formControlName="race" [options]="raceOptions" placeholder="Select your race"></app-custom-select>
+            </label>
           </div>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="disability">Disability Status</label>
-          <app-custom-select id="disability" formControlName="disability" [options]="disabilityOptions" placeholder="Select an option"></app-custom-select>
+          <label class="block text-sm font-medium text-muted-foreground mb-1">
+            Disability Status
+            <app-custom-select id="disability" formControlName="disability" [options]="disabilityOptions" placeholder="Select an option"></app-custom-select>
+          </label>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -177,15 +183,16 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="hm_industry">
+          <label class="block text-sm font-medium text-muted-foreground mb-1">
             Industry <span class="text-destructive">*</span>
+          
+            <app-custom-select
+              id="hm_industry"
+              formControlName="industry"
+              [options]="industryOptions"
+              placeholder="Select your industry">
+            </app-custom-select>
           </label>
-          <app-custom-select
-            id="hm_industry"
-            formControlName="industry"
-            [options]="industryOptions"
-            placeholder="Select your industry">
-          </app-custom-select>
           <p *ngIf="hasError('industry')" class="mt-1 text-sm text-destructive">
             {{ getErrorMessage('industry') }}
           </p>
