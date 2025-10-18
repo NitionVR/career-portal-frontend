@@ -1,10 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
+import { UserDto } from '../models/user-dto';
 export interface SessionResponse {
   authenticated?: boolean;
-  email?: string;
   expiresIn?: number;
-  isNewUser?: boolean;
-  role?: string;
-  userId?: string;
+  user?: UserDto;
 }

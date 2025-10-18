@@ -6,12 +6,12 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { CandidateRegistrationDto } from '../../models/candidate-registration-dto';
+import { CandidateRegistrationRequest } from '../../models/candidate-registration-request';
 import { VerifyTokenResponse } from '../../models/verify-token-response';
 
 export interface CompleteCandidateRegistration$Params {
   token: string;
-      body: CandidateRegistrationDto
+      body: CandidateRegistrationRequest
 }
 
 export function completeCandidateRegistration(http: HttpClient, rootUrl: string, params: CompleteCandidateRegistration$Params, context?: HttpContext): Observable<StrictHttpResponse<VerifyTokenResponse>> {

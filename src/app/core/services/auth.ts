@@ -77,15 +77,15 @@ export class AuthService {
   checkSession(): Observable<SessionResponse> {
     return this.authController.checkSession().pipe(
       tap(response => {
-        if (response.authenticated && response.userId) {
+        if (response.authenticated && response.user) {
+          // The backend now sends a nested user object.
           const user: User = {
-            id: response.userId,
-            email: response.email!,
-            role: response.role as any,
-            isNewUser: response.isNewUser || false,
-            // Note: firstName and lastName are not in SessionResponse, get them from storage
-            firstName: this.getCurrentUser()?.firstName,
-            lastName: this.getCurrentUser()?.lastName,
+            id: response.user.id,
+            email: response.user.email!,
+            role: response.user.role as any,
+            isNewUser: response.user.isNewUser || false,
+            firstName: response.user.firstName,
+            lastName: response.user.lastName,
           };
           this.storeUser(user); // Update the user in localStorage
           this.currentUserSubject.next(user);

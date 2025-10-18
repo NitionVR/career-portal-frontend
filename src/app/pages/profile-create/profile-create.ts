@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegistrationControllerService } from '../../api/services/registration-controller.service';
 import { ProfileControllerService } from '../../api/services/profile-controller.service';
-import { CandidateRegistrationDto } from '../../api/models/candidate-registration-dto';
-import { HiringManagerRegistrationDto } from '../../api/models/hiring-manager-registration-dto';
+import { CandidateRegistrationRequest } from '../../api/models/candidate-registration-request';
+import { HiringManagerRegistrationRequest } from '../../api/models/hiring-manager-registration-request';
 import { AuthService, User } from '../../core/services/auth';
 import { CustomSelectComponent } from '../../shared/components/custom-select/custom-select.component';
 import { GENDER_OPTIONS, RACE_OPTIONS, DISABILITY_OPTIONS, INDUSTRY_OPTIONS } from '../../shared/data/form-options';
@@ -171,16 +171,38 @@ export class ProfileCreate implements OnInit {
     }
   }
 
+  private getFormattedBody(): any {
+    const formValue = this.profileForm.value;
+    const body = { ...formValue };
+
+    if (body.contactNumber && typeof body.contactNumber === 'object') {
+      body.contactNumber = body.contactNumber.internationalNumber;
+    }
+
+    // Sanitize the phone number string to remove all spaces.
+    if (body.contactNumber && typeof body.contactNumber === 'string') {
+      body.contactNumber = body.contactNumber.replace(/\s/g, '');
+    }
+
+    console.log('Submitting form body:', body); // Debugging line
+    return body;
+  }
+
   private completeWithToken(): void {
+    const formValue = this.getFormattedBody();
+    let body: any;
+
     if (this.userRole === 'CANDIDATE') {
-      const body: CandidateRegistrationDto = this.profileForm.value;
+      body = { candidate: formValue };
+      console.log('Submitting CANDIDATE body:', body);
       this.registrationService.completeCandidateRegistration({ token: this.registrationToken!, body })
         .subscribe({
           next: (res) => this.handleSuccess(res),
           error: (err) => this.handleError(err)
         });
     } else if (this.userRole === 'HIRING_MANAGER') {
-      const body: HiringManagerRegistrationDto = this.profileForm.value;
+      body = { hiringManager: formValue };
+      console.log('Submitting HIRING_MANAGER body:', body);
       this.registrationService.completeHiringManagerRegistration({ token: this.registrationToken!, body })
         .subscribe({
           next: (res) => this.handleSuccess(res),
@@ -190,7 +212,15 @@ export class ProfileCreate implements OnInit {
   }
 
   private completeWithSession(): void {
-    const body: CompleteProfileRequest = this.profileForm.value;
+    const formValue = this.getFormattedBody();
+    let body: any;
+
+    if (this.userRole === 'CANDIDATE') {
+      body = { candidate: formValue };
+    } else {
+      body = { hiringManager: formValue };
+    }
+    console.log('Submitting session body:', body);
     this.profileService.completeProfile({ body })
       .subscribe({
         next: (res) => this.handleSuccess(res),
