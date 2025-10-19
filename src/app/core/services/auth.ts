@@ -141,7 +141,7 @@ export class AuthService {
         if (this.refreshTokenTimer) {
           clearTimeout(this.refreshTokenTimer);
         }
-        this.router.navigate(['/homepage']);
+        this.router.navigate(['/'], { queryParams: { reason: 'session_expired' } });
       })
     ).subscribe({
       next: () => console.log('Server logout successful'),

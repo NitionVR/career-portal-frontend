@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SignInComponent } from '../../shared/components/sign-in/sign-in.component';
@@ -9,6 +9,9 @@ import { JobFilterComponent } from '../../shared/components/job-filter/job-filte
 import { JobPostResponse } from '../../api/models/job-post-response';
 import { JobPostControllerService } from '../../api/services/job-post-controller.service';
 import { PageJobPostResponse } from '../../api/models/page-job-post-response';
+import {ActivatedRoute, Router} from '@angular/router';
+import { SnackbarService } from '../../shared/components/snackbar/snackbar.service';
+import {AuthService} from '../../core/services/auth';
 
 @Component({
   selector: 'app-homepage',
@@ -20,7 +23,7 @@ import { PageJobPostResponse } from '../../api/models/page-job-post-response';
 export class HomepageComponent implements OnInit {
   showSignInModal = false;
   searchQuery: string = '';
-  
+
   paginatedJobs: JobPostResponse[] = [];
 
   currentFilters: any = {};
@@ -28,10 +31,19 @@ export class HomepageComponent implements OnInit {
   pageSize: number = 10;
   totalPages: number = 1;
 
-  constructor(private jobPostService: JobPostControllerService) { }
+  public authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private snackbarService = inject(SnackbarService);
+  private jobPostService = inject(JobPostControllerService);
 
   ngOnInit(): void {
     this.fetchJobs();
+    this.route.queryParams.subscribe(params => {
+      if (params['reason'] === 'session_expired') {
+        this.snackbarService.info('For your security, your session has expired. Please log in again.');
+      }
+    });
   }
 
   fetchJobs(): void {
