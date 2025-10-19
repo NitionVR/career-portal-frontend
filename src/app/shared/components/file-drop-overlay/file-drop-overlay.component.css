@@ -1,0 +1,40 @@
+.overlay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: hsl(var(--primary) / 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* Allow drop events to pass through */
+}
+
+.overlay-content {
+  border: 3px dashed hsl(var(--primary-foreground));
+  border-radius: 1.5rem;
+  padding: 4rem 6rem;
+  text-align: center;
+  color: hsl(var(--primary-foreground));
+}
+
+.overlay-content .icon {
+  font-size: 6rem;
+  line-height: 1;
+}
+
+.overlay-content .title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+.overlay-content .subtitle {
+  font-size: 1.125rem;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+}
