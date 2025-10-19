@@ -17,8 +17,11 @@ import { getAvatarUploadUrl } from '../fn/profile-controller/get-avatar-upload-u
 import { GetAvatarUploadUrl$Params } from '../fn/profile-controller/get-avatar-upload-url';
 import { getCurrentUserProfile } from '../fn/profile-controller/get-current-user-profile';
 import { GetCurrentUserProfile$Params } from '../fn/profile-controller/get-current-user-profile';
+import { JsonNode } from '../models/json-node';
 import { updateAvatar } from '../fn/profile-controller/update-avatar';
 import { UpdateAvatar$Params } from '../fn/profile-controller/update-avatar';
+import { updateFullProfile } from '../fn/profile-controller/update-full-profile';
+import { UpdateFullProfile$Params } from '../fn/profile-controller/update-full-profile';
 import { updateProfile } from '../fn/profile-controller/update-profile';
 import { UpdateProfile$Params } from '../fn/profile-controller/update-profile';
 import { UploadUrlResponse } from '../models/upload-url-response';
@@ -53,6 +56,56 @@ export class ProfileControllerService extends BaseService {
   updateProfile(params: UpdateProfile$Params, context?: HttpContext): Observable<void> {
     return this.updateProfile$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `getCurrentUserProfile()` */
+  static readonly GetCurrentUserProfilePath = '/api/profile/me';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getCurrentUserProfile()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getCurrentUserProfile$Response(params?: GetCurrentUserProfile$Params, context?: HttpContext): Observable<StrictHttpResponse<JsonNode>> {
+    return getCurrentUserProfile(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getCurrentUserProfile$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getCurrentUserProfile(params?: GetCurrentUserProfile$Params, context?: HttpContext): Observable<JsonNode> {
+    return this.getCurrentUserProfile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<JsonNode>): JsonNode => r.body)
+    );
+  }
+
+  /** Path part for operation `updateFullProfile()` */
+  static readonly UpdateFullProfilePath = '/api/profile/me';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateFullProfile()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateFullProfile$Response(params: UpdateFullProfile$Params, context?: HttpContext): Observable<StrictHttpResponse<JsonNode>> {
+    return updateFullProfile(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateFullProfile$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateFullProfile(params: UpdateFullProfile$Params, context?: HttpContext): Observable<JsonNode> {
+    return this.updateFullProfile$Response(params, context).pipe(
+      map((r: StrictHttpResponse<JsonNode>): JsonNode => r.body)
     );
   }
 
@@ -153,31 +206,6 @@ export class ProfileControllerService extends BaseService {
   getAvatarUploadUrl(params: GetAvatarUploadUrl$Params, context?: HttpContext): Observable<UploadUrlResponse> {
     return this.getAvatarUploadUrl$Response(params, context).pipe(
       map((r: StrictHttpResponse<UploadUrlResponse>): UploadUrlResponse => r.body)
-    );
-  }
-
-  /** Path part for operation `getCurrentUserProfile()` */
-  static readonly GetCurrentUserProfilePath = '/api/profile/me';
-
-  /**
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `getCurrentUserProfile()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getCurrentUserProfile$Response(params?: GetCurrentUserProfile$Params, context?: HttpContext): Observable<StrictHttpResponse<UserDto>> {
-    return getCurrentUserProfile(this.http, this.rootUrl, params, context);
-  }
-
-  /**
-   * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `getCurrentUserProfile$Response()` instead.
-   *
-   * This method doesn't expect any request body.
-   */
-  getCurrentUserProfile(params?: GetCurrentUserProfile$Params, context?: HttpContext): Observable<UserDto> {
-    return this.getCurrentUserProfile$Response(params, context).pipe(
-      map((r: StrictHttpResponse<UserDto>): UserDto => r.body)
     );
   }
 

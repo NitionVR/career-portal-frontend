@@ -8,12 +8,14 @@ import { RequestBuilder } from '../../request-builder';
 
 import { JsonNode } from '../../models/json-node';
 
-export interface GetCurrentUserProfile$Params {
+export interface UpdateFullProfile$Params {
+      body: JsonNode
 }
 
-export function getCurrentUserProfile(http: HttpClient, rootUrl: string, params?: GetCurrentUserProfile$Params, context?: HttpContext): Observable<StrictHttpResponse<JsonNode>> {
-  const rb = new RequestBuilder(rootUrl, getCurrentUserProfile.PATH, 'get');
+export function updateFullProfile(http: HttpClient, rootUrl: string, params: UpdateFullProfile$Params, context?: HttpContext): Observable<StrictHttpResponse<JsonNode>> {
+  const rb = new RequestBuilder(rootUrl, updateFullProfile.PATH, 'put');
   if (params) {
+    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -26,4 +28,4 @@ export function getCurrentUserProfile(http: HttpClient, rootUrl: string, params?
   );
 }
 
-getCurrentUserProfile.PATH = '/api/profile/me';
+updateFullProfile.PATH = '/api/profile/me';

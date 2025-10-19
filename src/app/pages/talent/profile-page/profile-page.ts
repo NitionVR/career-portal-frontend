@@ -17,6 +17,7 @@ import { ProjectComponent } from './project/project'; // Import ProjectComponent
 import { AuthService, User } from '../../../core/services/auth';
 import { ProfileControllerService } from '../../../api/services';
 import { Subscription } from 'rxjs';
+import { SnackbarService } from '../../../shared/components/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -36,6 +37,7 @@ export class ProfilePageComponent implements OnInit {
   private profileService = inject(ProfileControllerService);
   private fb = inject(FormBuilder);
   private httpBackend = inject(HttpBackend);
+  private snackbarService = inject(SnackbarService);
 
   get userInitials(): string {
     if (!this.user) {
@@ -52,6 +54,21 @@ export class ProfilePageComponent implements OnInit {
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
       this.user = user;
       this.initForm();
+      this.loadProfileData(); // Load existing data after form is initialized
+    });
+  }
+
+  loadProfileData(): void {
+    this.profileService.getCurrentUserProfile().subscribe({
+      next: (profileData) => {
+        if (profileData) {
+          this.profileForm.patchValue(profileData);
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load profile data', err);
+        // Handle error, maybe show a toast message
+      }
     });
   }
 
@@ -414,13 +431,22 @@ export class ProfilePageComponent implements OnInit {
   }
 
   onSaveProfile(): void {
-    if (this.profileForm.valid) {
-      console.log('Profile saved:', this.profileForm.value);
-      // Here you would typically send the data to a backend service
-    } else {
+    if (this.profileForm.invalid) {
       console.log('Form is invalid');
-      // Optionally, mark all fields as touched to display validation errors
       this.profileForm.markAllAsTouched();
+      this.snackbarService.error('Please fix the errors in the form before submitting.');
+      return;
     }
+
+    this.profileService.updateFullProfile({ body: this.profileForm.value }).subscribe({
+      next: (savedProfile) => {
+        console.log('Profile saved successfully!', savedProfile);
+        this.snackbarService.success('Profile saved successfully!');
+      },
+      error: (err) => {
+        console.error('Failed to save profile', err);
+        this.snackbarService.error('Failed to save profile. Please try again.');
+      }
+    });
   }
 }

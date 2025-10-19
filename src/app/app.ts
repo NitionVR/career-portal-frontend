@@ -1,6 +1,7 @@
 import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoadingBarComponent } from './shared/components/loading-bar/loading-bar.component';
+import { SnackbarComponent } from './shared/components/snackbar/snackbar.component';
 import { AuthService } from './core/services/auth';
 import { inject } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -8,7 +9,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LoadingBarComponent],
+  imports: [RouterOutlet, LoadingBarComponent, SnackbarComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
