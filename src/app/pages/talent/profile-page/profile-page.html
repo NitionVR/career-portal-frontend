@@ -1,338 +1,294 @@
 <div class="py-8 sm:py-12">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-    <div class="flex items-center mb-8">
-      <span class="material-symbols-outlined text-primary text-4xl mr-4">person</span>
-      <h1 class="text-3xl font-bold tracking-tight">My Profile</h1>
-    </div>
-
-    <!-- Upload CV / Fill Manually Section -->
-    <div class="glassmorphism rounded-xl p-6 sm:p-8 mb-10">
-      <h2 class="text-xl font-semibold mb-4 text-foreground">How would you like to create your profile?</h2>
-      <div class="flex flex-col sm:flex-row gap-4">
-        <button class="flex-1 px-6 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center">
-          <span class="material-symbols-outlined mr-2">upload_file</span> Upload CV to Autofill
-        </button>
-        <button class="flex-1 px-6 py-3 text-base font-semibold text-muted-foreground bg-gray-700/50 rounded-full hover:bg-gray-700/80 transition-colors flex items-center justify-center">
-          <span class="material-symbols-outlined mr-2">edit_note</span> Fill Manually
-        </button>
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+      <div class="flex items-center mb-4 sm:mb-0">
+        <span class="material-symbols-outlined text-primary text-4xl mr-4">person</span>
+        <h1 class="text-3xl font-bold tracking-tight">My Profile</h1>
+      </div>
+      <!-- Profile Strength Meter -->
+      <div class="flex items-center gap-3">
+        <div class="w-24 h-24 rounded-full bg-muted flex items-center justify-center">
+          <div class="w-20 h-20 rounded-full bg-card flex items-center justify-center">
+            <span class="text-2xl font-bold text-primary">20%</span>
+          </div>
+        </div>
+        <div>
+          <p class="font-semibold text-foreground">Profile Strength</p>
+          <p class="text-sm text-muted-foreground">Complete more sections to stand out.</p>
+        </div>
       </div>
     </div>
 
-    <form [formGroup]="profileForm" (ngSubmit)="onSaveProfile()">
-      <mat-accordion class="example-headers-align" multi>
-        <!-- Profile Picture Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">account_circle</span>
-              Profile Picture
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="flex flex-col sm:flex-row items-center gap-6">
-            <div class="relative">
-              <!-- Profile Picture with Fallback -->
-              <ng-container *ngIf="user?.profileImageUrl; else initialsAvatar">
-                <img alt="User avatar" class="h-32 w-32 rounded-full ring-4 ring-secondary/50" [src]="user?.profileImageUrl"/>
-              </ng-container>
-              <ng-template #initialsAvatar>
-                <div class="h-32 w-32 rounded-full ring-4 ring-secondary/50 bg-primary flex items-center justify-center text-primary-foreground font-bold text-5xl">
-                  {{ userInitials }}
-                </div>
-              </ng-template>
-              <div class="absolute inset-0 bg-gray-900/70 rounded-full flex items-center justify-center" *ngIf="uploading">
-                <div class="w-20 h-20 rounded-full border-4 border-t-primary border-gray-600 animate-spin"></div>
+    <!-- Upload CV Section -->
+    <div class="glassmorphism rounded-xl p-6 sm:p-8 mb-10 text-center">
+      <h2 class="text-xl font-semibold mb-4 text-foreground">Get Started Instantly</h2>
+      <p class="text-muted-foreground mb-6 max-w-2xl mx-auto">Let us do the heavy lifting. Upload your CV or resume, and we'll automatically fill in your profile to get you started in seconds.</p>
+      <button class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center mx-auto">
+        <span class="material-symbols-outlined mr-2">upload_file</span>
+        Upload CV to Autofill
+      </button>
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSaveProfile()" class="space-y-6">
+      <!-- Profile Picture Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">account_circle</span>
+          Profile Picture
+        </h3>
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <div class="relative">
+            <ng-container *ngIf="user?.profileImageUrl; else initialsAvatar">
+              <img alt="User avatar" class="h-32 w-32 rounded-full ring-4 ring-primary/50" [src]="user?.profileImageUrl"/>
+            </ng-container>
+            <ng-template #initialsAvatar>
+              <div class="h-32 w-32 rounded-full ring-4 ring-primary/50 bg-primary flex items-center justify-center text-primary-foreground font-bold text-5xl">
+                {{ userInitials }}
               </div>
-            </div>
-            <div class="flex-grow text-center sm:text-left">
-              <div class="flex flex-col sm:flex-row gap-4 items-center">
-                <label class="cursor-pointer px-6 py-2.5 text-sm font-semibold text-gray-900 bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center" for="profile-picture-upload">
-                  <span class="material-symbols-outlined mr-2">upload</span> Upload Picture
-                </label>
-                <input (change)="onFileUpload($event)" class="hidden" id="profile-picture-upload" type="file"/>
-                <button (click)="removePicture()" type="button" class="px-6 py-2.5 text-sm font-semibold text-muted-foreground bg-gray-700/50 rounded-full hover:bg-gray-700/80 transition-colors flex items-center justify-center">
-                  <span class="material-symbols-outlined mr-2 text-destructive">delete</span> Remove
-                </button>
-              </div>
-              <p class="text-xs text-muted-foreground mt-3">PNG, JPG, GIF up to 5MB. Recommended: 400x400px.</p>
-              <div class="w-full bg-gray-700 rounded-full h-2.5 mt-4" *ngIf="uploading">
-                <div [style.width]="progress + '%'" class="bg-secondary h-2.5 rounded-full"></div>
-              </div>
+            </ng-template>
+            <div class="absolute inset-0 bg-card/70 rounded-full flex items-center justify-center" *ngIf="uploading">
+              <div class="w-20 h-20 rounded-full border-4 border-t-primary border-muted animate-spin"></div>
             </div>
           </div>
-        </mat-expansion-panel>
-
-        <!-- Personal Information Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formGroupName="basics">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">badge</span>
-              Personal Information
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-muted-foreground" for="name">Full Name</label>
-              <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="name" formControlName="name" type="text"/>
+          <div class="flex-grow text-center sm:text-left">
+            <div class="flex flex-col sm:flex-row gap-4 items-center">
+              <label class="cursor-pointer px-6 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center" for="profile-picture-upload">
+                <span class="material-symbols-outlined mr-2">upload</span> Upload Picture
+              </label>
+              <input (change)="onFileUpload($event)" class="hidden" id="profile-picture-upload" type="file"/>
+              <button (click)="removePicture()" type="button" class="px-6 py-2.5 text-sm font-semibold text-muted-foreground bg-muted rounded-full hover:bg-muted/80 transition-colors flex items-center justify-center">
+                <span class="material-symbols-outlined mr-2 text-destructive">delete</span> Remove
+              </button>
             </div>
-            <div>
-              <label class="block text-sm font-medium text-muted-foreground" for="label">Professional Title</label>
-              <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="label" formControlName="label" type="text"/>
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-muted-foreground" for="email">Email Address</label>
-              <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="email" formControlName="email" type="email"/>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-muted-foreground" for="phone">Phone Number</label>
-              <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="phone" formControlName="phone" type="text"/>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-muted-foreground" for="url">Website/Portfolio</label>
-              <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="url" formControlName="url" type="text"/>
-            </div>
-            <div class="md:col-span-2" formGroupName="location">
-              <h3 class="text-lg font-semibold text-foreground mb-3">Location</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label class="block text-sm font-medium text-muted-foreground" for="address">Address</label>
-                  <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="address" formControlName="address" type="text"/>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-muted-foreground" for="city">City</label>
-                  <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="city" formControlName="city" type="text"/>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-muted-foreground" for="postalCode">Postal Code</label>
-                  <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="postalCode" formControlName="postalCode" type="text"/>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-muted-foreground" for="countryCode">Country Code</label>
-                  <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="countryCode" formControlName="countryCode" type="text"/>
-                </div>
-                <div class="md:col-span-2">
-                  <label class="block text-sm font-medium text-muted-foreground" for="region">Region</label>
-                  <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="region" formControlName="region" type="text"/>
-                </div>
-              </div>
+            <p class="text-xs text-muted-foreground mt-3">PNG, JPG up to 5MB. Recommended: 400x400px.</p>
+            <div class="w-full bg-muted rounded-full h-2.5 mt-4" *ngIf="uploading">
+              <div [style.width.%]="progress" class="bg-primary h-2.5 rounded-full transition-all duration-300"></div>
             </div>
           </div>
-        </mat-expansion-panel>
+        </div>
+      </div>
 
-        <!-- Professional Summary Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formGroupName="basics">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">article</span>
-              Professional Summary
-            </mat-panel-title>
-          </mat-expansion-panel-header>
+      <!-- Personal Information Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formGroupName="basics">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">badge</span>
+          Personal Information
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-muted-foreground" for="summary">Summary</label>
-            <textarea class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="summary" formControlName="summary" rows="6"></textarea>
+            <label class="block text-sm font-medium text-muted-foreground" for="name">Full Name</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="name" formControlName="name" type="text"/>
           </div>
-        </mat-expansion-panel>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground" for="label">Professional Title</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="label" formControlName="label" type="text"/>
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-muted-foreground" for="email">Email Address</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="email" formControlName="email" type="email"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground" for="phone">Phone Number</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="phone" formControlName="phone" type="text"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground" for="url">Website/Portfolio</label>
+            <input class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="url" formControlName="url" type="text"/>
+          </div>
+        </div>
+      </div>
 
-        <!-- Work Experience Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="work">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">work</span>
-              Work Experience
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let workExperienceFormGroup of workExperiences.controls; let i = index" [formGroupName]="i">
-            <app-work-experience [workFormGroup]="workExperienceFormGroup" (remove)="removeWorkExperience(i)"></app-work-experience>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addWorkExperience()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Work Experience
-            </button>
-          </div>
-        </mat-expansion-panel>
+      <!-- Professional Summary Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formGroupName="basics">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">article</span>
+          Professional Summary
+        </h3>
+        <div>
+          <label class="block text-sm font-medium text-muted-foreground" for="summary">Summary</label>
+          <textarea class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200" id="summary" formControlName="summary" rows="6"></textarea>
+        </div>
+      </div>
 
-        <!-- Volunteer Experience Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="volunteer">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">volunteer_activism</span>
-              Volunteer Experience
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let volunteerExperienceFormGroup of volunteerExperiences.controls; let i = index" [formGroupName]="i">
-            <app-volunteer-experience [volunteerFormGroup]="volunteerExperienceFormGroup" (remove)="removeVolunteerExperience(i)"></app-volunteer-experience>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addVolunteerExperience()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Volunteer Experience
-            </button>
-          </div>
-        </mat-expansion-panel>
+      <!-- Work Experience Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="work">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">work</span>
+          Work Experience
+        </h3>
+        <div *ngFor="let workExperienceFormGroup of workExperiences.controls; let i = index" [formGroupName]="i">
+          <app-work-experience [workFormGroup]="workExperienceFormGroup" (remove)="removeWorkExperience(i)"></app-work-experience>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addWorkExperience()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Work Experience
+          </button>
+        </div>
+      </div>
 
-        <!-- Education Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="education">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">school</span>
-              Education
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let educationFormGroup of educations.controls; let i = index" [formGroupName]="i">
-            <app-education [educationFormGroup]="educationFormGroup" (remove)="removeEducation(i)"></app-education>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addEducation()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Education
-            </button>
-          </div>
-        </mat-expansion-panel>
+      <!-- Volunteer Experience Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="volunteer">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">volunteer_activism</span>
+          Volunteer Experience
+        </h3>
+        <div *ngFor="let volunteerExperienceFormGroup of volunteerExperiences.controls; let i = index" [formGroupName]="i">
+          <app-volunteer-experience [volunteerFormGroup]="volunteerExperienceFormGroup" (remove)="removeVolunteerExperience(i)"></app-volunteer-experience>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addVolunteerExperience()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Volunteer Experience
+          </button>
+        </div>
+      </div>
 
-        <!-- Awards Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="awards">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">emoji_events</span>
-              Awards
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let awardFormGroup of awards.controls; let i = index" [formGroupName]="i">
-            <app-award [awardFormGroup]="awardFormGroup" (remove)="removeAward(i)"></app-award>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addAward()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Award
-            </button>
-          </div>
-        </mat-expansion-panel>
+      <!-- Education Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="education">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">school</span>
+          Education
+        </h3>
+        <div *ngFor="let educationFormGroup of educations.controls; let i = index" [formGroupName]="i">
+          <app-education [educationFormGroup]="educationFormGroup" (remove)="removeEducation(i)"></app-education>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addEducation()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Education
+          </button>
+        </div>
+      </div>
 
-        <!-- Certificates Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="certificates">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">military_tech</span>
-              Certificates
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let certificateFormGroup of certificates.controls; let i = index" [formGroupName]="i">
-            <app-certificate [certificateFormGroup]="certificateFormGroup" (remove)="removeCertificate(i)"></app-certificate>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addCertificate()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Certificate
-            </button>
-          </div>
-        </mat-expansion-panel>
+      <!-- Awards Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="awards">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">emoji_events</span>
+          Awards
+        </h3>
+        <div *ngFor="let awardFormGroup of awards.controls; let i = index" [formGroupName]="i">
+          <app-award [awardFormGroup]="awardFormGroup" (remove)="removeAward(i)"></app-award>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addAward()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Award
+          </button>
+        </div>
+      </div>
 
-        <!-- Publications Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="publications">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">book</span>
-              Publications
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let publicationFormGroup of publications.controls; let i = index" [formGroupName]="i">
-            <app-publication [publicationFormGroup]="publicationFormGroup" (remove)="removePublication(i)"></app-publication>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addPublication()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Publication
-            </button>
-          </div>
-        </mat-expansion-panel>
+      <!-- Certificates Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="certificates">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">military_tech</span>
+          Certificates
+        </h3>
+        <div *ngFor="let certificateFormGroup of certificates.controls; let i = index" [formGroupName]="i">
+          <app-certificate [certificateFormGroup]="certificateFormGroup" (remove)="removeCertificate(i)"></app-certificate>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addCertificate()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Certificate
+          </button>
+        </div>
+      </div>
 
-        <!-- Skills Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="skills">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">psychology</span>
-              Skills
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let skillFormGroup of skills.controls; let i = index" [formGroupName]="i">
-            <app-skill [skillFormGroup]="skillFormGroup" (remove)="removeSkill(i)"></app-skill>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addSkill()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Skill
-            </button>
-          </div>
-        </mat-expansion-panel>
+      <!-- Publications Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="publications">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">book</span>
+          Publications
+        </h3>
+        <div *ngFor="let publicationFormGroup of publications.controls; let i = index" [formGroupName]="i">
+          <app-publication [publicationFormGroup]="publicationFormGroup" (remove)="removePublication(i)"></app-publication>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addPublication()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Publication
+          </button>
+        </div>
+      </div>
 
-        <!-- Languages Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="languages">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">language</span>
-              Languages
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let languageFormGroup of languages.controls; let i = index" [formGroupName]="i">
-            <app-language [languageFormGroup]="languageFormGroup" (remove)="removeLanguage(i)"></app-language>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addLanguage()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Language
-            </button>
-          </div>
-        </mat-expansion-panel>
+      <!-- Skills Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="skills">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">psychology</span>
+          Skills
+        </h3>
+        <div *ngFor="let skillFormGroup of skills.controls; let i = index" [formGroupName]="i">
+          <app-skill [skillFormGroup]="skillFormGroup" (remove)="removeSkill(i)"></app-skill>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addSkill()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Skill
+          </button>
+        </div>
+      </div>
 
-        <!-- Interests Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="interests">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">interests</span>
-              Interests
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let interestFormGroup of interests.controls; let i = index" [formGroupName]="i">
-            <app-interest [interestFormGroup]="interestFormGroup" (remove)="removeInterest(i)"></app-interest>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addInterest()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Interest
-            </button>
-          </div>
-        </mat-expansion-panel>
+      <!-- Languages Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="languages">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">language</span>
+          Languages
+        </h3>
+        <div *ngFor="let languageFormGroup of languages.controls; let i = index" [formGroupName]="i">
+          <app-language [languageFormGroup]="languageFormGroup" (remove)="removeLanguage(i)"></app-language>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addLanguage()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Language
+          </button>
+        </div>
+      </div>
 
-        <!-- References Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="references">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">group</span>
-              References
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let referenceFormGroup of references.controls; let i = index" [formGroupName]="i">
-            <app-reference [referenceFormGroup]="referenceFormGroup" (remove)="removeReference(i)"></app-reference>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addReference()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Reference
-            </button>
-          </div>
-        </mat-expansion-panel>
+      <!-- Interests Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="interests">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">interests</span>
+          Interests
+        </h3>
+        <div *ngFor="let interestFormGroup of interests.controls; let i = index" [formGroupName]="i">
+          <app-interest [interestFormGroup]="interestFormGroup" (remove)="removeInterest(i)"></app-interest>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addInterest()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Interest
+          </button>
+        </div>
+      </div>
 
-        <!-- Projects Section -->
-        <mat-expansion-panel class="glassmorphism rounded-xl mb-4" formArrayName="projects">
-          <mat-expansion-panel-header>
-            <mat-panel-title class="flex items-center">
-              <span class="material-symbols-outlined mr-3">workspaces</span>
-              Projects
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div *ngFor="let projectFormGroup of projects.controls; let i = index" [formGroupName]="i">
-            <app-project [projectFormGroup]="projectFormGroup" (remove)="removeProject(i)"></app-project>
-          </div>
-          <div class="flex justify-end mt-4">
-            <button type="button" (click)="addProject()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
-              <span class="material-symbols-outlined mr-2">add</span> Add Project
-            </button>
-          </div>
-        </mat-expansion-panel>
-      </mat-accordion>
+      <!-- References Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="references">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">group</span>
+          References
+        </h3>
+        <div *ngFor="let referenceFormGroup of references.controls; let i = index" [formGroupName]="i">
+          <app-reference [referenceFormGroup]="referenceFormGroup" (remove)="removeReference(i)"></app-reference>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addReference()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Reference
+          </button>
+        </div>
+      </div>
+
+      <!-- Projects Section -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8" formArrayName="projects">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">workspaces</span>
+          Projects
+        </h3>
+        <div *ngFor="let projectFormGroup of projects.controls; let i = index" [formGroupName]="i">
+          <app-project [projectFormGroup]="projectFormGroup" (remove)="removeProject(i)"></app-project>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button type="button" (click)="addProject()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
+            <span class="material-symbols-outlined mr-2">add</span> Add Project
+          </button>
+        </div>
+      </div>
 
       <div class="flex justify-end pt-4">
-        <button type="submit" [disabled]="profileForm.invalid" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out disabled:opacity-50">
+        <button type="submit" [disabled]="profileForm.invalid" class="w-full sm:w-auto flex justify-center py-3 px-6 border border-transparent rounded-full shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out disabled:opacity-50">
           <span class="material-symbols-outlined mr-2">save</span> Save Changes
         </button>
       </div>

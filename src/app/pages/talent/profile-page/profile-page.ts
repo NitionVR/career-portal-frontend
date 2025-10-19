@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatExpansionModule, WorkExperienceComponent, VolunteerExperienceComponent, EducationComponent, AwardComponent, CertificateComponent, PublicationComponent, SkillComponent, LanguageComponent, InterestComponent, ReferenceComponent, ProjectComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, WorkExperienceComponent, VolunteerExperienceComponent, EducationComponent, AwardComponent, CertificateComponent, PublicationComponent, SkillComponent, LanguageComponent, InterestComponent, ReferenceComponent, ProjectComponent],
   templateUrl: './profile-page.html',
   styleUrls: ['./profile-page.css']
 })
