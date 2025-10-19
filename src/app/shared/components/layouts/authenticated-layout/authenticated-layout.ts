@@ -20,6 +20,7 @@ export class AuthenticatedLayoutComponent implements OnInit, OnDestroy {
   isMobile: boolean = false;
   isLoggedIn$: Observable<boolean>;
   user$: Observable<any | null>;
+  sidebarContext: 'talent-dashboard' | 'talent-profile' = 'talent-dashboard';
 
   get userRole(): string | null {
     // This is a synchronous way to get the role for the template's *ngIf
@@ -37,6 +38,12 @@ export class AuthenticatedLayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.checkIsMobile();
+    this.routerSubscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.updateSidebarContext();
+    });
+    this.updateSidebarContext(); // Initial context set
   }
 
   ngOnDestroy(): void {
@@ -54,6 +61,14 @@ export class AuthenticatedLayoutComponent implements OnInit, OnDestroy {
       this.isMobileSidebarOpen = false; // Ensure sidebar is closed on mobile by default
     } else {
       this.isMobileSidebarOpen = false; // Close sidebar if resizing to desktop
+    }
+  }
+
+  private updateSidebarContext(): void {
+    if (this.router.url.includes('/talent/profile')) {
+      this.sidebarContext = 'talent-profile';
+    } else {
+      this.sidebarContext = 'talent-dashboard';
     }
   }
 
