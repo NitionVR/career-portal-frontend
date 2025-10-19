@@ -1,0 +1,19 @@
+<div class="relative inline-block text-left">
+  <div>
+    <button (click)="toggleDropdown()" type="button" class="inline-flex items-center justify-center font-medium rounded-md transition-colors hover:bg-muted p-1 -m-1" id="menu-button" aria-expanded="true" aria-haspopup="true">
+      <span [ngClass]="{
+        'text-green-400': job.status === 'PUBLISHED',
+        'text-yellow-400': job.status === 'DRAFT',
+        'text-red-400': job.status === 'ARCHIVED' || job.status === 'CLOSED',
+        'text-muted-foreground': !job.status
+      }">{{ job.status | titlecase }}</span>
+      <span class="material-symbols-outlined text-sm text-muted-foreground">arrow_drop_down</span>
+    </button>
+  </div>
+
+  <div *ngIf="isOpen" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-popover ring-1 ring-black ring-opacity-5 focus:outline-none z-10 glassmorphism" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+    <div class="py-1" role="none">
+      <a *ngFor="let transition of availableTransitions" (click)="changeState(transition)" class="text-foreground block px-4 py-2 text-sm hover:bg-muted cursor-pointer" role="menuitem" tabindex="-1">{{ transition | titlecase }}</a>
+    </div>
+  </div>
+</div>

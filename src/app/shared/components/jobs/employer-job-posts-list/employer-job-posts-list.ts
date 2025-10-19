@@ -2,11 +2,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { JobPostResponse } from '../../../../api/models/job-post-response';
+import { StatusDropdownComponent } from '../../status-dropdown/status-dropdown.component';
 
 @Component({
   selector: 'app-employer-job-posts-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, StatusDropdownComponent],
   templateUrl: './employer-job-posts-list.html',
   styleUrls: ['./employer-job-posts-list.css']
 })

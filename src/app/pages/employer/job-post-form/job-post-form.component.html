@@ -5,7 +5,7 @@
       <p class="text-lg text-muted-foreground mt-1">Fill in the details below to create a new job opening.</p>
     </div>
 
-    <form [formGroup]="jobPostForm" (ngSubmit)="onSubmit('PUBLISHED')" class="space-y-8">
+    <form [formGroup]="jobPostForm" class="space-y-8">
       <!-- Basic Information Card -->
       <div class="glassmorphism rounded-xl p-6 sm:p-8">
         <h3 class="text-xl font-semibold text-foreground mb-6">Basic Information</h3>
@@ -116,7 +116,7 @@
         <button type="button" (click)="onSubmit('DRAFT')" class="px-8 py-3 text-base font-semibold text-muted-foreground bg-muted rounded-full hover:bg-muted/80 transition-colors">
           Save as Draft
         </button>
-        <button type="submit" [disabled]="jobPostForm.invalid" class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors disabled:opacity-50">
+        <button type="button" (click)="onSubmit('PUBLISHED')" [disabled]="jobPostForm.invalid" class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors disabled:opacity-50">
           Publish Job Post
         </button>
       </div>
