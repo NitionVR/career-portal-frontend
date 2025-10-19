@@ -18,11 +18,13 @@ import { AuthService, User } from '../../../core/services/auth';
 import { ProfileControllerService } from '../../../api/services';
 import { Subscription } from 'rxjs';
 import { SnackbarService } from '../../../shared/components/snackbar/snackbar.service';
+import { FileDropDirective } from '../../../shared/directives/file-drop.directive';
+import { FileDropOverlayComponent } from '../../../shared/components/file-drop-overlay/file-drop-overlay.component';
 
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, WorkExperienceComponent, VolunteerExperienceComponent, EducationComponent, AwardComponent, CertificateComponent, PublicationComponent, SkillComponent, LanguageComponent, InterestComponent, ReferenceComponent, ProjectComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, WorkExperienceComponent, VolunteerExperienceComponent, EducationComponent, AwardComponent, CertificateComponent, PublicationComponent, SkillComponent, LanguageComponent, InterestComponent, ReferenceComponent, ProjectComponent, FileDropDirective, FileDropOverlayComponent],
   templateUrl: './profile-page.html',
   styleUrls: ['./profile-page.css']
 })
@@ -32,6 +34,7 @@ export class ProfilePageComponent implements OnInit {
   profileForm!: FormGroup;
   user: User | null = null;
   userSubscription: Subscription | undefined;
+  isDragging = false;
 
   private authService = inject(AuthService);
   private profileService = inject(ProfileControllerService);
@@ -341,12 +344,29 @@ export class ProfilePageComponent implements OnInit {
     this.projects.removeAt(index);
   }
 
-  onFileUpload(event: any): void {
-    const file = event.target.files[0];
-    if (!file) {
+  onFileDropped(file: File): void {
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!allowedTypes.includes(file.type)) {
+      this.snackbarService.error('Invalid file type. Please upload a PDF, DOC, or DOCX file.');
       return;
     }
 
+    if (file.size > maxSize) {
+      this.snackbarService.error('File is too large. Maximum size is 5MB.');
+      return;
+    }
+
+    // If validation passes, start the upload process
+    this.handleFileUpload(file);
+  }
+
+  triggerFileUpload(fileUploadInput: HTMLInputElement): void {
+    fileUploadInput.click();
+  }
+
+  handleFileUpload(file: File): void {
     this.uploading = true;
     this.progress = 0; // Reset progress
 
@@ -428,6 +448,13 @@ export class ProfilePageComponent implements OnInit {
         // You might want to show an error message to the user here
       }
     });
+  }
+
+  onFileUpload(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.onFileDropped(file); // Reuse the same validation and upload logic
+    }
   }
 
   onSaveProfile(): void {
