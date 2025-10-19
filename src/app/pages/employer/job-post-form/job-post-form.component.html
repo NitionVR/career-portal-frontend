@@ -6,35 +6,101 @@
     </div>
 
     <form [formGroup]="jobPostForm" (ngSubmit)="onSubmit('PUBLISHED')" class="space-y-8">
+      <!-- Basic Information Card -->
       <div class="glassmorphism rounded-xl p-6 sm:p-8">
-        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
-          <span class="material-symbols-outlined mr-3">title</span>
-          Job Title
-        </h3>
-        <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="title">Title</label>
-          <input id="title" formControlName="title" type="text" placeholder="e.g., Senior Frontend Developer"
-                 class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
-          <!-- Add validation error display here later -->
+        <h3 class="text-xl font-semibold text-foreground mb-6">Basic Information</h3>
+        <div class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="title">Job Title</label>
+            <input id="title" formControlName="title" type="text" placeholder="e.g., Senior Frontend Developer"
+                   class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="description">Job Description</label>
+            <textarea id="description" formControlName="description" rows="8"
+                      placeholder="Describe the role, responsibilities, and requirements..."
+                      class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"></textarea>
+          </div>
         </div>
       </div>
 
+      <!-- Details Card -->
       <div class="glassmorphism rounded-xl p-6 sm:p-8">
-        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
-          <span class="material-symbols-outlined mr-3">description</span>
-          Job Description
-        </h3>
-        <div>
-          <label class="block text-sm font-medium text-muted-foreground mb-1" for="description">Description</label>
-          <textarea id="description" formControlName="description" rows="8"
-                    placeholder="Describe the role, responsibilities, and requirements..."
-                    class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"></textarea>
-          <!-- Add validation error display here later -->
+        <h3 class="text-xl font-semibold text-foreground mb-6">Job Details</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Location -->
+          <div formGroupName="location" class="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2">
+            <div class="md:col-span-2 font-medium text-foreground">Location</div>
+            <div>
+              <label class="block text-sm text-muted-foreground mb-1" for="city">City</label>
+              <input id="city" formControlName="city" type="text" class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+            </div>
+            <div>
+              <label class="block text-sm text-muted-foreground mb-1" for="countryCode">Country Code</label>
+              <input id="countryCode" formControlName="countryCode" type="text" class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="salary">Salary</label>
+            <input id="salary" formControlName="salary" type="text" placeholder="e.g., $120,000 - $150,000"
+                   class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="experienceLevel">Experience Level</label>
+            <input id="experienceLevel" formControlName="experienceLevel" type="text" placeholder="e.g., Senior"
+                   class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="contractType">Contract Type</label>
+            <input id="contractType" formControlName="contractType" type="text" placeholder="e.g., Full-time"
+                   class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-muted-foreground mb-1" for="workType">Work Type</label>
+            <input id="workType" formControlName="workType" type="text" placeholder="e.g., Remote, Hybrid"
+                   class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+          </div>
         </div>
       </div>
 
-      <!-- More form sections will be added here -->
+      <!-- Dynamic Sections (Skills, Responsibilities, etc.) -->
+      <!-- Skills -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8">
+        <h3 class="text-xl font-semibold text-foreground mb-6">Required Skills</h3>
+        <div formArrayName="skills" class="space-y-4">
+          <div *ngFor="let skill of skills.controls; let i=index" [formGroupName]="i" class="flex items-center gap-4">
+            <input formControlName="name" placeholder="e.g., TypeScript" class="flex-grow px-4 py-3 bg-background border border-border rounded-md"/>
+            <button type="button" (click)="removeSkill(i)" class="p-2 text-muted-foreground hover:text-destructive"><span class="material-symbols-outlined">delete</span></button>
+          </div>
+        </div>
+        <button type="button" (click)="addSkill()" class="mt-4 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover">+ Add Skill</button>
+      </div>
 
+      <!-- Responsibilities -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8">
+        <h3 class="text-xl font-semibold text-foreground mb-6">Responsibilities</h3>
+        <div formArrayName="responsibilities" class="space-y-4">
+          <div *ngFor="let resp of responsibilities.controls; let i=index" class="flex items-center gap-4">
+            <input [formControlName]="i" placeholder="e.g., Develop and maintain web applications" class="flex-grow px-4 py-3 bg-background border border-border rounded-md"/>
+            <button type="button" (click)="removeResponsibility(i)" class="p-2 text-muted-foreground hover:text-destructive"><span class="material-symbols-outlined">delete</span></button>
+          </div>
+        </div>
+        <button type="button" (click)="addResponsibility()" class="mt-4 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover">+ Add Responsibility</button>
+      </div>
+
+      <!-- Qualifications -->
+      <div class="glassmorphism rounded-xl p-6 sm:p-8">
+        <h3 class="text-xl font-semibold text-foreground mb-6">Qualifications</h3>
+        <div formArrayName="qualifications" class="space-y-4">
+          <div *ngFor="let qual of qualifications.controls; let i=index" class="flex items-center gap-4">
+            <input [formControlName]="i" placeholder="e.g., 5+ years of experience with Angular" class="flex-grow px-4 py-3 bg-background border border-border rounded-md"/>
+            <button type="button" (click)="removeQualification(i)" class="p-2 text-muted-foreground hover:text-destructive"><span class="material-symbols-outlined">delete</span></button>
+          </div>
+        </div>
+        <button type="button" (click)="addQualification()" class="mt-4 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover">+ Add Qualification</button>
+      </div>
+
+      <!-- Action Buttons -->
       <div class="flex justify-end items-center gap-4 pt-6 border-t border-border">
         <button type="button" (click)="onSubmit('DRAFT')" class="px-8 py-3 text-base font-semibold text-muted-foreground bg-muted rounded-full hover:bg-muted/80 transition-colors">
           Save as Draft
