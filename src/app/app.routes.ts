@@ -12,6 +12,7 @@ import { JobPostDetailsPageComponent } from './pages/job-post-details/job-post-d
 import { ProfilePageComponent } from './pages/talent/profile-page/profile-page';
 import { EmployerDashboardComponent } from './pages/employer/dashboard/dashboard';
 import { JobPostFormComponent } from './pages/employer/job-post-form/job-post-form.component';
+import { CompanyProfileComponent } from './pages/employer/company-profile/company-profile.component';
 
 // Import the new guards
 import { authGuard } from './core/guards/auth.guard';
@@ -57,6 +58,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: EmployerDashboardComponent },
       { path: 'jobs/create', component: JobPostFormComponent },
       { path: 'jobs/:id/edit', component: JobPostFormComponent },
+      { path: 'settings/company', component: CompanyProfileComponent },
       // Add other employer routes here
     ]
   },
