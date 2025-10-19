@@ -7,6 +7,8 @@ import { SignInComponent } from '../../shared/components/sign-in/sign-in.compone
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth';
 import { JobPostControllerService } from '../../api/services/job-post-controller.service';
+import { JobApplicationControllerService } from '../../api/services/job-application-controller.service';
+import { SnackbarService } from '../../shared/components/snackbar/snackbar.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -29,7 +31,9 @@ export class JobPostDetailsPageComponent implements OnInit {
 
   private route = inject(ActivatedRoute);
   private jobPostService = inject(JobPostControllerService);
+  private jobApplicationService = inject(JobApplicationControllerService);
   private authService = inject(AuthService);
+  private snackbarService = inject(SnackbarService);
 
   constructor() {
     this.isLoggedIn$ = this.authService.isAuthenticated$;
@@ -73,5 +77,21 @@ export class JobPostDetailsPageComponent implements OnInit {
 
   toggleShowAllSkills(): void {
     this.showAllSkills = !this.showAllSkills;
+  }
+
+  applyToJob(): void {
+    if (!this.jobPost?.id) {
+      this.snackbarService.error('Cannot apply: Job ID is missing.');
+      return;
+    }
+    this.jobApplicationService.applyForJob({ id: this.jobPost.id }).subscribe({
+      next: () => {
+        this.snackbarService.success('Application submitted successfully!');
+        // Optionally, you could change the button state to "Applied"
+      },
+      error: (err) => {
+        this.snackbarService.error(err.error?.message || 'Failed to submit application.');
+      }
+    });
   }
 }
