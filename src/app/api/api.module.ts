@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { ProfileControllerService } from './services/profile-controller.service';
+import { OrganizationControllerService } from './services/organization-controller.service';
 import { JobPostControllerService } from './services/job-post-controller.service';
 import { WorkflowControllerService } from './services/workflow-controller.service';
 import { NotificationControllerService } from './services/notification-controller.service';
@@ -22,6 +23,7 @@ import { AuthenticationControllerService } from './services/authentication-contr
   declarations: [],
   providers: [
     ProfileControllerService,
+    OrganizationControllerService,
     JobPostControllerService,
     WorkflowControllerService,
     NotificationControllerService,

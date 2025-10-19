@@ -71,10 +71,26 @@
           </div>
         </div>
         <div class="flex-shrink-0 flex items-center justify-end border-t border-border bg-black/20 p-6">
-          <button class="flex items-center gap-2 rounded-full bg-primary px-8 py-3 text-base font-bold text-primary-foreground transition-all duration-300 ease-in-out hover:bg-primary/90 transform hover:scale-105">
-            Apply Now
-            <span class="material-symbols-outlined">arrow_forward</span>
-          </button>
+          <!-- Employer Preview Actions -->
+          <ng-container *ngIf="isEmployerPreview; else publicActions">
+            <div class="flex items-center gap-4">
+              <a [routerLink]="['/employer/jobs', jobPost.id, 'edit']" class="flex items-center gap-2 rounded-full bg-muted px-8 py-3 text-base font-bold text-foreground transition-all duration-300 ease-in-out hover:bg-muted/80 transform hover:scale-105">
+                <span class="material-symbols-outlined">edit</span>
+                Edit Post
+              </a>
+              <a [routerLink]="['/employer/jobs', jobPost.id, 'applicants']" class="flex items-center gap-2 rounded-full bg-primary px-8 py-3 text-base font-bold text-primary-foreground transition-all duration-300 ease-in-out hover:bg-primary/90 transform hover:scale-105">
+                View Applicants
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </a>
+            </div>
+          </ng-container>
+          <!-- Public/Candidate Actions -->
+          <ng-template #publicActions>
+            <button class="flex items-center gap-2 rounded-full bg-primary px-8 py-3 text-base font-bold text-primary-foreground transition-all duration-300 ease-in-out hover:bg-primary/90 transform hover:scale-105">
+              Apply Now
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </ng-template>
         </div>
       </div>
     </div>

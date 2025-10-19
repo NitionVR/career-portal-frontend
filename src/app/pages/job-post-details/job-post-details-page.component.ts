@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-job-post-details-page',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, SignInComponent, FormsModule],
+  imports: [CommonModule, HeaderComponent, SignInComponent, FormsModule, RouterLink],
   templateUrl: './job-post-details-page.component.html',
   styleUrls: ['./job-post-details-page.component.css']
 })
@@ -25,6 +25,7 @@ export class JobPostDetailsPageComponent implements OnInit {
   showSignInModal = false;
   showAllSkills = false;
   initialSkillsToShow = 10;
+  isEmployerPreview = false;
 
   private route = inject(ActivatedRoute);
   private jobPostService = inject(JobPostControllerService);
@@ -36,6 +37,7 @@ export class JobPostDetailsPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isEmployerPreview = this.route.snapshot.queryParamMap.get('preview') === 'true';
     const jobId = this.route.snapshot.paramMap.get('id');
     if (jobId) {
       this.fetchJobPost(jobId);

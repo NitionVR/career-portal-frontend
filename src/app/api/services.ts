@@ -1,4 +1,5 @@
 export { ProfileControllerService } from './services/profile-controller.service';
+export { OrganizationControllerService } from './services/organization-controller.service';
 export { JobPostControllerService } from './services/job-post-controller.service';
 export { WorkflowControllerService } from './services/workflow-controller.service';
 export { NotificationControllerService } from './services/notification-controller.service';
