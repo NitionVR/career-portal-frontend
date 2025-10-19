@@ -31,9 +31,10 @@ export const INDUSTRY_OPTIONS: SelectOption[] = [
 ];
 
 export const EXPERIENCE_LEVEL_OPTIONS: SelectOption[] = [
-  { value: 'ENTRY_LEVEL', label: 'Entry Level' },
-  { value: 'MID_LEVEL', label: 'Mid Level' },
-  { value: 'SENIOR_LEVEL', label: 'Senior Level' },
+  { value: 'entry-level', label: 'Entry Level' },
+  { value: 'mid-level', label: 'Mid Level' },
+  { value: 'senior-level', label: 'Senior Level' },
+  { value: 'executive', label: 'Executive' },
 ];
 
 export const CONTRACT_TYPE_OPTIONS: SelectOption[] = [
