@@ -4,7 +4,21 @@ This document outlines the next phase of required backend API changes to support
 
 ---
 
-### **P0: Critical - Complete the Employer Dashboard**
+### **P0: Critical - View Applicants for a Job**
+
+**Objective:** To allow an employer to see a list of all candidates who have applied for one of their job posts.
+
+**Endpoint to Add:** `GET /api/job-posts/{jobId}/applications`
+
+**Details:**
+*   **Description:** Returns a paginated list of all `ApplicationSummaryDto` objects for the given `jobId`.
+*   **Security:** Must be authenticated and authorized, ensuring the caller owns the job post.
+*   **Success Response:** `PageApplicationSummaryDto`
+*   **Impact:** This is a **blocker** for the entire "View Applicants" feature (Epic #4).
+
+---
+
+### **P1: Critical - Complete the Employer Dashboard**
 
 **Objective:** To make the Employer Dashboard fully functional by providing all necessary data for the job post list.
 
