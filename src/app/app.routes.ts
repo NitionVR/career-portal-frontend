@@ -11,6 +11,7 @@ import { ApplicationDetailsPageComponent } from './pages/talent/application-deta
 import { JobPostDetailsPageComponent } from './pages/job-post-details/job-post-details-page.component';
 import { ProfilePageComponent } from './pages/talent/profile-page/profile-page';
 import { EmployerDashboardComponent } from './pages/employer/dashboard/dashboard';
+import { JobPostFormComponent } from './pages/employer/job-post-form/job-post-form.component';
 
 // Import the new guards
 import { authGuard } from './core/guards/auth.guard';
@@ -54,6 +55,9 @@ export const routes: Routes = [
     data: { role: 'HIRING_MANAGER' }, // Specify the required role for this section
     children: [
       { path: 'dashboard', component: EmployerDashboardComponent },
+      { path: 'jobs/create', component: JobPostFormComponent },
+      { path: 'jobs/:id/edit', component: JobPostFormComponent },
+      // Add other employer routes here
     ]
   },
 

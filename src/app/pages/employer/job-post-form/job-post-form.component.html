@@ -1,0 +1,48 @@
+<div class="py-8 sm:py-12">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold tracking-tight">Create Job Post</h1>
+      <p class="text-lg text-muted-foreground mt-1">Fill in the details below to create a new job opening.</p>
+    </div>
+
+    <form [formGroup]="jobPostForm" (ngSubmit)="onSubmit('PUBLISHED')" class="space-y-8">
+      <div class="glassmorphism rounded-xl p-6 sm:p-8">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">title</span>
+          Job Title
+        </h3>
+        <div>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="title">Title</label>
+          <input id="title" formControlName="title" type="text" placeholder="e.g., Senior Frontend Developer"
+                 class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+          <!-- Add validation error display here later -->
+        </div>
+      </div>
+
+      <div class="glassmorphism rounded-xl p-6 sm:p-8">
+        <h3 class="text-xl font-semibold text-foreground mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-3">description</span>
+          Job Description
+        </h3>
+        <div>
+          <label class="block text-sm font-medium text-muted-foreground mb-1" for="description">Description</label>
+          <textarea id="description" formControlName="description" rows="8"
+                    placeholder="Describe the role, responsibilities, and requirements..."
+                    class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"></textarea>
+          <!-- Add validation error display here later -->
+        </div>
+      </div>
+
+      <!-- More form sections will be added here -->
+
+      <div class="flex justify-end items-center gap-4 pt-6 border-t border-border">
+        <button type="button" (click)="onSubmit('DRAFT')" class="px-8 py-3 text-base font-semibold text-muted-foreground bg-muted rounded-full hover:bg-muted/80 transition-colors">
+          Save as Draft
+        </button>
+        <button type="submit" [disabled]="jobPostForm.invalid" class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors disabled:opacity-50">
+          Publish Job Post
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
