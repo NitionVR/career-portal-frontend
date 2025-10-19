@@ -15,9 +15,12 @@ import { applyForJob } from '../fn/job-application-controller/apply-for-job';
 import { ApplyForJob$Params } from '../fn/job-application-controller/apply-for-job';
 import { getApplicationDetails } from '../fn/job-application-controller/get-application-details';
 import { GetApplicationDetails$Params } from '../fn/job-application-controller/get-application-details';
+import { getApplicationsForJob } from '../fn/job-application-controller/get-applications-for-job';
+import { GetApplicationsForJob$Params } from '../fn/job-application-controller/get-applications-for-job';
 import { getMyApplications } from '../fn/job-application-controller/get-my-applications';
 import { GetMyApplications$Params } from '../fn/job-application-controller/get-my-applications';
 import { PageApplicationSummaryDto } from '../models/page-application-summary-dto';
+import { PageEmployerApplicationSummaryDto } from '../models/page-employer-application-summary-dto';
 import { withdrawApplication } from '../fn/job-application-controller/withdraw-application';
 import { WithdrawApplication$Params } from '../fn/job-application-controller/withdraw-application';
 
@@ -49,6 +52,31 @@ export class JobApplicationControllerService extends BaseService {
   applyForJob(params: ApplyForJob$Params, context?: HttpContext): Observable<ApplicationSummaryDto> {
     return this.applyForJob$Response(params, context).pipe(
       map((r: StrictHttpResponse<ApplicationSummaryDto>): ApplicationSummaryDto => r.body)
+    );
+  }
+
+  /** Path part for operation `getApplicationsForJob()` */
+  static readonly GetApplicationsForJobPath = '/api/job-posts/{jobId}/applications';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getApplicationsForJob()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getApplicationsForJob$Response(params: GetApplicationsForJob$Params, context?: HttpContext): Observable<StrictHttpResponse<PageEmployerApplicationSummaryDto>> {
+    return getApplicationsForJob(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getApplicationsForJob$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getApplicationsForJob(params: GetApplicationsForJob$Params, context?: HttpContext): Observable<PageEmployerApplicationSummaryDto> {
+    return this.getApplicationsForJob$Response(params, context).pipe(
+      map((r: StrictHttpResponse<PageEmployerApplicationSummaryDto>): PageEmployerApplicationSummaryDto => r.body)
     );
   }
 

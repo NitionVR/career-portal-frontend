@@ -2,8 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { JobApplicationControllerService } from '../../../api/services';
-import { ApplicationSummaryDto } from '../../../api/models';
-import { PageApplicationSummaryDto } from '../../../api/models';
+import { EmployerApplicationSummaryDto, PageEmployerApplicationSummaryDto } from '../../../api/models';
 
 @Component({
   selector: 'app-view-applicants',
@@ -13,9 +12,11 @@ import { PageApplicationSummaryDto } from '../../../api/models';
   styleUrls: ['./view-applicants.component.css']
 })
 export class ViewApplicantsComponent implements OnInit {
-  applicants: ApplicationSummaryDto[] = [];
+  applicants: EmployerApplicationSummaryDto[] = [];
   isLoading = true;
   jobId: string | null = null;
+  currentPage = 0;
+  pageSize = 10;
 
   private route = inject(ActivatedRoute);
   private applicationService = inject(JobApplicationControllerService);
@@ -24,18 +25,18 @@ export class ViewApplicantsComponent implements OnInit {
 
   ngOnInit(): void {
     this.jobId = this.route.snapshot.paramMap.get('id');
-    // if (this.jobId) {
-    //   this.loadApplicants();
-    // }
+    if (this.jobId) {
+      this.loadApplicants();
+    }
   }
 
-  /*
   loadApplicants(): void {
     this.isLoading = true;
-    // Assuming a method like 'getApplicationsForJob' exists.
-    // We will need to verify the exact method name from the generated client.
-    this.applicationService.getApplicationsForJob({ jobId: this.jobId! }).subscribe({
-      next: (page: PageApplicationSummaryDto) => {
+    this.applicationService.getApplicationsForJob({
+      jobId: this.jobId!,
+      pageable: { page: this.currentPage, size: this.pageSize }
+    }).subscribe({
+      next: (page: PageEmployerApplicationSummaryDto) => {
         this.applicants = page.content || [];
         this.isLoading = false;
       },
@@ -45,5 +46,4 @@ export class ViewApplicantsComponent implements OnInit {
       }
     });
   }
-  */
 }
