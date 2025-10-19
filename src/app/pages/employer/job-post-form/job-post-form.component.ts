@@ -5,16 +5,23 @@ import { JobPostControllerService } from '../../../api/services';
 import { JobPostRequest } from '../../../api/models';
 import { SnackbarService } from '../../../shared/components/snackbar/snackbar.service';
 import { Router } from '@angular/router';
+import { CustomSelectComponent } from '../../../shared/components/custom-select/custom-select.component';
+import { EXPERIENCE_LEVEL_OPTIONS, CONTRACT_TYPE_OPTIONS, WORK_TYPE_OPTIONS } from '../../../shared/data/form-options';
 
 @Component({
   selector: 'app-job-post-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent],
   templateUrl: './job-post-form.component.html',
   styleUrls: ['./job-post-form.component.css']
 })
 export class JobPostFormComponent implements OnInit {
   jobPostForm!: FormGroup;
+  isSubmitted = false;
+
+  experienceLevelOptions = EXPERIENCE_LEVEL_OPTIONS;
+  contractTypeOptions = CONTRACT_TYPE_OPTIONS;
+  workTypeOptions = WORK_TYPE_OPTIONS;
 
   private fb = inject(FormBuilder);
   private jobPostService = inject(JobPostControllerService);
@@ -26,7 +33,7 @@ export class JobPostFormComponent implements OnInit {
   ngOnInit(): void {
     this.jobPostForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(5)]],
-      description: ['', [Validators.required, Validators.minLength(50)]],
+      description: ['', [Validators.required, Validators.minLength(50), Validators.maxLength(5000)]],
       location: this.fb.group({
         city: ['', Validators.required],
         countryCode: ['', Validators.required]
@@ -81,7 +88,24 @@ export class JobPostFormComponent implements OnInit {
     this.qualifications.removeAt(index);
   }
 
+  // Validation Helpers
+  hasError(fieldName: string): boolean {
+    const field = this.jobPostForm.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || this.isSubmitted));
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const field = this.jobPostForm.get(fieldName);
+    if (!field || !field.errors) return '';
+
+    if (field.hasError('required')) return 'This field is required';
+    if (field.hasError('minlength')) return `Minimum ${field.errors['minlength'].requiredLength} characters required`;
+    if (field.hasError('maxlength')) return `Maximum ${field.errors['maxlength'].requiredLength} characters exceeded`;
+    return 'Invalid input';
+  }
+
   onSubmit(status: 'DRAFT' | 'PUBLISHED'): void {
+    this.isSubmitted = true;
     if (this.jobPostForm.invalid && status === 'PUBLISHED') {
       this.snackbarService.error('Please fill in all required fields to publish.');
       this.jobPostForm.markAllAsTouched();

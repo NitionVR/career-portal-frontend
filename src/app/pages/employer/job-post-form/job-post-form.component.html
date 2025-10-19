@@ -13,13 +13,17 @@
           <div>
             <label class="block text-sm font-medium text-muted-foreground mb-1" for="title">Job Title</label>
             <input id="title" formControlName="title" type="text" placeholder="e.g., Senior Frontend Developer"
-                   class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"/>
+                   class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"
+                   [class.border-destructive]="hasError('title')"/>
+            <p *ngIf="hasError('title')" class="mt-1 text-sm text-destructive">{{ getErrorMessage('title') }}</p>
           </div>
           <div>
             <label class="block text-sm font-medium text-muted-foreground mb-1" for="description">Job Description</label>
             <textarea id="description" formControlName="description" rows="8"
                       placeholder="Describe the role, responsibilities, and requirements..."
-                      class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"></textarea>
+                      class="w-full px-4 py-3 bg-background border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"
+                      [class.border-destructive]="hasError('description')"></textarea>
+            <p *ngIf="hasError('description')" class="mt-1 text-sm text-destructive">{{ getErrorMessage('description') }}</p>
           </div>
         </div>
       </div>
@@ -33,71 +37,78 @@
             <div class="md:col-span-2 font-medium text-foreground">Location</div>
             <div>
               <label class="block text-sm text-muted-foreground mb-1" for="city">City</label>
-              <input id="city" formControlName="city" type="text" class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+              <input id="city" formControlName="city" type="text" class="w-full px-4 py-3 bg-background border border-border rounded-md" [class.border-destructive]="hasError('location.city')"/>
+              <p *ngIf="hasError('location.city')" class="mt-1 text-sm text-destructive">{{ getErrorMessage('location.city') }}</p>
             </div>
             <div>
               <label class="block text-sm text-muted-foreground mb-1" for="countryCode">Country Code</label>
-              <input id="countryCode" formControlName="countryCode" type="text" class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+              <input id="countryCode" formControlName="countryCode" type="text" class="w-full px-4 py-3 bg-background border border-border rounded-md" [class.border-destructive]="hasError('location.countryCode')"/>
+              <p *ngIf="hasError('location.countryCode')" class="mt-1 text-sm text-destructive">{{ getErrorMessage('location.countryCode') }}</p>
             </div>
           </div>
           <div>
             <label class="block text-sm font-medium text-muted-foreground mb-1" for="salary">Salary</label>
             <input id="salary" formControlName="salary" type="text" placeholder="e.g., $120,000 - $150,000"
-                   class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+                   class="w-full px-4 py-3 bg-background border border-border rounded-md" [class.border-destructive]="hasError('salary')"/>
+            <p *ngIf="hasError('salary')" class="mt-1 text-sm text-destructive">{{ getErrorMessage('salary') }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-muted-foreground mb-1" for="experienceLevel">Experience Level</label>
-            <input id="experienceLevel" formControlName="experienceLevel" type="text" placeholder="e.g., Senior"
-                   class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+            <label class="block text-sm font-medium text-muted-foreground mb-1">Experience Level</label>
+            <app-custom-select id="experienceLevel" formControlName="experienceLevel" [options]="experienceLevelOptions" placeholder="Select experience level"></app-custom-select>
+            <p *ngIf="hasError('experienceLevel')" class="mt-1 text-sm text-destructive">{{ getErrorMessage('experienceLevel') }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-muted-foreground mb-1" for="contractType">Contract Type</label>
-            <input id="contractType" formControlName="contractType" type="text" placeholder="e.g., Full-time"
-                   class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+            <label class="block text-sm font-medium text-muted-foreground mb-1">Contract Type</label>
+            <app-custom-select id="contractType" formControlName="contractType" [options]="contractTypeOptions" placeholder="Select contract type"></app-custom-select>
+            <p *ngIf="hasError('contractType')" class="mt-1 text-sm text-destructive">{{ getErrorMessage('contractType') }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-muted-foreground mb-1" for="workType">Work Type</label>
-            <input id="workType" formControlName="workType" type="text" placeholder="e.g., Remote, Hybrid"
-                   class="w-full px-4 py-3 bg-background border border-border rounded-md"/>
+            <label class="block text-sm font-medium text-muted-foreground mb-1">Work Type</label>
+            <app-custom-select id="workType" formControlName="workType" [options]="workTypeOptions" placeholder="Select work type"></app-custom-select>
+            <p *ngIf="hasError('workType')" class="mt-1 text-sm text-destructive">{{ getErrorMessage('workType') }}</p>
           </div>
         </div>
       </div>
 
-      <!-- Dynamic Sections (Skills, Responsibilities, etc.) -->
-      <!-- Skills -->
+      <!-- Dynamic Sections -->
       <div class="glassmorphism rounded-xl p-6 sm:p-8">
-        <h3 class="text-xl font-semibold text-foreground mb-6">Required Skills</h3>
+        <h3 class="text-xl font-semibold text-foreground mb-6">Skills, Responsibilities & Qualifications</h3>
+        <!-- Skills -->
         <div formArrayName="skills" class="space-y-4">
+          <label class="block text-sm font-medium text-muted-foreground">Required Skills</label>
           <div *ngFor="let skill of skills.controls; let i=index" [formGroupName]="i" class="flex items-center gap-4">
             <input formControlName="name" placeholder="e.g., TypeScript" class="flex-grow px-4 py-3 bg-background border border-border rounded-md"/>
             <button type="button" (click)="removeSkill(i)" class="p-2 text-muted-foreground hover:text-destructive"><span class="material-symbols-outlined">delete</span></button>
           </div>
         </div>
         <button type="button" (click)="addSkill()" class="mt-4 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover">+ Add Skill</button>
-      </div>
+        <p *ngIf="hasError('skills')" class="mt-1 text-sm text-destructive">Please add at least one skill.</p>
 
-      <!-- Responsibilities -->
-      <div class="glassmorphism rounded-xl p-6 sm:p-8">
-        <h3 class="text-xl font-semibold text-foreground mb-6">Responsibilities</h3>
+        <hr class="my-6 border-border"/>
+
+        <!-- Responsibilities -->
         <div formArrayName="responsibilities" class="space-y-4">
+          <label class="block text-sm font-medium text-muted-foreground">Responsibilities</label>
           <div *ngFor="let resp of responsibilities.controls; let i=index" class="flex items-center gap-4">
             <input [formControlName]="i" placeholder="e.g., Develop and maintain web applications" class="flex-grow px-4 py-3 bg-background border border-border rounded-md"/>
             <button type="button" (click)="removeResponsibility(i)" class="p-2 text-muted-foreground hover:text-destructive"><span class="material-symbols-outlined">delete</span></button>
           </div>
         </div>
         <button type="button" (click)="addResponsibility()" class="mt-4 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover">+ Add Responsibility</button>
-      </div>
+        <p *ngIf="hasError('responsibilities')" class="mt-1 text-sm text-destructive">Please add at least one responsibility.</p>
 
-      <!-- Qualifications -->
-      <div class="glassmorphism rounded-xl p-6 sm:p-8">
-        <h3 class="text-xl font-semibold text-foreground mb-6">Qualifications</h3>
+        <hr class="my-6 border-border"/>
+
+        <!-- Qualifications -->
         <div formArrayName="qualifications" class="space-y-4">
+          <label class="block text-sm font-medium text-muted-foreground">Qualifications</label>
           <div *ngFor="let qual of qualifications.controls; let i=index" class="flex items-center gap-4">
             <input [formControlName]="i" placeholder="e.g., 5+ years of experience with Angular" class="flex-grow px-4 py-3 bg-background border border-border rounded-md"/>
             <button type="button" (click)="removeQualification(i)" class="p-2 text-muted-foreground hover:text-destructive"><span class="material-symbols-outlined">delete</span></button>
           </div>
         </div>
         <button type="button" (click)="addQualification()" class="mt-4 px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover">+ Add Qualification</button>
+        <p *ngIf="hasError('qualifications')" class="mt-1 text-sm text-destructive">Please add at least one qualification.</p>
       </div>
 
       <!-- Action Buttons -->
