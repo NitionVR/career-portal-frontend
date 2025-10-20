@@ -344,29 +344,32 @@ export class ProfilePageComponent implements OnInit {
     this.projects.removeAt(index);
   }
 
+  onCVFileSelected(event: any): void {
+    const file = event.target?.files?.[0];
+    if (file) {
+      this.onFileDropped(file);
+    }
+  }
+
   onFileDropped(file: File): void {
-    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const isCV = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(file.type);
+    const isImage = ['image/jpeg', 'image/png', 'image/gif'].includes(file.type);
 
-    if (!allowedTypes.includes(file.type)) {
-      this.snackbarService.error('Invalid file type. Please upload a PDF, DOC, or DOCX file.');
-      return;
+    if (isImage) {
+      this.handleAvatarUpload(file);
+    } else if (isCV) {
+      // To be implemented in the next step
+      this.snackbarService.info('CV upload functionality is coming soon!');
+    } else {
+      this.snackbarService.error('Unsupported file type.');
     }
-
-    if (file.size > maxSize) {
-      this.snackbarService.error('File is too large. Maximum size is 5MB.');
-      return;
-    }
-
-    // If validation passes, start the upload process
-    this.handleFileUpload(file);
   }
 
   triggerFileUpload(fileUploadInput: HTMLInputElement): void {
     fileUploadInput.click();
   }
 
-  handleFileUpload(file: File): void {
+  handleAvatarUpload(file: File): void {
     this.uploading = true;
     this.progress = 0; // Reset progress
 
@@ -450,7 +453,7 @@ export class ProfilePageComponent implements OnInit {
     });
   }
 
-  onFileUpload(event: any): void {
+  onAvatarUpload(event: any): void {
     const file = event.target.files[0];
     if (file) {
       this.onFileDropped(file); // Reuse the same validation and upload logic
