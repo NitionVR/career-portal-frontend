@@ -26,11 +26,11 @@
     <div class="glassmorphism rounded-xl p-6 sm:p-8 mb-10 text-center">
       <h2 class="text-xl font-semibold mb-4 text-foreground">Get Started Instantly</h2>
       <p class="text-muted-foreground mb-6 max-w-2xl mx-auto">Let us do the heavy lifting. Upload your CV or resume, and we'll automatically fill in your profile to get you started in seconds.</p>
-      <button (click)="triggerFileUpload(fileUploadInput)" class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center mx-auto">
+      <button (click)="triggerFileUpload(cvUploadInput)" class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center mx-auto">
         <span class="material-symbols-outlined mr-2">upload_file</span>
         Upload CV to Autofill
       </button>
-      <input type="file" class="hidden" #fileUploadInput (change)="onFileUpload($event)" accept=".pdf,.doc,.docx"/>
+      <input type="file" class="hidden" #cvUploadInput (change)="onCVFileSelected($event)" accept=".pdf,.doc,.docx"/>
     </div>
 
     <form [formGroup]="profileForm" (ngSubmit)="onSaveProfile()" class="space-y-6">
@@ -59,7 +59,7 @@
               <label class="cursor-pointer px-6 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center" for="profile-picture-upload">
                 <span class="material-symbols-outlined mr-2">upload</span> Upload Picture
               </label>
-              <input (change)="onFileUpload($event)" class="hidden" id="profile-picture-upload" type="file"/>
+              <input (change)="onAvatarUpload($event)" class="hidden" id="profile-picture-upload" type="file" accept="image/png, image/jpeg"/>
               <button (click)="removePicture()" type="button" class="px-6 py-2.5 text-sm font-semibold text-muted-foreground bg-muted rounded-full hover:bg-muted/80 transition-colors flex items-center justify-center">
                 <span class="material-symbols-outlined mr-2 text-destructive">delete</span> Remove
               </button>
