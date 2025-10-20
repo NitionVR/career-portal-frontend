@@ -22,18 +22,7 @@ import { guestGuard } from './core/guards/guest.guard';
 
 export const routes: Routes = [
   // The homepage will handle its own redirection logic if the user is authenticated.
-  {
-    path: '',
-    component: HomepageComponent,
-    pathMatch: 'full',
-    canActivate: [() => !window.location.search.includes('token')]
-  },
-  {
-    path: '',
-    component: MagicLinkPage,
-    pathMatch: 'full',
-    canActivate: [() => window.location.search.includes('token')]
-  },
+  { path: '', component: HomepageComponent },
   { path: 'homepage', redirectTo: '', pathMatch: 'full' }, // Redirect legacy homepage path
 
   // Guest-only routes

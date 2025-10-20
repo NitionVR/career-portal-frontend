@@ -281,14 +281,8 @@ export class AuthService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = `Client-side error: ${error.error.message}`;
-    } else {
-      errorMessage = error.error?.message || `Server error: ${error.status}`;
-    }
-    console.error('AuthService error:', errorMessage, error);
-    return throwError(() => new Error(errorMessage));
+    console.error('AuthService error:', error);
+    return throwError(() => error);
   }
 
   public loginForTesting(): Observable<void> {
