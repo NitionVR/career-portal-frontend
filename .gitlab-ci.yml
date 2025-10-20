@@ -1,9 +1,9 @@
 stages:
-  - validate_iac
-  - deploy_app_infra
   - security_scan
+  - validate_iac
   - test
   - build_image
+  - deploy_app_infra
   - deploy_app
   - mirror
 
