@@ -61,4 +61,21 @@
       </button>
     </div>
   </ng-container>
+
+  <!-- User Not Found State -->
+  <ng-container *ngIf="modalState === 'userNotFound'">
+    <div class="py-8 text-center">
+      <span class="material-symbols-outlined text-info text-6xl mb-4">person_off</span>
+      <p class="text-lg font-semibold text-foreground mb-2">User Not Found</p>
+      <p class="text-muted-foreground mb-4">The email address <strong>{{ email }}</strong> is not registered. Would you like to create an account?</p>
+      <div class="flex flex-col gap-4">
+        <a routerLink="/sign-up" (click)="closeModal.emit()" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-primary-foreground bg-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out">
+          Create Account
+        </a>
+        <button (click)="resetState()" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-muted-foreground bg-muted hover:bg-muted/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary transition-all duration-300 ease-in-out">
+          Try a Different Email
+        </button>
+      </div>
+    </div>
+  </ng-container>
 </div>

@@ -15,7 +15,7 @@ export class SignInComponent {
   @Output() closeModal = new EventEmitter<void>();
   email: string = '';
   rememberMe: boolean = false;
-  modalState: 'input' | 'sent' | 'verifying' | 'error' = 'input';
+  modalState: 'input' | 'sent' | 'verifying' | 'error' | 'userNotFound' = 'input';
   errorMessage: string | null = null;
 
   private authService = inject(AuthService);
@@ -30,8 +30,12 @@ export class SignInComponent {
         },
         error: (err: any) => {
           console.error(err);
-          this.errorMessage = 'Login failed: ' + (err.error?.message || err.message);
-          this.modalState = 'error';
+          if (err.message?.includes('User not found')) {
+            this.modalState = 'userNotFound';
+          } else {
+            this.errorMessage = 'Login failed: ' + (err.message || 'An unknown error occurred.');
+            this.modalState = 'error';
+          }
         },
       });
     }
