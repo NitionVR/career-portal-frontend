@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { App } from './app';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthService } from './core/services/auth';
@@ -8,7 +9,14 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App, HttpClientTestingModule],
-      providers: [AuthService, SnackbarService],
+      providers: [
+        AuthService, 
+        SnackbarService,
+        { 
+          provide: ActivatedRoute, 
+          useValue: { snapshot: { queryParamMap: { get: () => null } } } 
+        }
+      ],
     }).compileComponents();
   });
 
