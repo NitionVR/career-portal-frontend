@@ -1,7 +1,7 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, APP_INITIALIZER } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
@@ -10,6 +10,14 @@ import { LucideAngularModule, Mail, ArrowRight, CheckCircle, User } from 'lucide
 import { blobToJsonInterceptor } from './core/interceptors/blob-to-json.interceptor';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { authInitializerProvider } from './core/initializers/auth.initializer';
+import { firstValueFrom } from 'rxjs';
+
+export function loadConfig(http: HttpClient) {
+  return () => firstValueFrom(http.get('/assets/config.json'))
+    .then((config: any) => {
+      (window as any).config = config;
+    });
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +31,14 @@ export const appConfig: ApplicationConfig = {
 
     // App Initializer to check session on startup
     authInitializerProvider,
+
+    // Runtime configuration loader
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadConfig,
+      deps: [HttpClient],
+      multi: true
+    },
 
     // Environment provider (if needed elsewhere)
     { provide: 'environment', useValue: environment },
