@@ -1,10 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { AuthService } from './core/services/auth';
+import { SnackbarService } from './shared/components/snackbar/snackbar.service';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [App, HttpClientTestingModule],
+      providers: [AuthService, SnackbarService],
     }).compileComponents();
   });
 
@@ -12,5 +16,10 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
+  });
+
+  afterEach(() => {
+    const authService = TestBed.inject(AuthService);
+    authService.clearRefreshTokenTimer();
   });
 });

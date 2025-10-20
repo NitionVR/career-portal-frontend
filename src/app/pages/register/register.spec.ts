@@ -1,16 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { RegisterPage } from './register';
 import { AuthService } from '../../core/services/auth';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RegistrationControllerService } from '../../api/services';
 
 describe('RegisterPage', () => {
   let component: RegisterPage;
   let fixture: ComponentFixture<RegisterPage>;
-  let authService: AuthService;
+  let registrationControllerService: RegistrationControllerService;
   let router: Router;
 
   beforeEach(async () => {
@@ -26,15 +27,29 @@ describe('RegisterPage', () => {
           provide: Router,
           useValue: {
             navigate: jasmine.createSpy('navigate'),
+            createUrlTree: jasmine.createSpy('createUrlTree'),
+            serializeUrl: jasmine.createSpy('serializeUrl'),
+            events: of(),
+          },
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              queryParamMap: {
+                get: jasmine.createSpy('get'),
+              },
+            },
           },
         },
         AuthService,
+        RegistrationControllerService,
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterPage);
     component = fixture.componentInstance;
-    authService = TestBed.inject(AuthService);
+    registrationControllerService = TestBed.inject(RegistrationControllerService);
     router = TestBed.inject(Router);
     fixture.detectChanges();
   });
@@ -61,26 +76,26 @@ describe('RegisterPage', () => {
   });
 
   it('should set the role', () => {
-    component.setRole('hiring-manager');
-    expect(component.role).toBe('hiring-manager');
+    component.setRole('HIRING_MANAGER');
+    expect(component.role).toBe('HIRING_MANAGER');
   });
 
-  it('should call authService.initiateRegistration on submit with valid form', () => {
-    spyOn(authService, 'initiateRegistration').and.returnValue(of({ message: 'success' }));
+  it('should call registrationControllerService.initiateRegistration on submit with valid form', () => {
+    spyOn(registrationControllerService, 'initiateRegistration').and.returnValue(of(undefined as any));
     component.signupForm.setValue({ email: 'test@example.com' });
     component.onSubmit();
-    expect(authService.initiateRegistration).toHaveBeenCalledWith('test@example.com', 'CANDIDATE');
+    expect(registrationControllerService.initiateRegistration).toHaveBeenCalledWith({ body: { email: 'test@example.com', role: 'CANDIDATE' } });
   });
 
   it('should set registrationState to "sent" on successful registration', () => {
-    spyOn(authService, 'initiateRegistration').and.returnValue(of({ message: 'success' }));
+    spyOn(registrationControllerService, 'initiateRegistration').and.returnValue(of(undefined as any));
     component.signupForm.setValue({ email: 'test@example.com' });
     component.onSubmit();
     expect(component.registrationState).toBe('sent');
   });
 
   it('should set registrationState to "error" on failed registration', () => {
-    spyOn(authService, 'initiateRegistration').and.returnValue(throwError(() => new Error('fail')));
+    spyOn(registrationControllerService, 'initiateRegistration').and.returnValue(throwError(() => new Error('fail')));
     spyOn(console, 'error');
     component.signupForm.setValue({ email: 'test@example.com' });
     component.onSubmit();
@@ -93,6 +108,6 @@ describe('RegisterPage', () => {
     expect(component.registrationState).toBe('input');
     expect(component.errorMessage).toBeNull();
     expect(component.signupForm.value.email).toBeNull();
-    expect(component.role).toBe('talent');
+    expect(component.role).toBe('CANDIDATE');
   });
 });

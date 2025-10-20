@@ -7,11 +7,13 @@ import { AuthService } from '../../core/services/auth';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { JwtDecoderService } from '../../core/services/jwt-decoder.service';
+import { RegistrationControllerService } from '../../api/services';
 
 describe('ProfileCreate', () => {
   let component: ProfileCreate;
   let fixture: ComponentFixture<ProfileCreate>;
   let authService: AuthService;
+  let registrationControllerService: RegistrationControllerService;
   let router: Router;
   let route: ActivatedRoute;
   let jwtDecoderService: JwtDecoderService;
@@ -53,37 +55,43 @@ describe('ProfileCreate', () => {
           },
         },
         AuthService,
+        RegistrationControllerService,
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProfileCreate);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService);
+    registrationControllerService = TestBed.inject(RegistrationControllerService);
     router = TestBed.inject(Router);
     route = TestBed.inject(ActivatedRoute);
     jwtDecoderService = TestBed.inject(JwtDecoderService);
 
     routeGetSpy = route.snapshot.queryParamMap.get as jasmine.Spy;
     jwtDecodeSpy = jwtDecoderService.decode as jasmine.Spy;
+
+    spyOn(registrationControllerService, 'validateRegistrationToken').and.returnValue(of({ valid: true, role: 'CANDIDATE' }));
+
+    fixture.detectChanges();
   });
 
   describe('Initialization and Token Handling', () => {
     it('should set error message if token is missing', () => {
       routeGetSpy.and.returnValue(null);
       component.ngOnInit();
-      expect(component.errorMessage).toBe('Registration token missing.');
+      expect(component.errorMessage).toBe('Invalid access. No registration token found and you don\'t appear to be a new user.');
     });
 
     it('should set error message if token is invalid', () => {
       routeGetSpy.and.returnValue('invalid-token');
-      jwtDecodeSpy.and.throwError('Invalid token');
+      (registrationControllerService.validateRegistrationToken as jasmine.Spy).and.returnValue(throwError(() => new Error('Invalid token')));
       component.ngOnInit();
-      expect(component.errorMessage).toBe('Invalid registration token.');
+      expect(component.errorMessage).toBe('Invalid or expired registration token.');
     });
 
     it('should initialize candidate form for CANDIDATE role', () => {
       routeGetSpy.and.returnValue(candidateToken);
-      jwtDecodeSpy.and.returnValue({ role: 'CANDIDATE' });
+      (registrationControllerService.validateRegistrationToken as jasmine.Spy).and.returnValue(of({ valid: true, role: 'CANDIDATE' }));
       component.ngOnInit();
       expect(component.userRole).toBe('CANDIDATE');
       expect(component.profileForm.get('firstName')).toBeDefined();
@@ -92,7 +100,7 @@ describe('ProfileCreate', () => {
 
     it('should initialize hiring manager form for HIRING_MANAGER role', () => {
       routeGetSpy.and.returnValue(hiringManagerToken);
-      jwtDecodeSpy.and.returnValue({ role: 'HIRING_MANAGER' });
+      (registrationControllerService.validateRegistrationToken as jasmine.Spy).and.returnValue(of({ valid: true, role: 'HIRING_MANAGER' }));
       component.ngOnInit();
       expect(component.userRole).toBe('HIRING_MANAGER');
       expect(component.profileForm.get('companyName')).toBeDefined();
@@ -103,7 +111,7 @@ describe('ProfileCreate', () => {
   describe('Form Validation', () => {
     beforeEach(() => {
       routeGetSpy.and.returnValue(candidateToken);
-      jwtDecodeSpy.and.returnValue({ role: 'CANDIDATE' });
+      (registrationControllerService.validateRegistrationToken as jasmine.Spy).and.returnValue(of({ valid: true, role: 'CANDIDATE' }));
       component.ngOnInit();
     });
 
@@ -126,13 +134,13 @@ describe('ProfileCreate', () => {
     });
 
     it('hiring manager form should be invalid when empty', () => {
-      jwtDecodeSpy.and.returnValue({ role: 'HIRING_MANAGER' });
+      (registrationControllerService.validateRegistrationToken as jasmine.Spy).and.returnValue(of({ valid: true, role: 'HIRING_MANAGER' }));
       component.ngOnInit();
       expect(component.profileForm.valid).toBeFalsy();
     });
 
     it('hiring manager form should be valid when filled correctly', () => {
-      jwtDecodeSpy.and.returnValue({ role: 'HIRING_MANAGER' });
+      (registrationControllerService.validateRegistrationToken as jasmine.Spy).and.returnValue(of({ valid: true, role: 'HIRING_MANAGER' }));
       component.ngOnInit();
       component.profileForm.setValue({
         username: 'hmuser',
@@ -145,18 +153,25 @@ describe('ProfileCreate', () => {
     });
   });
 
-  describe('Form Submission', () => {
-    it('should set error message if form is invalid', () => {
-      routeGetSpy.and.returnValue(candidateToken);
-      jwtDecodeSpy.and.returnValue({ role: 'CANDIDATE' });
-      component.ngOnInit();
-      component.onSubmit();
-      expect(component.errorMessage).toBe('Please fill in all required fields.');
-    });
+    describe('Form Submission', () => {
+
+      it('should set error message if form is invalid', () => {
+
+        routeGetSpy.and.returnValue(candidateToken);
+
+        (registrationControllerService.validateRegistrationToken as jasmine.Spy).and.returnValue(of({ valid: true, role: 'CANDIDATE' }));
+
+        component.ngOnInit();
+
+        component.onSubmit();
+
+        expect(component.errorMessage).toBe('Please fix the errors in the form before submitting.');
+
+      });
 
     it('should call completeCandidateRegistration and navigate on success', () => {
       routeGetSpy.and.returnValue(candidateToken);
-      jwtDecodeSpy.and.returnValue({ role: 'CANDIDATE' });
+      (registrationControllerService.validateRegistrationToken as jasmine.Spy).and.returnValue(of({ valid: true, role: 'CANDIDATE' }));
       component.ngOnInit();
       component.profileForm.setValue({
         username: 'testuser',
@@ -168,7 +183,7 @@ describe('ProfileCreate', () => {
         contactNumber: '1234567890',
         alternateContactNumber: '',
       });
-      const spy = spyOn(authService, 'completeCandidateRegistration').and.returnValue(of({ message: 'success' }));
+      const spy = spyOn(registrationControllerService, 'completeCandidateRegistration').and.returnValue(of({} as any));
       component.onSubmit();
       expect(spy).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalledWith(['/']);
@@ -176,7 +191,7 @@ describe('ProfileCreate', () => {
 
     it('should set error message on failed candidate registration', () => {
       routeGetSpy.and.returnValue(candidateToken);
-      jwtDecodeSpy.and.returnValue({ role: 'CANDIDATE' });
+      (registrationControllerService.validateRegistrationToken as jasmine.Spy).and.returnValue(of({ valid: true, role: 'CANDIDATE' }));
       component.ngOnInit();
       component.profileForm.setValue({
         username: 'testuser',
@@ -188,16 +203,16 @@ describe('ProfileCreate', () => {
         contactNumber: '1234567890',
         alternateContactNumber: '',
       });
-      const spy = spyOn(authService, 'completeCandidateRegistration').and.returnValue(throwError(() => new Error('fail')));
+      const spy = spyOn(registrationControllerService, 'completeCandidateRegistration').and.returnValue(throwError(() => new Error('fail')));
       spyOn(console, 'error');
       component.onSubmit();
       expect(spy).toHaveBeenCalled();
-      expect(component.errorMessage).toContain('Candidate registration failed');
+      expect(component.errorMessage).toContain('An error occurred');
     });
 
     it('should call completeHiringManagerRegistration and navigate on success', () => {
         routeGetSpy.and.returnValue(hiringManagerToken);
-        jwtDecodeSpy.and.returnValue({ role: 'HIRING_MANAGER' });
+        (registrationControllerService.validateRegistrationToken as jasmine.Spy).and.returnValue(of({ valid: true, role: 'HIRING_MANAGER' }));
         component.ngOnInit();
         component.profileForm.setValue({
           username: 'hmuser',
@@ -206,7 +221,7 @@ describe('ProfileCreate', () => {
           contactPerson: 'HR',
           contactNumber: '0987654321',
         });
-        const spy = spyOn(authService, 'completeHiringManagerRegistration').and.returnValue(of({ message: 'success' }));
+        const spy = spyOn(registrationControllerService, 'completeHiringManagerRegistration').and.returnValue(of({} as any));
         component.onSubmit();
         expect(spy).toHaveBeenCalled();
         expect(router.navigate).toHaveBeenCalledWith(['/']);

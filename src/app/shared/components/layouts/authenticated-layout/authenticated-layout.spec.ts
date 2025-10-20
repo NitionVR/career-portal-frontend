@@ -3,6 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticatedLayoutComponent } from './authenticated-layout';
 import { AuthService } from '../../../../core/services/auth';
+import { ENVIRONMENT } from '../../../../core/tokens';
 
 describe('AuthenticatedLayoutComponent', () => {
   let component: AuthenticatedLayoutComponent;
@@ -18,14 +19,14 @@ describe('AuthenticatedLayoutComponent', () => {
           useValue: {},
         },
         AuthService,
-        { provide: 'environment', useValue: { testUser: { email: 'test@example.com' } } }
+        { provide: ENVIRONMENT, useValue: { testUser: { email: 'test@example.com' } } }
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AuthenticatedLayoutComponent);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService);
-    const environment = TestBed.inject('environment');
+    const environment = TestBed.inject(ENVIRONMENT);
 
     // Log in the test user
     if (environment.testUser) {
@@ -35,6 +36,10 @@ describe('AuthenticatedLayoutComponent', () => {
     } else {
       fixture.detectChanges();
     }
+  });
+
+  afterEach(() => {
+    authService.clearRefreshTokenTimer();
   });
 
   it('should create', () => {
