@@ -36,13 +36,8 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeHeadlessCI: {
         base: 'ChromeHeadless',
-        flags: [
-          '--no-sandbox',
-          '--disable-gpu',
-          '--disable-dev-shm-usage',
-          '--disable-software-rasterizer',
-          '--disable-extensions',
-        ],
+        flags: ['--no-sandbox'],
+        chromeDataDir: require('path').join(__dirname, 'tmp')
       },
     },
     singleRun: false,
