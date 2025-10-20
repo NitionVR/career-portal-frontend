@@ -5,6 +5,7 @@ stages:
   - test
   - build_image
   - deploy_app
+  - mirror
 
 variables:
   ECR_REPOSITORY_NAME: etalente-frontend
