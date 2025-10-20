@@ -72,7 +72,7 @@ test_app:
       elif which chromium >/dev/null 2>&1; then
         export CHROME_BIN=$(which chromium)
       fi
-    - echo "Using Chrome at: $CHROME_BIN"
+    - echo "$CHROME_BIN"
     - "$CHROME_BIN" --version || true
     - npm install --legacy-peer-deps
   script:
