@@ -1,13 +1,12 @@
 /* tslint:disable */
 /* eslint-disable */
 import { JsonNode } from '../models/json-node';
-export interface UserDto {
+export interface CandidateProfileDto {
   email?: string;
   firstName?: string;
   id?: string;
-  isNewUser?: boolean;
   lastName?: string;
   profile?: JsonNode;
   profileImageUrl?: string;
-  role?: string;
+  summary?: string;
 }

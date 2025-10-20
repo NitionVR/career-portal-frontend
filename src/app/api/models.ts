@@ -4,6 +4,7 @@ export type { AcceptInvitationRequest } from './models/accept-invitation-request
 export type { ApplicationDetailsDto } from './models/application-details-dto';
 export type { ApplicationSummaryDto } from './models/application-summary-dto';
 export type { CandidateDto } from './models/candidate-dto';
+export type { CandidateProfileDto } from './models/candidate-profile-dto';
 export type { CandidateRegistrationDto } from './models/candidate-registration-dto';
 export type { CandidateRegistrationRequest } from './models/candidate-registration-request';
 export type { CommunicationHistoryDto } from './models/communication-history-dto';

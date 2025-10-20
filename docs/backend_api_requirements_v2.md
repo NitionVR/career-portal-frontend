@@ -4,6 +4,20 @@ This document outlines the next phase of required backend API changes to support
 
 ---
 
+### **P0: Critical - Include Full Candidate Profile in Application Details**
+
+**Objective:** To allow an employer to view a candidate's full resume when they click on an application.
+
+**Endpoint to Modify:** `GET /api/applications/{id}`
+
+**Details:**
+*   **Problem:** The `ApplicationDetailsDto` returned by this endpoint currently lacks any information about the candidate who applied.
+*   **Requirement:** The `ApplicationDetailsDto` must be updated to include the full candidate profile object. This object should follow the JSON Resume schema.
+*   **Example:** Add a `candidate: UserDto` (or similar) field to the `ApplicationDetailsDto`, where the `UserDto` contains the entire profile.
+*   **Impact:** This is a **blocker** for building the employer's application/resume view.
+
+---
+
 ### **P0: Critical - View Applicants for a Job**
 
 **Objective:** To allow an employer to see a list of all candidates who have applied for one of their job posts.
