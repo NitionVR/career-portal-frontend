@@ -96,7 +96,7 @@ Resources:
 
 Outputs:
   FrontendTaskDefinitionArn:
-    Description: The ARN of the Frontend Task Definition
+    Description: The ARN of the Frontend Task Definition #trigger infrastructure deployment
     Value: !Ref FrontendTaskDefinition
     Export:
       Name: !Sub ${ProjectName}-FrontendTaskDefinitionArn
