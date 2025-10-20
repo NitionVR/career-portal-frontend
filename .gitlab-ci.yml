@@ -1,4 +1,5 @@
 stages:
+  - .pre
   - validate_iac
   - deploy_app_infra
   - security_scan
@@ -12,10 +13,41 @@ variables:
   ECR_IMAGE_TAG: $CI_COMMIT_SHORT_SHA
   ECR_LATEST_TAG: latest
 
+# Add default tags to use your macOS group runner
 default:
   tags:
     - docker
     - group-runner
+
+# ===== NEW: Test Chrome Location =====
+test_chrome_location:
+  stage: .pre
+  image: cypress/browsers:node-22.20.0-chrome-140.0.7339.207-1-ff-143.0.1-edge-140.0.3485.81-1
+  script:
+    - echo "=== Searching for Chrome binaries ==="
+    - find /usr -name "*chrome*" -type f 2>/dev/null | head -20
+    - echo ""
+    - echo "=== Checking common locations ==="
+    - ls -la /usr/bin/google-chrome* 2>/dev/null || echo "[NOT FOUND] Not in /usr/bin/google-chrome*"
+    - ls -la /opt/google/chrome* 2>/dev/null || echo "[NOT FOUND] Not in /opt/google/chrome*"
+    - ls -la /usr/bin/chromium* 2>/dev/null || echo "[NOT FOUND] Not in /usr/bin/chromium*"
+    - echo ""
+    - echo "=== Using 'which' command ==="
+    - which google-chrome-stable && echo "[FOUND] google-chrome-stable at $(which google-chrome-stable)" || echo "[NOT FOUND] google-chrome-stable not found"
+    - which google-chrome && echo "[FOUND] google-chrome at $(which google-chrome)" || echo "[NOT FOUND] google-chrome not found"
+    - which chromium && echo "[FOUND] chromium at $(which chromium)" || echo "[NOT FOUND] chromium not found"
+    - which chrome && echo "[FOUND] chrome at $(which chrome)" || echo "[NOT FOUND] chrome not found"
+    - echo ""
+    - echo "=== Testing Chrome execution ==="
+    - if [ -f /usr/bin/google-chrome-stable ]; then /usr/bin/google-chrome-stable --version; fi
+    - if [ -f /usr/bin/google-chrome ]; then /usr/bin/google-chrome --version; fi
+    - if [ -f /opt/google/chrome/chrome ]; then /opt/google/chrome/chrome --version; fi
+    - echo ""
+    - echo "=== Environment variables ==="
+    - env | grep -i chrome || echo "No CHROME env vars set"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  allow_failure: true
 
 .aws_base:
   image:
@@ -65,10 +97,35 @@ security_scan:
 test_app:
   stage: test
   image: cypress/browsers:node-22.20.0-chrome-140.0.7339.207-1-ff-143.0.1-edge-140.0.3485.81-1
+  needs:
+    - job: test_chrome_location
+      optional: true
   before_script:
+    - echo "=== Auto-detecting Chrome location ==="
+    - |
+      if which google-chrome-stable >/dev/null 2>&1; then
+        export CHROME_BIN=$(which google-chrome-stable)
+        echo "[SUCCESS] Using google-chrome-stable: $CHROME_BIN"
+      elif which google-chrome >/dev/null 2>&1; then
+        export CHROME_BIN=$(which google-chrome)
+        echo "[SUCCESS] Using google-chrome: $CHROME_BIN"
+      elif which chromium >/dev/null 2>&1; then
+        export CHROME_BIN=$(which chromium)
+        echo "[SUCCESS] Using chromium: $CHROME_BIN"
+      elif [ -f /opt/google/chrome/chrome ]; then
+        export CHROME_BIN=/opt/google/chrome/chrome
+        echo "[SUCCESS] Using /opt/google/chrome/chrome: $CHROME_BIN"
+      else
+        echo "[WARNING] Chrome not found, letting karma auto-detect..."
+      fi
+    - if [ -n "$CHROME_BIN" ]; then $CHROME_BIN --version; fi
     - npm install --legacy-peer-deps
   script:
     - ./node_modules/.bin/ng test --watch=false --browsers=ChromeHeadlessCI
+  artifacts:
+    reports:
+      junit: junit.xml
+    when: always
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
