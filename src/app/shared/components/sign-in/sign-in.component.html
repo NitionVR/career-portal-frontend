@@ -16,8 +16,12 @@
           [(ngModel)]="email"
           placeholder="you@example.com"
           required
+          pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$"
+          #emailInput="ngModel"
+          [class.border-destructive]="emailInput.invalid && emailInput.touched"
           class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary focus:shadow-input-focus transition-shadow duration-200"
         />
+        <p *ngIf="emailInput.invalid && emailInput.touched" class="mt-1 text-sm text-destructive">Please enter a valid email address.</p>
       </div>
       <div class="text-left mb-4">
         <label class="flex items-center">
