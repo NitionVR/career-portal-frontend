@@ -1,5 +1,4 @@
 stages:
-  - .pre
   - validate_iac
   - deploy_app_infra
   - security_scan
@@ -13,46 +12,12 @@ variables:
   ECR_IMAGE_TAG: $CI_COMMIT_SHORT_SHA
   ECR_LATEST_TAG: latest
 
-# Add default tags to use your macOS group runner
 default:
   tags:
     - docker
     - group-runner
 
-# ===== NEW: Test Chrome Location =====
-test_chrome_location:
-  stage: .pre
-  image: cypress/browsers:node-22.20.0-chrome-140.0.7339.207-1-ff-143.0.1-edge-140.0.3485.81-1
-  script:
-    - echo "=== Searching for Chrome binaries ==="
-    - find /usr -name "*chrome*" -type f 2>/dev/null | head -20
-    - echo ""
-    - echo "=== Checking common locations ==="
-    - ls -la /usr/bin/google-chrome* 2>/dev/null || echo "[NOT FOUND] Not in /usr/bin/google-chrome*"
-    - ls -la /opt/google/chrome* 2>/dev/null || echo "[NOT FOUND] Not in /opt/google/chrome*"
-    - ls -la /usr/bin/chromium* 2>/dev/null || echo "[NOT FOUND] Not in /usr/bin/chromium*"
-    - echo ""
-    - echo "=== Using 'which' command ==="
-    - which google-chrome-stable && echo "[FOUND] google-chrome-stable at $(which google-chrome-stable)" || echo "[NOT FOUND] google-chrome-stable not found"
-    - which google-chrome && echo "[FOUND] google-chrome at $(which google-chrome)" || echo "[NOT FOUND] google-chrome not found"
-    - which chromium && echo "[FOUND] chromium at $(which chromium)" || echo "[NOT FOUND] chromium not found"
-    - which chrome && echo "[FOUND] chrome at $(which chrome)" || echo "[NOT FOUND] chrome not found"
-    - echo ""
-    - echo "=== Testing Chrome execution ==="
-    - if [ -f /usr/bin/google-chrome-stable ]; then /usr/bin/google-chrome-stable --version; fi
-    - if [ -f /usr/bin/google-chrome ]; then /usr/bin/google-chrome --version; fi
-    - if [ -f /opt/google/chrome/chrome ]; then /opt/google/chrome/chrome --version; fi
-    - echo ""
-    - echo "=== Environment variables ==="
-    - env | grep -i chrome || echo "No CHROME env vars set"
-  rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-  allow_failure: true
-
 .aws_base:
-  image:
-    name: amazon/aws-cli:latest
-    entrypoint: ["/usr/bin/env", "bash", "-l", "-c"]
   before_script:
     - aws --version
     - echo "AWS CLI configured for region $AWS_REGION"
@@ -83,9 +48,8 @@ deploy_app_infra:
 
 security_scan:
   stage: security_scan
-  image:
-    name: "zricethezav/gitleaks"
-    entrypoint: [""]
+  before_script:
+    - brew install gitleaks || echo "gitleaks already installed"
   script:
     - gitleaks detect --source . --verbose --report-path gitleaks-report.json
   artifacts:
@@ -96,18 +60,23 @@ security_scan:
 
 test_app:
   stage: test
-  image: cypress/browsers:node-22.20.0-chrome-140.0.7339.207-1-ff-143.0.1-edge-140.0.3485.81-1
   before_script:
-    - echo "=== Installing Chromium via Puppeteer ==="
+    - node --version
+    - npm --version
+    # Auto-detect Chrome on macOS
+    - |
+      if [ -f "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]; then
+        export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+      elif which google-chrome-stable >/dev/null 2>&1; then
+        export CHROME_BIN=$(which google-chrome-stable)
+      elif which chromium >/dev/null 2>&1; then
+        export CHROME_BIN=$(which chromium)
+      fi
+    - echo "Using Chrome at: $CHROME_BIN"
+    - "$CHROME_BIN" --version || true
     - npm install --legacy-peer-deps
-    - npm install puppeteer --legacy-peer-deps
-    - npx puppeteer browsers install chrome
-    - export CHROME_BIN=$(find ~/.cache/puppeteer -name "chrome" -type f 2>/dev/null | head -1)
-    - if [ -z "$CHROME_BIN" ]; then export CHROME_BIN=$(find /root/.cache/puppeteer -name "chrome" -type f 2>/dev/null | head -1); fi
-    - echo "$CHROME_BIN"
-    - $CHROME_BIN --version || echo "Chrome not executable"
   script:
-    - ./node_modules/.bin/ng test --watch=false --browsers=ChromeHeadlessCI
+    - npm run test -- --watch=false --browsers=ChromeHeadlessCI
   artifacts:
     reports:
       junit: junit.xml
@@ -117,11 +86,8 @@ test_app:
 
 build_image:
   stage: build_image
-  image: docker:latest
-  services:
-    - docker:dind
   before_script:
-    - apk add --no-cache aws-cli
+    - docker --version
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
   script:
     - |
@@ -148,11 +114,9 @@ deploy_app:
 
 mirror_to_github:
   stage: mirror
-  image: alpine:latest
   variables:
     GIT_DEPTH: 0
   before_script:
-    - apk add --no-cache git openssh
     - git config --global user.email "$GITHUB_EMAIL"
     - git config --global user.name "$GITHUB_USERNAME"
   script:
