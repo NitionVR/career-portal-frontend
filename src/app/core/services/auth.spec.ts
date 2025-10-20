@@ -12,6 +12,10 @@ describe('AuthService', () => {
     service = TestBed.inject(AuthService);
   });
 
+  afterEach(() => {
+    service.clearRefreshTokenTimer();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
