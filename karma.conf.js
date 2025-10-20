@@ -37,11 +37,17 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeHeadlessCI: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox'],
+        flags: [
+          '--no-sandbox',
+          '--disable-gpu',
+          '--disable-dev-shm-usage',
+          '--disable-software-rasterizer',
+          '--disable-extensions',
+        ],
       },
     },
     singleRun: false,
     restartOnFileChange: true,
-    process.env.CHROME_BIN = '/usr/bin/google-chrome';
+    // REMOVED: process.env.CHROME_BIN = '/usr/bin/google-chrome'; ← This was the problem!
   });
 };
