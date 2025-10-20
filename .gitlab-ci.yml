@@ -100,7 +100,7 @@ test_app:
   before_script:
     - echo "=== Installing Chromium via Puppeteer ==="
     - npm install --legacy-peer-deps
-    - npm install puppeteer
+    - npm install puppeteer --legacy-peer-deps
     - npx puppeteer browsers install chrome
     - export CHROME_BIN=$(find ~/.cache/puppeteer -name "chrome" -type f 2>/dev/null | head -1)
     - if [ -z "$CHROME_BIN" ]; then export CHROME_BIN=$(find /root/.cache/puppeteer -name "chrome" -type f 2>/dev/null | head -1); fi
