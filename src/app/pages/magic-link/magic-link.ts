@@ -87,7 +87,7 @@ export class MagicLinkPage implements OnInit {
   private getDashboardUrl(role?: string): string {
     switch (role) {
       case 'CANDIDATE':
-        return '/talent/dashboard';
+        return '/talent/job-list';
       case 'HIRING_MANAGER':
         return '/employer/dashboard';
       default:
