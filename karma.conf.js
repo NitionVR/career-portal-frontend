@@ -1,3 +1,5 @@
+process.env.CHROME_BIN = '/usr/bin/google-chrome';
+
 module.exports = function (config) {
   config.set({
     basePath: '',
