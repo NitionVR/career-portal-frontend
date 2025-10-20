@@ -30,10 +30,20 @@ export class SignInComponent {
         },
         error: (err: any) => {
           console.error(err);
-          if (err.message?.includes('User not found')) {
-            this.modalState = 'userNotFound';
+          if (err.error instanceof Blob && err.error.type === 'application/json') {
+            const reader = new FileReader();
+            reader.onload = (e: any) => {
+              const errorBody = JSON.parse(e.target.result);
+              if (err.status === 404 && errorBody?.message?.includes('User with email')) {
+                this.modalState = 'userNotFound';
+              } else {
+                this.errorMessage = 'Login failed: ' + (errorBody?.message || err.message);
+                this.modalState = 'error';
+              }
+            };
+            reader.readAsText(err.error);
           } else {
-            this.errorMessage = 'Login failed: ' + (err.message || 'An unknown error occurred.');
+            this.errorMessage = 'Login failed: ' + (err.error?.message || err.message);
             this.modalState = 'error';
           }
         },
