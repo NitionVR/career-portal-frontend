@@ -13,6 +13,7 @@ import { ProfilePageComponent } from './pages/talent/profile-page/profile-page';
 import { EmployerDashboardComponent } from './pages/employer/dashboard/dashboard';
 import { JobPostFormComponent } from './pages/employer/job-post-form/job-post-form.component';
 import { CompanyProfileComponent } from './pages/employer/company-profile/company-profile.component';
+import { EmployerApplicationDetailsComponent } from './pages/employer/employer-application-details/employer-application-details.component';
 import { ViewApplicantsComponent } from './pages/employer/view-applicants/view-applicants.component';
 
 // Import the new guards
@@ -60,6 +61,7 @@ export const routes: Routes = [
       { path: 'jobs/create', component: JobPostFormComponent },
       { path: 'jobs/:id/edit', component: JobPostFormComponent },
       { path: 'jobs/:id/applicants', component: ViewApplicantsComponent },
+      { path: 'applications/:id', component: EmployerApplicationDetailsComponent },
       { path: 'settings/company', component: CompanyProfileComponent },
       // Add other employer routes here
     ]
