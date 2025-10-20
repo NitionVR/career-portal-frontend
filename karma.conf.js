@@ -1,9 +1,3 @@
-// karma.conf.js
-
-if (process.env.CHROME_BIN) {
-  console.log(`Using Chrome at: ${process.env.CHROME_BIN}`);
-}
-
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -16,11 +10,16 @@ module.exports = function (config) {
       require('@angular-devkit/build-angular/plugins/karma'),
     ],
     client: {
-      jasmine: {},
-      clearContext: false,
+      jasmine: {
+        // you can add configuration options for Jasmine here
+        // the possible options are listed at https://jasmine.github.io/api/edge/Configuration.html
+        // for example, you can disable the random execution with `random: false`
+        // or set a specific seed with `seed: 4321`
+      },
+      clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
     jasmineHtmlReporter: {
-      suppressAll: true,
+      suppressAll: true, // removes the duplicated traces
     },
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage/etalente-clone-frontend'),
@@ -36,7 +35,7 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeHeadlessCI: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage'],
+        flags: ['--no-sandbox'],
       },
     },
     singleRun: false,
