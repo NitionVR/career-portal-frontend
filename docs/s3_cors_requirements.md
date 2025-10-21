@@ -1,55 +1,56 @@
-# S3 Bucket CORS Configuration for Image Uploads
+# S3 Bucket CORS Configuration Requirements
 
-## Problem Diagnosis
+**Epic:** Complete File Upload Functionality
 
-When the frontend attempts to upload a profile picture directly to the pre-signed URL provided by the backend, the browser blocks the request. The developer console shows the following error:
+**User Story:** As a user, I want to be able to upload files (profile pictures, CVs, company logos) directly to S3 from my browser.
 
-`Access to XMLHttpRequest at 'https://etalente-uploads.s3.amazonaws.com/...' from origin 'http://localhost:4200' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.`
+## Problem
 
-### Analysis
+The browser is receiving a `403 Forbidden` error when making a preflight `OPTIONS` request to the S3 pre-signed URL. This indicates that the S3 bucket's CORS (Cross-Origin Resource Sharing) policy is not configured to allow uploads from the frontend application's origin.
 
-This is a standard Cross-Origin Resource Sharing (CORS) security issue. The frontend code is behaving correctly, but the Amazon S3 bucket (`etalente-uploads`) is not configured to accept direct `PUT` requests originating from our web application's domain (`http://localhost:4200`).
+## Requirements
 
-The browser sends a preflight `OPTIONS` request to the S3 URL to ask for permission before sending the actual image data. Because the S3 bucket's CORS policy does not explicitly allow our frontend's origin, S3 does not return the required `Access-Control-Allow-Origin` header. The browser then correctly and safely blocks the request, resulting in a `net::ERR_FAILED` error.
+The S3 bucket (`etalente-uploads`) must be configured with a CORS policy that allows the following:
 
-## Backend/DevOps Requirement
+1.  **Allowed Origins:**
+    *   `http://localhost:4200` (for local development)
+    *   `http://etalente-alb-665506398.af-south-1.elb.amazonaws.com` (for the deployed production environment)
 
-This issue cannot be resolved on the frontend. The **CORS configuration of the `etalente-uploads` S3 bucket must be updated.**
+2.  **Allowed Methods:**
+    *   `PUT` (to allow the file upload itself)
+    *   `POST`
+    *   `GET`
 
-Please apply the following XML configuration to the bucket's CORS settings. This will instruct S3 to trust `PUT` requests coming from our development environment.
+3.  **Allowed Headers:**
+    *   `*` (Allow all headers, which is simplest for this use case) or be specific, e.g., `Authorization`, `x-amz-date`, `x-amz-content-sha256`, `content-type`, etc.
 
-### S3 Bucket CORS Configuration
+4.  **Expose Headers:**
+    *   `ETag` (Often useful for verifying the integrity of the uploaded file)
 
-```xml
-<CORSConfiguration>
- <CORSRule>
-   <AllowedOrigin>http://localhost:4200</AllowedOrigin>
-   <AllowedMethod>PUT</AllowedMethod>
-   <AllowedHeader>*</AllowedHeader>
-   <MaxAgeSeconds>3000</MaxAgeSeconds>
-   <ExposeHeader>ETag</Ex-poseHeader>
- </CORSRule>
- 
- <!-- 
-   IMPORTANT: A similar rule will be needed for the production frontend domain 
-   once it is deployed.
- -->
- <!--
- <CORSRule>
-   <AllowedOrigin>https://your-production-domain.com</AllowedOrigin>
-   <AllowedMethod>PUT</AllowedMethod>
-   <AllowedHeader>*</AllowedHeader>
-   <MaxAgeSeconds>3000</MaxAgeSeconds>
-   <ExposeHeader>ETag</ExposeHeader>
- </CORSRule>
- -->
-</CORSConfiguration>
+## Example S3 CORS Configuration Rule
+
+Here is an example of a CORS rule that should be applied to the `etalente-uploads` S3 bucket:
+
+```json
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "PUT",
+            "POST",
+            "GET"
+        ],
+        "AllowedOrigins": [
+            "http://localhost:4200",
+            "http://etalente-alb-665506398.af-south-1.elb.amazonaws.com"
+        ],
+        "ExposeHeaders": [
+            "ETag"
+        ]
+    }
+]
 ```
 
-### Key Configuration Points:
-
-*   **`<AllowedOrigin>`:** This is the most critical part. It explicitly whitelists our frontend's origin.
-*   **`<AllowedMethod>`:** This permits the `PUT` HTTP method, which is used to upload the file content.
-*   **`<AllowedHeader>*</AllowedHeader>`:** This is necessary because the pre-signed URL request includes several custom Amazon S3 headers.
-
-Once this configuration is saved on the S3 bucket, the frontend upload feature should work immediately without any further code changes.
+**Action Required:** The backend team needs to apply this CORS configuration to the `etalente-uploads` S3 bucket via the AWS console or their infrastructure-as-code scripts.

@@ -21,14 +21,6 @@ export function loadConfig(http: HttpClient) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    // Runtime configuration loader (MUST RUN FIRST)
-    {
-      provide: APP_INITIALIZER,
-      useFactory: loadConfig,
-      deps: [HttpClient],
-      multi: true
-    },
-
     // Core providers
     provideRouter(routes),
     provideAnimations(),
@@ -37,8 +29,16 @@ export const appConfig: ApplicationConfig = {
       AuthInterceptor // Add the new auth interceptor here
     ])),
 
-    // App Initializer to check session on startup (runs after config is loaded)
+    // App Initializer to check session on startup
     authInitializerProvider,
+
+    // Runtime configuration loader
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadConfig,
+      deps: [HttpClient],
+      multi: true
+    },
 
     // Environment provider (if needed elsewhere)
     { provide: 'environment', useValue: environment },

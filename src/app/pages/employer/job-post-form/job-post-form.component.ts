@@ -200,20 +200,15 @@ export class JobPostFormComponent implements OnInit {
 
       }
 
-  
-
       const jobPostRequest: JobPostRequest = {
-
         ...this.jobPostForm.value,
-
+        jobType: this.jobPostForm.value.contractType,
+        remote: this.jobPostForm.value.workType,
         company: this.organization.id, // Corrected field name
-
         status: status
-
       };
 
-  
-
+      console.log('Job Post Request:', jobPostRequest);
       this.jobPostService.createJobPost({ body: jobPostRequest }).subscribe({
 
   
