@@ -4,17 +4,20 @@ import { ActivatedRoute } from '@angular/router';
 import { JobApplicationControllerService, WorkflowControllerService } from '../../../api/services';
 import { ApplicationDetailsDto } from '../../../api/models';
 import { SnackbarService } from '../../../shared/components/snackbar/snackbar.service';
+import { StateTransitionModalComponent } from '../../../shared/components/state-transition-modal/state-transition-modal.component';
 
 @Component({
   selector: 'app-employer-application-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StateTransitionModalComponent],
   templateUrl: './employer-application-details.component.html',
   styleUrls: ['./employer-application-details.component.css']
 })
 export class EmployerApplicationDetailsComponent implements OnInit {
   application: ApplicationDetailsDto | null = null;
   isLoading = true;
+  isAdvanceModalVisible = false;
+  possibleNextStates: string[] = ['INTERVIEW', 'OFFER']; // Placeholder
 
   private route = inject(ActivatedRoute);
   private applicationService = inject(JobApplicationControllerService);
@@ -37,7 +40,7 @@ export class EmployerApplicationDetailsComponent implements OnInit {
         this.application = data;
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load application details', err);
         this.isLoading = false;
       }
@@ -53,6 +56,30 @@ export class EmployerApplicationDetailsComponent implements OnInit {
         this.loadApplicationDetails(this.application!.id!);      },
       error: (err: any) => {
         this.snackbarService.error(err.error?.message || 'Failed to reject application.');
+      }
+    });
+  }
+
+  openAdvanceModal(): void {
+    // In a real app, you would fetch these from the backend
+    // this.workflowController.getPossibleTransitions({ entityId: this.application.id }).subscribe(states => {
+    //   this.possibleNextStates = states;
+    //   this.isAdvanceModalVisible = true;
+    // });
+    this.isAdvanceModalVisible = true;
+  }
+
+  handleStateChange(newState: any): void {
+    if (!this.application?.id) return;
+
+    this.applicationService.transitionApplicationStatus({ applicationId: this.application.id, body: { targetStatus: newState } }).subscribe({
+      next: () => {
+        this.snackbarService.success(`Application advanced to ${newState}.`);
+        this.loadApplicationDetails(this.application!.id!);
+        this.isAdvanceModalVisible = false;
+      },
+      error: (err: any) => {
+        this.snackbarService.error(err.error?.message || 'Failed to advance application.');
       }
     });
   }
