@@ -4,6 +4,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration } from './api-configuration';
+import { environment } from '../../environments/environment';
 
 /**
  * Base class for services
@@ -23,7 +24,11 @@ export class BaseService {
    * service, will fallback to `ApiConfiguration.rootUrl`.
    */
   get rootUrl(): string {
-    return (window as any).config?.apiUrl || this._rootUrl || this.config.rootUrl;
+    if (environment.production) {
+      return (window as any).config?.apiUrl || this._rootUrl || this.config.rootUrl;
+    } else {
+      return 'http://localhost:8080';
+    }
   }
 
   /**
