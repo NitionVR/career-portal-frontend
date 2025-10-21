@@ -370,10 +370,11 @@ export class ProfilePageComponent implements OnInit {
   }
 
   handleAvatarUpload(file: File): void {
+    console.log('1. handleAvatarUpload called with file:', file);
     this.uploading = true;
     this.progress = 0; // Reset progress
 
-    // Step 1: Get the pre-signed upload URL from our backend
+    // Call the backend service to get the pre-signed URL
     this.profileService.getAvatarUploadUrl({
       body: {
         contentType: file.type,
@@ -381,8 +382,9 @@ export class ProfilePageComponent implements OnInit {
       }
     }).subscribe({
       next: (response) => {
+        console.log('2. Received response from getAvatarUploadUrl:', response);
         if (response.uploadUrl && response.fileUrl) {
-          // Step 2: Upload the file directly to the cloud storage URL
+          // If successful, proceed to upload the file to S3
           this.uploadFileToCloud(file, response.uploadUrl, response.fileUrl);
         } else {
           console.error('Backend did not return a valid upload URL.');
@@ -396,28 +398,32 @@ export class ProfilePageComponent implements OnInit {
     });
   }
 
-  private uploadFileToCloud(file: File, uploadUrl: string, fileUrl: string): void {
-    // We need to use HttpClient directly for this part to upload the binary file
-    const httpClient = new HttpClient(this.httpBackend); // Create a new instance to bypass interceptors if needed
-
-    httpClient.put(uploadUrl, file, {
-      reportProgress: true,
-      observe: 'events',
-      headers: { 'Content-Type': file.type }
-    }).subscribe({
-      next: (event: any) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          this.progress = Math.round(100 * event.loaded / event.total);
-        } else if (event.type === HttpEventType.Response) {
-          // Step 3: Update the user's profile in our backend with the final URL
-          this.updateProfileAvatar(fileUrl);
+  private async uploadFileToCloud(file: File, uploadUrl: string, fileUrl: string): Promise<void> {
+    console.log('3. uploadFileToCloud called with URL:', uploadUrl);
+    console.log('4. Uploading file:', file);
+    try {
+      const response = await fetch(uploadUrl, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+          'Content-Length': file.size.toString(),
+          // These headers are likely required by the pre-signed URL signature
+          'x-amz-meta-upload-timestamp': new Date().toISOString(),
+          'x-amz-meta-uploaded-by': this.user?.id || 'unknown'
         }
-      },
-      error: (err) => {
-        console.error('Failed to upload file to cloud storage', err);
+      });
+
+      if (response.ok) {
+        this.updateProfileAvatar(fileUrl);
+      } else {
+        console.error('Failed to upload file to cloud storage', response);
         this.uploading = false;
       }
-    });
+    } catch (err) {
+      console.error('Failed to upload file to cloud storage', err);
+      this.uploading = false;
+    }
   }
 
   private updateProfileAvatar(fileUrl: string): void {
