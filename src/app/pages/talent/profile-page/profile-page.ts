@@ -402,7 +402,8 @@ export class ProfilePageComponent implements OnInit {
 
     httpClient.put(uploadUrl, file, {
       reportProgress: true,
-      observe: 'events'
+      observe: 'events',
+      headers: { 'Content-Type': file.type }
     }).subscribe({
       next: (event: any) => {
         if (event.type === HttpEventType.UploadProgress) {
