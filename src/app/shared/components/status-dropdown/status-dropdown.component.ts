@@ -40,7 +40,9 @@ export class StatusDropdownComponent implements OnInit {
   }
 
   changeState(newState: string): void {
-    this.jobPostService.transitionState({ id: this.job.id, body: { targetStatus: newState as any } }).subscribe({
+    console.log('Changing job status:', { jobId: this.job.id, newState });
+    const updatedJob = { ...this.job, status: newState };
+    this.jobPostService.updateJobPost({ id: this.job.id, body: updatedJob }).subscribe({
       next: (updatedJob) => {
         this.job.status = updatedJob.status; // Update the local job object
         this.snackbarService.success(`Job status updated to ${updatedJob.status}`);
