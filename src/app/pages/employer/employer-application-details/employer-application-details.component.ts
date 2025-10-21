@@ -1,8 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { JobApplicationControllerService } from '../../../api/services';
+import { JobApplicationControllerService, WorkflowControllerService } from '../../../api/services';
 import { ApplicationDetailsDto } from '../../../api/models';
+import { SnackbarService } from '../../../shared/components/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-employer-application-details',
@@ -17,6 +18,8 @@ export class EmployerApplicationDetailsComponent implements OnInit {
 
   private route = inject(ActivatedRoute);
   private applicationService = inject(JobApplicationControllerService);
+  private workflowController = inject(WorkflowControllerService);
+  private snackbarService = inject(SnackbarService);
 
   constructor() { }
 
@@ -37,6 +40,19 @@ export class EmployerApplicationDetailsComponent implements OnInit {
       error: (err) => {
         console.error('Failed to load application details', err);
         this.isLoading = false;
+      }
+    });
+  }
+
+  rejectApplication(): void {
+    if (!this.application?.id) return;
+
+    this.applicationService.transitionApplicationStatus({ applicationId: this.application.id, body: { targetStatus: 'REJECTED' } }).subscribe({
+      next: () => {
+        this.snackbarService.success('Application has been rejected.');
+        this.loadApplicationDetails(this.application!.id!);      },
+      error: (err: any) => {
+        this.snackbarService.error(err.error?.message || 'Failed to reject application.');
       }
     });
   }

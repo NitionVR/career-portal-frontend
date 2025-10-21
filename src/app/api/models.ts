@@ -3,6 +3,7 @@
 export type { AcceptInvitationRequest } from './models/accept-invitation-request';
 export type { ApplicationDetailsDto } from './models/application-details-dto';
 export type { ApplicationSummaryDto } from './models/application-summary-dto';
+export type { ApplicationTransitionRequest } from './models/application-transition-request';
 export type { CandidateDto } from './models/candidate-dto';
 export type { CandidateProfileDto } from './models/candidate-profile-dto';
 export type { CandidateRegistrationDto } from './models/candidate-registration-dto';

@@ -21,6 +21,8 @@ import { getMyApplications } from '../fn/job-application-controller/get-my-appli
 import { GetMyApplications$Params } from '../fn/job-application-controller/get-my-applications';
 import { PageApplicationSummaryDto } from '../models/page-application-summary-dto';
 import { PageEmployerApplicationSummaryDto } from '../models/page-employer-application-summary-dto';
+import { transitionApplicationStatus } from '../fn/job-application-controller/transition-application-status';
+import { TransitionApplicationStatus$Params } from '../fn/job-application-controller/transition-application-status';
 import { withdrawApplication } from '../fn/job-application-controller/withdraw-application';
 import { WithdrawApplication$Params } from '../fn/job-application-controller/withdraw-application';
 
@@ -52,6 +54,31 @@ export class JobApplicationControllerService extends BaseService {
   applyForJob(params: ApplyForJob$Params, context?: HttpContext): Observable<ApplicationSummaryDto> {
     return this.applyForJob$Response(params, context).pipe(
       map((r: StrictHttpResponse<ApplicationSummaryDto>): ApplicationSummaryDto => r.body)
+    );
+  }
+
+  /** Path part for operation `transitionApplicationStatus()` */
+  static readonly TransitionApplicationStatusPath = '/api/applications/{applicationId}/transition';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `transitionApplicationStatus()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  transitionApplicationStatus$Response(params: TransitionApplicationStatus$Params, context?: HttpContext): Observable<StrictHttpResponse<ApplicationDetailsDto>> {
+    return transitionApplicationStatus(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `transitionApplicationStatus$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  transitionApplicationStatus(params: TransitionApplicationStatus$Params, context?: HttpContext): Observable<ApplicationDetailsDto> {
+    return this.transitionApplicationStatus$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ApplicationDetailsDto>): ApplicationDetailsDto => r.body)
     );
   }
 
