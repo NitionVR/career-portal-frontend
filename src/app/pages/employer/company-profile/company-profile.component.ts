@@ -5,11 +5,13 @@ import { OrganizationControllerService } from '../../../api/services';
 import { SnackbarService } from '../../../shared/components/snackbar/snackbar.service';
 import { HttpClient, HttpBackend, HttpEventType } from '@angular/common/http';
 import { OrganizationDto } from '../../../api/models';
+import { MatTabsModule } from '@angular/material/tabs';
+import { OrganizationMembersComponent } from './organization-members/organization-members.component';
 
 @Component({
   selector: 'app-company-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatTabsModule, OrganizationMembersComponent],
   templateUrl: './company-profile.component.html',
   styleUrls: ['./company-profile.component.css']
 })

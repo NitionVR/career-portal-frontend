@@ -1,0 +1,24 @@
+.mat-mdc-table {
+  width: 100%;
+  background: transparent;
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.mat-column-actions {
+  width: 80px;
+  text-align: right;
+}
+
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

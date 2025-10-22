@@ -1,15 +1,18 @@
 <div class="py-8 sm:py-12">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
     <div class="mb-8">
-      <h1 class="text-3xl font-bold tracking-tight">Company Profile</h1>
-      <p class="text-lg text-muted-foreground mt-1">This information will appear on all your job posts.</p>
+      <h1 class="text-3xl font-bold tracking-tight">Company Management</h1>
+      <p class="text-lg text-muted-foreground mt-1">Manage your company profile and team members.</p>
     </div>
 
-    <div *ngIf="isLoading" class="flex items-center justify-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-    </div>
+    <mat-tab-group animationDuration="0ms" class="glassmorphism rounded-xl">
+      <mat-tab label="Company Profile">
+        <div class="p-6">
+          <div *ngIf="isLoading" class="flex items-center justify-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
 
-    <form *ngIf="!isLoading" [formGroup]="profileForm" (ngSubmit)="onSave()" class="space-y-8">
+          <form *ngIf="!isLoading" [formGroup]="profileForm" (ngSubmit)="onSave()" class="space-y-8">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Left Column: Logo Upload -->
         <div class="lg:col-span-1">
@@ -58,5 +61,11 @@
         </button>
       </div>
     </form>
+          </div>
+        </mat-tab>
+        <mat-tab label="Organization Members">
+          <app-organization-members></app-organization-members>
+        </mat-tab>
+      </mat-tab-group>
   </div>
 </div>

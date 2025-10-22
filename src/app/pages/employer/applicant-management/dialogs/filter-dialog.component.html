@@ -1,69 +1,69 @@
-<h2 mat-dialog-title class="text-xl font-semibold">Advanced Filters</h2>
-<mat-dialog-content class="mat-typography">
-  <form [formGroup]="filterForm" class="space-y-4">
-    <div>
-      <label class="text-sm font-medium text-muted-foreground">Application Status</label>
-      <mat-selection-list formControlName="status" class="mt-2">
-        <mat-list-option *ngFor="let status of statuses" [value]="status.value">
-          {{status.label}}
-        </mat-list-option>
-      </mat-selection-list>
-    </div>
-    
-    <div>
-      <label class="text-sm font-medium text-muted-foreground">Skills</label>
-      <mat-form-field appearance="outline" class="w-full mt-2">
-        <mat-chip-list #chipList>
-          <mat-chip *ngFor="let skill of selectedSkills" [removable]="true" (removed)="removeSkill(skill)">
-            {{skill}}
-            <mat-icon matChipRemove>cancel</mat-icon>
-          </mat-chip>
-          <input placeholder="Add skills..."
-                 [matChipInputFor]="chipList"
-                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                 (matChipInputTokenEnd)="addSkill($event)">
-        </mat-chip-list>
-      </mat-form-field>
-    </div>
-    
-    <div>
-      <label class="text-sm font-medium text-muted-foreground">Minimum Experience (years)</label>
-      <mat-slider min="0" max="15" step="1" class="w-full mt-2" [displayWith]="formatExperience">
-        <input matSliderThumb formControlName="experience">
-      </mat-slider>
-      <div class="text-sm text-right">{{filterForm.get('experience')?.value || 0}} years</div>
-    </div>
-    
-    <div>
-      <label class="text-sm font-medium text-muted-foreground">Education Level</label>
-      <mat-form-field appearance="outline" class="w-full mt-2">
-        <mat-select formControlName="education" multiple>
-          <mat-option *ngFor="let education of educationLevels" [value]="education.value">
-            {{education.label}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    
-    <div>
-      <label class="text-sm font-medium text-muted-foreground">Location</label>
-      <mat-form-field appearance="outline" class="w-full mt-2">
-        <input matInput formControlName="location" placeholder="City, State, or Country">
-      </mat-form-field>
-    </div>
-    
-    <div>
-      <label class="text-sm font-medium text-muted-foreground">Minimum AI Match Score</label>
-      <mat-slider min="0" max="100" step="5" class="w-full mt-2" [displayWith]="formatScore">
-        <input matSliderThumb formControlName="aiMatchScore">
-      </mat-slider>
-      <div class="text-sm text-right">{{filterForm.get('aiMatchScore')?.value || 0}}%</div>
-    </div>
-  </form>
-</mat-dialog-content>
+<div class="glassmorphism rounded-xl p-6">
+  <h2 mat-dialog-title class="text-xl font-bold">Advanced Filters</h2>
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="filterForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-medium text-muted-foreground">Application Status</label>
+        <select formControlName="status" class="job-filter-select w-full mt-2">
+          <option value="">All Statuses</option>
+          <option *ngFor="let status of statusOptions" [value]="status">
+            {{ status }}
+          </option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="text-sm font-medium text-muted-foreground">Skills</label>
+        <input type="text" formControlName="skills" placeholder="e.g. JavaScript, React" class="search-input w-full mt-2">
+      </div>
+      
+      <div>
+        <label class="text-sm font-medium text-muted-foreground">Experience</label>
+        <select formControlName="experience" class="job-filter-select w-full mt-2">
+          <option value="">Any Experience</option>
+          <option value="0-1">0-1 years</option>
+          <option value="1-3">1-3 years</option>
+          <option value="3-5">3-5 years</option>
+          <option value="5-10">5-10 years</option>
+          <option value="10+">10+ years</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="text-sm font-medium text-muted-foreground">Education Level</label>
+        <select formControlName="education" class="job-filter-select w-full mt-2">
+          <option value="">Any Education</option>
+          <option value="high_school">High School</option>
+          <option value="associate">Associate Degree</option>
+          <option value="bachelor">Bachelor's Degree</option>
+          <option value="master">Master's Degree</option>
+          <option value="phd">PhD</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="text-sm font-medium text-muted-foreground">Location</label>
+        <input type="text" formControlName="location" placeholder="City, State, or Country" class="search-input w-full mt-2">
+      </div>
+      
+      <div>
+        <label class="text-sm font-medium text-muted-foreground">Minimum AI Match Score</label>
+        <select formControlName="matchScore" class="job-filter-select w-full mt-2">
+          <option value="">Any Score</option>
+          <option value="90+">90% and above</option>
+          <option value="80+">80% and above</option>
+          <option value="70+">70% and above</option>
+        </select>
+      </div>
+    </form>
+  </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-button (click)="onClear()">Clear All</button>
-  <button mat-raised-button color="primary" (click)="onApply()" [disabled]="!hasFilters()">Apply Filters</button>
-</mat-dialog-actions>
+    <div class="flex justify-end items-center gap-4 mt-8 pt-6 border-t border-border">
+    <button type="button" (click)="onClear()" class="px-8 py-3 text-base font-semibold text-muted-foreground bg-muted rounded-full hover:bg-muted/80 transition-colors">
+      Clear All
+    </button>
+    <button type="button" (click)="onApply()" class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors">
+      Apply Filters
+    </button>
+  </div>
+</div>

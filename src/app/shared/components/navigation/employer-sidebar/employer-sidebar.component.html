@@ -55,5 +55,32 @@
       <span class="material-symbols-outlined mr-3">business</span>
       <span class="flex-grow min-w-0" *ngIf="!isMinimized">Company Profile</span>
     </a>
+    <a routerLink="/employer/notifications" routerLinkActive="active" (click)="onNavLinkClick()"
+       class="flex items-center px-4 py-3 rounded-lg transition-colors"
+       [ngClass]="{
+         'bg-primary/10 text-primary font-semibold': rlaNotifications.isActive,
+         'text-muted-foreground hover:bg-muted hover:text-foreground': !rlaNotifications.isActive
+       }"
+       #rlaNotifications="routerLinkActive"
+       matTooltip="Notifications" [matTooltipDisabled]="!isMinimized">
+      <span class="material-symbols-outlined mr-3">notifications</span>
+      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Notifications</span>
+      <span *ngIf="unreadCount > 0" class="ml-auto text-xs rounded-full px-2 py-0.5"
+            [ngClass]="{
+              'bg-red-600 text-white': !rlaNotifications.isActive,
+              'bg-primary text-white': rlaNotifications.isActive
+            }">{{ unreadCount }}</span>
+    </a>
+    <a routerLink="/employer/audit-log" routerLinkActive="active" (click)="onNavLinkClick()"
+       class="flex items-center px-4 py-3 rounded-lg transition-colors"
+       [ngClass]="{
+         'bg-primary/10 text-primary font-semibold': rlaAudit.isActive,
+         'text-muted-foreground hover:bg-muted hover:text-foreground': !rlaAudit.isActive
+       }"
+       #rlaAudit="routerLinkActive"
+       matTooltip="Audit Log" [matTooltipDisabled]="!isMinimized">
+      <span class="material-symbols-outlined mr-3">fact_check</span>
+      <span class="flex-grow min-w-0" *ngIf="!isMinimized">Audit Log</span>
+    </a>
   </nav>
 </aside>

@@ -80,8 +80,12 @@
     </form>
   </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-button (click)="onCancel()">Cancel</button>
-    <button mat-raised-button color="primary" (click)="onApply()" [disabled]="!isFormValid()">Apply</button>
-  </mat-dialog-actions>
+    <div class="flex justify-end items-center gap-4 mt-8 pt-6 border-t border-border">
+    <button type="button" (click)="onCancel()" class="px-8 py-3 text-base font-semibold text-muted-foreground bg-muted rounded-full hover:bg-muted/80 transition-colors">
+      Cancel
+    </button>
+    <button type="button" (click)="onApply()" [disabled]="!isFormValid()" class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors disabled:opacity-50">
+      Apply
+    </button>
+  </div>
 </div>

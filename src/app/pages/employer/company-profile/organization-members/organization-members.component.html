@@ -1,0 +1,180 @@
+<div class="py-6">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h2 class="text-2xl font-bold tracking-tight">Organization Members</h2>
+      <p class="text-muted-foreground">Manage your organization's team members and permissions</p>
+    </div>
+    <button (click)="openInviteDialog()" class="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center" aria-label="Invite recruiters">
+      <mat-icon class="mr-2">person_add</mat-icon>
+      Invite Recruiters
+    </button>
+  </div>
+
+  <!-- Summary Metrics -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div class="metric-card glassmorphism">
+      <div class="metric-value">{{ members.length }}</div>
+      <div class="metric-label">Active Team Members</div>
+    </div>
+    <div class="metric-card glassmorphism">
+      <div class="metric-value">{{ pendingInvitations.length }}</div>
+      <div class="metric-label">Pending Invitations</div>
+    </div>
+  </div>
+
+  <!-- Members Table -->
+  <div class="glassmorphism rounded-xl p-6 mb-8">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-semibold">Team Members</h3>
+      <div class="table-toolbar flex gap-3 items-center">
+        <mat-form-field appearance="outline" class="w-48">
+          <mat-label>Role</mat-label>
+          <mat-select [(value)]="selectedRole" aria-label="Filter by role">
+            <mat-option value="">All</mat-option>
+            <mat-option *ngFor="let role of roleOptions" [value]="role">{{ role | titlecase }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-64">
+          <mat-label>Search members</mat-label>
+          <input matInput [(ngModel)]="searchQuery" placeholder="Name or email" aria-label="Search members" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="flex items-center justify-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" aria-label="Loading"></div>
+    </div>
+
+    <div *ngIf="!isLoading && filteredMembers.length === 0" class="text-center py-8 text-muted-foreground">
+      <p>No team members match your filters.</p>
+      <p class="mt-2">Try adjusting filters or inviting new team members.</p>
+    </div>
+
+    <table mat-table [dataSource]="filteredMembers" class="w-full" *ngIf="!isLoading && filteredMembers.length > 0" aria-label="Team members table">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let member">
+          <div class="flex items-center gap-3">
+            <div class="avatar" [attr.aria-label]="member.firstName + ' ' + member.lastName">
+              {{ getInitials(member) }}
+            </div>
+            <div>
+              <div class="font-medium">{{member.firstName}} {{member.lastName}}</div>
+              <div class="text-muted-foreground text-sm">{{member.email}}</div>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let member">{{member.email}}</td>
+      </ng-container>
+
+      <!-- Role Column -->
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Role</th>
+        <td mat-cell *matCellDef="let member">
+          <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="getRoleChipClass(member.role)">
+            {{member.role | titlecase}}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let member">
+          <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="getStatusChipClass(member.status)">
+            {{member.status | titlecase}}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Joined Date Column -->
+      <ng-container matColumnDef="joinedDate">
+        <th mat-header-cell *matHeaderCellDef>Joined</th>
+        <td mat-cell *matCellDef="let member">{{member.joinedDate | date}}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let member">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Member actions">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item *ngIf="member.role !== 'HIRING_MANAGER'" (click)="updateMemberRole(member.id, 'HIRING_MANAGER')">
+              <mat-icon>admin_panel_settings</mat-icon>
+              <span>Make Hiring Manager</span>
+            </button>
+            <button mat-menu-item *ngIf="member.role !== 'RECRUITER'" (click)="updateMemberRole(member.id, 'RECRUITER')">
+              <mat-icon>person</mat-icon>
+              <span>Make Recruiter</span>
+            </button>
+            <button mat-menu-item (click)="removeMember(member.id)">
+              <mat-icon>delete</mat-icon>
+              <span>Remove from Organization</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <!-- Pending Invitations -->
+  <div class="glassmorphism rounded-xl p-6">
+    <h3 class="text-xl font-semibold mb-4">Pending Invitations</h3>
+    
+    <div *ngIf="pendingInvitations.length === 0" class="text-center py-8 text-muted-foreground">
+      <p>No pending invitations.</p>
+      <p class="mt-2">Invite recruiters to collaborate on your hiring process.</p>
+    </div>
+
+    <table mat-table [dataSource]="pendingInvitations" class="w-full" *ngIf="pendingInvitations.length > 0" aria-label="Pending invitations table">
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let invitation">{{invitation.email}}</td>
+      </ng-container>
+
+      <!-- Sent Date Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Sent</th>
+        <td mat-cell *matCellDef="let invitation">{{invitation.createdAt | date}}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let invitation">
+          <span class="px-2 py-1 rounded-full text-xs font-medium bg-warning text-warning-foreground">
+            Pending
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let invitation">
+          <button mat-icon-button (click)="resendInvitation(invitation.id)" matTooltip="Resend Invitation" aria-label="Resend invitation">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button mat-icon-button (click)="revokeInvitation(invitation.id)" matTooltip="Revoke Invitation" aria-label="Revoke invitation">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="invitationColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: invitationColumns;"></tr>
+    </table>
+  </div>
+</div>
