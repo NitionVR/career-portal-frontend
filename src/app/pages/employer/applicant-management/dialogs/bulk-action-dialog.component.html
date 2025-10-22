@@ -1,89 +1,87 @@
-<h2 mat-dialog-title class="text-xl font-bold">Bulk Actions</h2>
-<mat-dialog-content class="mat-typography">
-  <p class="text-muted-foreground mb-4">Apply actions to {{data.count}} selected candidates</p>
-  
-  <form [formGroup]="actionForm" class="space-y-4">
-    <div>
-      <label class="text-sm font-medium text-muted-foreground">Action Type</label>
-      <mat-form-field appearance="outline" class="w-full mt-2">
-        <mat-select formControlName="actionType">
-          <mat-option value="status">Update Status</mat-option>
-          <mat-option value="tags">Add Tags</mat-option>
-          <mat-option value="export">Export Data</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+<div class="glassmorphism rounded-xl p-6">
+  <h2 mat-dialog-title class="text-xl font-bold">Bulk Actions</h2>
+  <mat-dialog-content class="mat-typography">
+    <p class="text-muted-foreground mb-4">Apply actions to {{data.count}} selected candidates</p>
     
-    <!-- Dynamic fields based on action type -->
-    <ng-container [ngSwitch]="actionForm.get('actionType')?.value">
-      <!-- Status Update Fields -->
-      <div *ngSwitchCase="'status'" class="space-y-4">
-        <div>
-          <label class="text-sm font-medium text-muted-foreground">New Status</label>
-          <mat-form-field appearance="outline" class="w-full mt-2">
-            <mat-select formControlName="newStatus">
-              <mat-option *ngFor="let status of data.statusOptions" [value]="status">
+    <form [formGroup]="actionForm" class="space-y-4">
+      <div>
+        <label class="text-sm font-medium text-muted-foreground">Action Type</label>
+        <select formControlName="actionType" class="job-filter-select w-full mt-2">
+          <option value="status">Update Status</option>
+          <option value="tags">Add Tags</option>
+          <option value="export">Export Data</option>
+        </select>
+      </div>
+      
+      <!-- Dynamic fields based on action type -->
+      <ng-container [ngSwitch]="actionForm.get('actionType')?.value">
+        <!-- Status Update Fields -->
+        <div *ngSwitchCase="'status'" class="space-y-4">
+          <div>
+            <label class="text-sm font-medium text-muted-foreground">New Status</label>
+            <select formControlName="newStatus" class="job-filter-select w-full mt-2">
+              <option *ngFor="let status of data.statusOptions" [value]="status">
                 {{status}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        
-        <div>
-          <label class="text-sm font-medium text-muted-foreground">Notification</label>
-          <mat-checkbox formControlName="sendNotification" class="block mt-2">
-            Send email notification to candidates
-          </mat-checkbox>
-        </div>
-      </div>
-      
-      <!-- Tags Fields -->
-      <div *ngSwitchCase="'tags'" class="space-y-4">
-        <div>
-          <label class="text-sm font-medium text-muted-foreground">Tags</label>
-          <mat-form-field appearance="outline" class="w-full mt-2">
-            <mat-chip-list #chipList>
-              <mat-chip *ngFor="let tag of selectedTags" [removable]="true" (removed)="removeTag(tag)">
-                {{tag}}
-                <mat-icon matChipRemove>cancel</mat-icon>
-              </mat-chip>
-              <input placeholder="Add tags..."
-                     [matChipInputFor]="chipList"
-                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                     (matChipInputTokenEnd)="addTag($event)">
-            </mat-chip-list>
-          </mat-form-field>
-        </div>
-      </div>
-      
-      <!-- Export Fields -->
-      <div *ngSwitchCase="'export'" class="space-y-4">
-        <div>
-          <label class="text-sm font-medium text-muted-foreground">Export Format</label>
-          <mat-form-field appearance="outline" class="w-full mt-2">
-            <mat-select formControlName="exportFormat">
-              <mat-option value="csv">CSV</mat-option>
-              <mat-option value="excel">Excel</mat-option>
-              <mat-option value="pdf">PDF</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        
-        <div>
-          <label class="text-sm font-medium text-muted-foreground">Data to Include</label>
-          <div class="mt-2 space-y-2">
-            <mat-checkbox formControlName="includeContact" class="block">Contact Information</mat-checkbox>
-            <mat-checkbox formControlName="includeSkills" class="block">Skills & Experience</mat-checkbox>
-            <mat-checkbox formControlName="includeNotes" class="block">Interview Notes</mat-checkbox>
-            <mat-checkbox formControlName="includeScores" class="block">AI Match Scores</mat-checkbox>
+              </option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="text-sm font-medium text-muted-foreground">Notification</label>
+            <div class="flex items-center mt-2">
+              <input type="checkbox" formControlName="sendNotification" id="sendNotification" class="h-4 w-4 rounded border-border bg-transparent text-primary focus:ring-primary">
+              <label for="sendNotification" class="ml-2 text-sm text-muted-foreground">Send email notification to candidates</label>
+            </div>
           </div>
         </div>
-      </div>
-    </ng-container>
-  </form>
-</mat-dialog-content>
+        
+        <!-- Tags Fields -->
+        <div *ngSwitchCase="'tags'" class="space-y-4">
+          <div>
+            <label class="text-sm font-medium text-muted-foreground">Tags</label>
+            <input type="text" formControlName="tagsInput" placeholder="e.g. Potential, Follow-up, Urgent" class="search-input w-full mt-2">
+          </div>
+        </div>
+        
+        <!-- Export Fields -->
+        <div *ngSwitchCase="'export'" class="space-y-4">
+          <div>
+            <label class="text-sm font-medium text-muted-foreground">Export Format</label>
+            <select formControlName="exportFormat" class="job-filter-select w-full mt-2">
+              <option value="csv">CSV</option>
+              <option value="excel">Excel</option>
+              <option value="pdf">PDF</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="text-sm font-medium text-muted-foreground">Data to Include</label>
+            <div class="mt-2 space-y-2">
+              <div class="flex items-center">
+                <input type="checkbox" formControlName="includeContact" id="includeContact" class="h-4 w-4 rounded border-border bg-transparent text-primary focus:ring-primary">
+                <label for="includeContact" class="ml-2 text-sm text-muted-foreground">Contact Information</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" formControlName="includeSkills" id="includeSkills" class="h-4 w-4 rounded border-border bg-transparent text-primary focus:ring-primary">
+                <label for="includeSkills" class="ml-2 text-sm text-muted-foreground">Skills & Experience</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" formControlName="includeNotes" id="includeNotes" class="h-4 w-4 rounded border-border bg-transparent text-primary focus:ring-primary">
+                <label for="includeNotes" class="ml-2 text-sm text-muted-foreground">Interview Notes</label>
+              </div>
+              <div class="flex items-center">
+                <input type="checkbox" formControlName="includeScores" id="includeScores" class="h-4 w-4 rounded border-border bg-transparent text-primary focus:ring-primary">
+                <label for="includeScores" class="ml-2 text-sm text-muted-foreground">AI Match Scores</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="onApply()" [disabled]="!isFormValid()">Apply</button>
-</mat-dialog-actions>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onApply()" [disabled]="!isFormValid()">Apply</button>
+  </mat-dialog-actions>
+</div>
