@@ -389,11 +389,13 @@ export class ProfilePageComponent implements OnInit {
         } else {
           console.error('Backend did not return a valid upload URL.');
           this.uploading = false;
+          this.snackbarService.error('Failed to get upload URL. Please try again.');
         }
       },
       error: (err) => {
         console.error('Failed to get upload URL', err);
         this.uploading = false;
+        this.snackbarService.error('Failed to get upload URL. Please try again.');
       }
     });
   }
@@ -401,27 +403,28 @@ export class ProfilePageComponent implements OnInit {
   private async uploadFileToCloud(file: File, uploadUrl: string, fileUrl: string): Promise<void> {
     console.log('3. uploadFileToCloud called with URL:', uploadUrl);
     console.log('4. Uploading file:', file);
+
     try {
+      // Minimal fetch - let browser handle headers
       const response = await fetch(uploadUrl, {
         method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-          'Content-Length': file.size.toString(),
-          // These headers are likely required by the pre-signed URL signature
-          'x-amz-meta-upload-timestamp': new Date().toISOString(),
-          'x-amz-meta-uploaded-by': this.user?.id || 'unknown'
-        }
+        body: file
+        // REMOVED: headers - let the browser set them automatically
       });
 
       if (response.ok) {
+        console.log('5. Upload successful!');
         this.updateProfileAvatar(fileUrl);
+        this.snackbarService.success('Profile picture updated successfully!');
       } else {
-        console.error('Failed to upload file to cloud storage', response);
+        const errorText = await response.text();
+        console.error('Failed to upload file to cloud storage', response.status, errorText);
+        this.snackbarService.error('Failed to upload avatar. Please try again.');
         this.uploading = false;
       }
     } catch (err) {
       console.error('Failed to upload file to cloud storage', err);
+      this.snackbarService.error('Network error while uploading. Please check your connection.');
       this.uploading = false;
     }
   }

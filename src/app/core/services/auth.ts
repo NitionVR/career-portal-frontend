@@ -86,6 +86,7 @@ export class AuthService {
             isNewUser: response.user.isNewUser || false,
             firstName: response.user.firstName,
             lastName: response.user.lastName,
+            profileImageUrl: response.user.profileImageUrl,
           };
           this.storeUser(user); // Update the user in localStorage
           this.currentUserSubject.next(user);
