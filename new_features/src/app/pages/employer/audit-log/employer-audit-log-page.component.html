@@ -1,0 +1,52 @@
+<section class="space-y-6">
+  <header>
+    <h1 class="text-2xl font-semibold">Audit Log</h1>
+    <p class="text-sm text-muted-foreground mt-1">View state changes for your job posts.</p>
+  </header>
+
+  <div *ngIf="postsError" class="p-4 bg-red-50 text-red-700 border border-red-200 rounded">{{ postsError }}</div>
+  <div *ngIf="isLoadingPosts" class="text-muted-foreground">Loading job posts…</div>
+
+  <div class="space-y-3" *ngIf="jobPosts?.content?.length">
+    <label class="block text-sm font-medium">Select job post</label>
+    <select class="w-full p-2 border rounded" [ngModel]="selectedJobPostId" (ngModelChange)="selectPost($event)">
+      <option [ngValue]="null">-- Choose a job post --</option>
+      <option *ngFor="let jp of jobPosts!.content!" [ngValue]="jp.id">{{ jp.title }} ({{ jp.status }})</option>
+    </select>
+    <div class="flex items-center justify-between">
+      <button class="px-3 py-2 rounded-md border hover:bg-muted disabled:opacity-50" (click)="prevPostsPage()" [disabled]="page === 0">Previous</button>
+      <div class="text-sm text-muted-foreground">Page {{ (jobPosts!.number || 0) + 1 }} of {{ jobPosts!.totalPages || 1 }}</div>
+      <button class="px-3 py-2 rounded-md border hover:bg-muted disabled:opacity-50" (click)="nextPostsPage()" [disabled]="jobPosts!.last">Next</button>
+    </div>
+  </div>
+
+  <div *ngIf="selectedJobPostId">
+    <h2 class="text-xl font-semibold mt-4">State History</h2>
+    <div *ngIf="auditError" class="p-4 bg-red-50 text-red-700 border border-red-200 rounded">{{ auditError }}</div>
+    <div *ngIf="isLoadingAudit" class="text-muted-foreground">Loading audit history…</div>
+    <div *ngIf="!isLoadingAudit && audits.length === 0" class="p-6 border rounded bg-card text-muted-foreground">No state changes recorded.</div>
+
+    <div *ngIf="!isLoadingAudit && audits.length" class="overflow-x-auto border rounded">
+      <table class="min-w-full text-sm">
+        <thead class="bg-muted">
+          <tr>
+            <th class="text-left p-2">Changed At</th>
+            <th class="text-left p-2">Changed By</th>
+            <th class="text-left p-2">From</th>
+            <th class="text-left p-2">To</th>
+            <th class="text-left p-2">Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of audits" class="border-t">
+            <td class="p-2">{{ a.changedAt | date:'medium' }}</td>
+            <td class="p-2">{{ a.changedByEmail || '—' }}</td>
+            <td class="p-2">{{ a.fromStatus }}</td>
+            <td class="p-2">{{ a.toStatus }}</td>
+            <td class="p-2">{{ a.reason || '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

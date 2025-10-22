@@ -1,0 +1,89 @@
+<h2 mat-dialog-title class="text-xl font-semibold">Bulk Actions</h2>
+<mat-dialog-content class="mat-typography">
+  <p class="text-muted-foreground mb-4">Apply actions to {{data.selectedCount}} selected candidates</p>
+  
+  <form [formGroup]="actionForm" class="space-y-4">
+    <div>
+      <label class="text-sm font-medium text-muted-foreground">Action Type</label>
+      <mat-form-field appearance="outline" class="w-full mt-2">
+        <mat-select formControlName="actionType">
+          <mat-option value="status">Update Status</mat-option>
+          <mat-option value="tags">Add Tags</mat-option>
+          <mat-option value="export">Export Data</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    
+    <!-- Dynamic fields based on action type -->
+    <ng-container [ngSwitch]="actionForm.get('actionType')?.value">
+      <!-- Status Update Fields -->
+      <div *ngSwitchCase="'status'" class="space-y-4">
+        <div>
+          <label class="text-sm font-medium text-muted-foreground">New Status</label>
+          <mat-form-field appearance="outline" class="w-full mt-2">
+            <mat-select formControlName="newStatus">
+              <mat-option *ngFor="let status of statuses" [value]="status.value">
+                {{status.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div>
+          <label class="text-sm font-medium text-muted-foreground">Notification</label>
+          <mat-checkbox formControlName="sendNotification" class="block mt-2">
+            Send email notification to candidates
+          </mat-checkbox>
+        </div>
+      </div>
+      
+      <!-- Tags Fields -->
+      <div *ngSwitchCase="'tags'" class="space-y-4">
+        <div>
+          <label class="text-sm font-medium text-muted-foreground">Tags</label>
+          <mat-form-field appearance="outline" class="w-full mt-2">
+            <mat-chip-list #chipList>
+              <mat-chip *ngFor="let tag of selectedTags" [removable]="true" (removed)="removeTag(tag)">
+                {{tag}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input placeholder="Add tags..."
+                     [matChipInputFor]="chipList"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     (matChipInputTokenEnd)="addTag($event)">
+            </mat-chip-list>
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <!-- Export Fields -->
+      <div *ngSwitchCase="'export'" class="space-y-4">
+        <div>
+          <label class="text-sm font-medium text-muted-foreground">Export Format</label>
+          <mat-form-field appearance="outline" class="w-full mt-2">
+            <mat-select formControlName="exportFormat">
+              <mat-option value="csv">CSV</mat-option>
+              <mat-option value="excel">Excel</mat-option>
+              <mat-option value="pdf">PDF</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div>
+          <label class="text-sm font-medium text-muted-foreground">Data to Include</label>
+          <div class="mt-2 space-y-2">
+            <mat-checkbox formControlName="includeContact" class="block">Contact Information</mat-checkbox>
+            <mat-checkbox formControlName="includeSkills" class="block">Skills & Experience</mat-checkbox>
+            <mat-checkbox formControlName="includeNotes" class="block">Interview Notes</mat-checkbox>
+            <mat-checkbox formControlName="includeScores" class="block">AI Match Scores</mat-checkbox>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onApply()" [disabled]="!isFormValid()">Apply</button>
+</mat-dialog-actions>

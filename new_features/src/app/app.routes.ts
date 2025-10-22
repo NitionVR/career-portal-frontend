@@ -16,6 +16,8 @@ import { CompanyProfileComponent } from './pages/employer/company-profile/compan
 import { EmployerApplicationDetailsComponent } from './pages/employer/employer-application-details/employer-application-details.component';
 import { ViewApplicantsComponent } from './pages/employer/view-applicants/view-applicants.component';
 import { ApplicantManagementComponent } from './pages/employer/applicant-management/applicant-management.component';
+import { EmployerNotificationsPageComponent } from './pages/employer/notifications/employer-notifications-page.component';
+import { EmployerAuditLogPageComponent } from './pages/employer/audit-log/employer-audit-log-page.component';
 
 // Import the new guards
 import { authGuard } from './core/guards/auth.guard';
@@ -65,7 +67,8 @@ export const routes: Routes = [
       { path: 'applications/:id', component: EmployerApplicationDetailsComponent },
       { path: 'applicants', component: ApplicantManagementComponent },
       { path: 'settings/company', component: CompanyProfileComponent },
-      // Add other employer routes here
+      { path: 'notifications', component: EmployerNotificationsPageComponent },
+      { path: 'audit-log', component: EmployerAuditLogPageComponent },
     ]
   },
 

@@ -1,0 +1,82 @@
+// Organization members component styles
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+}
+
+// Summary metric cards
+.metric-card {
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.metric-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.metric-label {
+  color: var(--text-secondary, var(--text-primary));
+}
+
+// Table styles
+.mat-mdc-table {
+  width: 100%;
+  background: transparent;
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mat-mdc-row:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+// Toolbar styles
+.table-toolbar .mat-mdc-form-field {
+  min-width: 180px;
+}
+
+// Avatar initials
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--primary-foreground, #fff);
+  background: var(--primary, #3b82f6);
+}
+
+// Action column
+.mat-column-actions {
+  width: 80px;
+  text-align: right;
+}
+
+// Status and role chips
+.rounded-full {
+  border-radius: 9999px;
+}
+
+// Loading spinner
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

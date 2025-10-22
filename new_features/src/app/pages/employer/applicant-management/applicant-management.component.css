@@ -1,0 +1,22 @@
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.analytics-tabs ::ng-deep .mat-mdc-tab-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.analytics-tabs ::ng-deep .mat-mdc-tab-label-active {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.analytics-tabs ::ng-deep .mat-mdc-tab-label {
+  height: 48px;
+}
+
+.analytics-tabs ::ng-deep .mdc-tab-indicator__content--underline {
+  border-color: var(--primary);
+}

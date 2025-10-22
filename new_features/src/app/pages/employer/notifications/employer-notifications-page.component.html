@@ -1,0 +1,32 @@
+<section class="space-y-6">
+  <header class="flex items-center justify-between">
+    <h1 class="text-2xl font-semibold">Notifications</h1>
+    <button class="px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50" (click)="markAllAsRead()" [disabled]="unreadCount === 0">Mark all as read</button>
+  </header>
+
+  <div *ngIf="errorMessage" class="p-4 bg-red-50 text-red-700 border border-red-200 rounded">{{ errorMessage }}</div>
+  <div *ngIf="isLoading" class="text-muted-foreground">Loading notifications…</div>
+
+  <div *ngIf="!isLoading && notifications?.content?.length === 0" class="p-6 border rounded bg-card text-muted-foreground">
+    No notifications yet.
+  </div>
+
+  <ul *ngIf="!isLoading && notifications?.content?.length" class="space-y-3">
+    <li *ngFor="let n of notifications!.content!" class="p-4 border rounded-lg bg-card flex items-start justify-between">
+      <div>
+        <div class="font-medium">{{ n.title || 'Notification' }}</div>
+        <div class="text-sm text-muted-foreground mt-1">{{ n.content }}</div>
+        <div class="text-xs text-muted-foreground mt-2">{{ n.createdAt | date:'medium' }}</div>
+      </div>
+      <div>
+        <button class="px-2 py-1 text-xs rounded-md border hover:bg-muted" (click)="markAsRead(n.id)" [disabled]="!!n.readAt">{{ n.readAt ? 'Read' : 'Mark as read' }}</button>
+      </div>
+    </li>
+  </ul>
+
+  <footer class="flex items-center justify-between" *ngIf="notifications">
+    <button class="px-3 py-2 rounded-md border hover:bg-muted disabled:opacity-50" (click)="prevPage()" [disabled]="page === 0">Previous</button>
+    <div class="text-sm text-muted-foreground">Page {{ (notifications.number || 0) + 1 }} of {{ notifications.totalPages || 1 }}</div>
+    <button class="px-3 py-2 rounded-md border hover:bg-muted disabled:opacity-50" (click)="nextPage()" [disabled]="notifications.last">Next</button>
+  </footer>
+</section>

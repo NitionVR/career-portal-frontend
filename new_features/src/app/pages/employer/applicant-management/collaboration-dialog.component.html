@@ -1,0 +1,54 @@
+<h2 mat-dialog-title class="text-xl font-semibold">Team Collaboration</h2>
+<mat-dialog-content class="mat-typography">
+  <p class="text-muted-foreground mb-4">Share feedback and notes about {{data.candidateName}}</p>
+  
+  <form [formGroup]="collaborationForm" class="space-y-4">
+    <div>
+      <label class="text-sm font-medium text-muted-foreground">Team Members</label>
+      <mat-form-field appearance="outline" class="w-full mt-2">
+        <mat-chip-list #chipList>
+          <mat-chip *ngFor="let member of selectedTeamMembers" [removable]="true" (removed)="removeMember(member)">
+            {{member}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input placeholder="Add team members..."
+                 [matChipInputFor]="chipList"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 (matChipInputTokenEnd)="addMember($event)">
+        </mat-chip-list>
+      </mat-form-field>
+    </div>
+    
+    <div>
+      <label class="text-sm font-medium text-muted-foreground">Note</label>
+      <mat-form-field appearance="outline" class="w-full mt-2">
+        <textarea matInput formControlName="note" rows="4" placeholder="Add your feedback or notes about this candidate..."></textarea>
+      </mat-form-field>
+    </div>
+    
+    <!-- Previous Notes Section -->
+    <div *ngIf="data.previousNotes && data.previousNotes.length > 0" class="mt-6">
+      <h3 class="text-lg font-medium mb-3">Previous Notes</h3>
+      
+      <div *ngFor="let note of data.previousNotes" class="glassmorphism p-4 rounded-lg mb-4">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <span class="font-medium">{{note.author}}</span>
+            <span class="text-xs text-muted-foreground ml-2">{{note.date | date:'medium'}}</span>
+          </div>
+          <mat-chip-list>
+            <mat-chip *ngFor="let tag of note.tags" [color]="tag.color" [selected]="true">
+              {{tag.label}}
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+        <p class="text-sm">{{note.content}}</p>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!collaborationForm.valid">Submit</button>
+</mat-dialog-actions>

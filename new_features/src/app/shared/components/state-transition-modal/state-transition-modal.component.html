@@ -1,0 +1,31 @@
+<div *ngIf="isVisible" class="modal">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-semibold text-foreground">Advance Application</h3>
+      <button (click)="closeModal.emit()" class="p-2 text-muted-foreground hover:text-foreground focus:outline-none">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="space-y-4">
+      <p class="text-sm text-muted-foreground">Select the next stage for this candidate's application.</p>
+      
+      <div>
+        <label for="next-state" class="block text-sm font-medium text-muted-foreground mb-1">Next Stage</label>
+        <select id="next-state" [(ngModel)]="selectedState" class="w-full px-4 py-3 bg-background border border-border rounded-md text-foreground focus:ring-0 focus:border-primary">
+          <option value="" disabled>Select a stage...</option>
+          <option *ngFor="let state of possibleNextStates" [value]="state">{{ state | titlecase }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex justify-end items-center gap-4 mt-8 pt-6 border-t border-border">
+      <button (click)="closeModal.emit()" type="button" class="px-8 py-3 text-base font-semibold text-muted-foreground bg-muted rounded-full hover:bg-muted/80 transition-colors">
+        Cancel
+      </button>
+      <button (click)="onConfirm()" [disabled]="!selectedState" class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors disabled:opacity-50">
+        Confirm & Advance
+      </button>
+    </div>
+  </div>
+</div>

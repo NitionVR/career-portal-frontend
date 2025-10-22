@@ -1,0 +1,430 @@
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.analytics-tabs ::ng-deep .mat-mdc-tab-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.analytics-tabs ::ng-deep .mat-mdc-tab-label-active {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.analytics-tabs ::ng-deep .mat-mdc-tab-label {
+  height: 48px;
+}
+
+.analytics-tabs ::ng-deep .mdc-tab-indicator__content--underline {
+  border-color: var(--primary);
+}
+
+/* Custom styles for Angular Material components to match app design */
+
+/* Mat Form Field */
+:host ::ng-deep .mat-mdc-form-field {
+  --mdc-filled-text-field-container-color: transparent;
+  --mdc-filled-text-field-focus-active-indicator-color: transparent;
+  --mdc-filled-text-field-hover-state-layer-color: transparent;
+  --mdc-filled-text-field-caret-color: hsl(var(--foreground));
+  --mdc-filled-text-field-input-text-color: hsl(var(--foreground));
+  --mdc-filled-text-field-label-text-color: hsl(var(--muted-foreground));
+  --mdc-filled-text-field-hover-label-text-color: hsl(var(--muted-foreground));
+  --mdc-filled-text-field-focus-label-text-color: hsl(var(--primary));
+  --mdc-filled-text-field-supporting-text-color: hsl(var(--muted-foreground));
+  --mdc-filled-text-field-active-indicator-color: transparent;
+  --mdc-filled-text-field-hover-active-indicator-color: transparent;
+  --mdc-filled-text-field-outline-color: hsl(var(--border));
+  --mdc-filled-text-field-hover-outline-color: hsl(var(--border));
+  --mdc-filled-text-field-focus-outline-color: hsl(var(--primary));
+  
+  .mat-mdc-text-field-wrapper {
+    padding: 0 !important;
+    height: 48px;
+    border-radius: 0.375rem;
+    border: 1px solid hsl(var(--border));
+    background-color: hsl(var(--background));
+    transition: all 0.2s ease-in-out;
+  }
+
+  .mat-mdc-form-field-flex {
+    height: 100%;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding: 0.75rem 1rem !important;
+    min-height: 48px;
+    height: 100%;
+    border-top: none;
+  }
+
+  .mat-mdc-form-field-label {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    left: 1rem !important;
+    width: auto !important;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .mat-mdc-form-field-has-label .mat-mdc-form-field-label.mdc-floating-label--float-above {
+    transform: translateY(-120%) scale(0.75) !important; /* Adjust as needed */
+    left: 1rem !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  .mat-mdc-select-trigger {
+    height: 100%;
+    padding: 0.75rem 1rem;
+  }
+
+  .mat-mdc-select-value-text {
+    color: hsl(var(--foreground));
+  }
+
+  .mat-mdc-select-arrow svg {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .mat-mdc-select-arrow-wrapper {
+    transform: none;
+  }
+
+  .mat-mdc-select-value {
+    color: hsl(var(--foreground));
+  }
+
+  .mat-mdc-select-placeholder {
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Focus state */
+  &.mat-focused .mat-mdc-text-field-wrapper {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+  }
+
+  /* Hover state */
+  &:not(.mat-focused) .mat-mdc-text-field-wrapper:hover {
+    border-color: hsl(var(--primary));
+  }
+}
+
+/* Mat Select Panel */
+:host ::ng-deep .mat-mdc-select-panel {
+  background-color: hsl(var(--popover));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  margin-top: 0.25rem;
+}
+
+:host ::ng-deep .mat-mdc-option {
+  color: hsl(var(--popover-foreground));
+}
+
+:host ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+  color: hsl(var(--primary));
+}
+
+:host ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item-persistent-ripple::before {
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+:host ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background-color: transparent;
+}
+
+:host ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+  color: hsl(var(--primary));
+}
+
+:host ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item-persistent-ripple::before {
+  background-color: hsl(var(--primary) / 0.1);
+}
+
+:host ::ng-deep .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background-color: transparent;
+}
+
+:host ::ng-deep .mat-mdc-option:hover:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+  color: hsl(var(--accent-foreground));
+}
+
+:host ::ng-deep .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+  background-color: hsl(var(--accent));
+}
+
+/* Mat Table */
+:host ::ng-deep .mat-mdc-table {
+  background-color: transparent;
+}
+
+:host ::ng-deep .mat-mdc-header-cell {
+  color: hsl(var(--muted-foreground));
+  font-weight: 600;
+  background-color: hsl(var(--muted));
+}
+
+:host ::ng-deep .mat-mdc-row {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+:host ::ng-deep .mat-mdc-row:hover {
+  background-color: hsl(var(--muted) / 0.5);
+}
+
+:host ::ng-deep .mat-mdc-cell {
+  color: hsl(var(--foreground));
+}
+
+/* Mat Paginator */
+:host ::ng-deep .mat-mdc-paginator {
+  background-color: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border-top: 1px solid hsl(var(--border));
+}
+
+:host ::ng-deep .mat-mdc-paginator-page-size-label,
+:host ::ng-deep .mat-mdc-paginator-range-label,
+:host ::ng-deep .mat-mdc-paginator-navigation-previous,
+:host ::ng-deep .mat-mdc-paginator-navigation-next,
+:host ::ng-deep .mat-mdc-paginator-navigation-first,
+:host ::ng-deep .mat-mdc-paginator-navigation-last {
+  color: hsl(var(--muted-foreground));
+}
+
+:host ::ng-deep .mat-mdc-paginator-page-size-select .mat-mdc-select-value {
+  color: hsl(var(--foreground));
+}
+
+:host ::ng-deep .mat-mdc-paginator-page-size-select .mat-mdc-select-arrow svg {
+  color: hsl(var(--muted-foreground));
+}
+
+/* Mat Checkbox */
+:host ::ng-deep .mat-mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background,
+:host ::ng-deep .mat-mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+
+:host ::ng-deep .mat-mdc-checkbox .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
+  border-color: hsl(var(--border));
+}
+
+:host ::ng-deep .mat-mdc-checkbox .mdc-checkbox__ripple {
+  color: hsl(var(--primary));
+}
+
+/* Mat Chips */
+:host ::ng-deep .mat-mdc-chip-set .mat-mdc-chip {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+}
+
+:host ::ng-deep .mat-mdc-chip-set .mat-mdc-chip .mat-mdc-chip-remove {
+  color: hsl(var(--muted-foreground));
+}
+
+/* Mat Menu */
+:host ::ng-deep .mat-mdc-menu-panel {
+  background-color: hsl(var(--popover));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+:host ::ng-deep .mat-mdc-menu-item {
+  color: hsl(var(--popover-foreground));
+}
+
+:host ::ng-deep .mat-mdc-menu-item:hover:not([disabled]) {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+:host ::ng-deep .mat-mdc-menu-item .mat-icon {
+  color: hsl(var(--muted-foreground));
+}
+
+:host ::ng-deep .mat-mdc-menu-item:hover:not([disabled]) .mat-icon {
+  color: hsl(var(--accent-foreground));
+}
+
+/* Mat Tabs */
+:host ::ng-deep .mat-mdc-tab-header {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+:host ::ng-deep .mat-mdc-tab-label {
+  color: hsl(var(--muted-foreground));
+}
+
+:host ::ng-deep .mat-mdc-tab-label-active {
+  color: hsl(var(--primary));
+  font-weight: 500;
+}
+
+:host ::ng-deep .mat-mdc-tab-header .mat-mdc-tab-label:not(.mat-mdc-tab-label-active):hover {
+  background-color: hsl(var(--muted));
+}
+
+:host ::ng-deep .mat-mdc-tab-group.mat-primary .mat-ink-bar,
+:host ::ng-deep .mat-mdc-tab-group.mat-primary .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
+  background-color: hsl(var(--primary));
+}
+
+/* Mat Icon */
+:host ::ng-deep .mat-icon {
+  /* Ensure Material Icons use the correct font */
+  font-family: 'Material Symbols Outlined', sans-serif !important;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24 !important;
+}
+
+/* Custom styles for the search input */
+.search-input {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  color: hsl(var(--foreground));
+  padding: 0.75rem 1rem;
+  height: 48px;
+  transition: all 0.2s ease-in-out;
+}
+
+.search-input:focus {
+  border-color: hsl(var(--primary));
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+.search-input::placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+/* Custom styles for the job filter select */
+.job-filter-select {
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.375rem;
+  color: hsl(var(--foreground));
+  padding: 0.75rem 1rem;
+  height: 48px;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-chevron-down'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+}
+
+.job-filter-select:focus {
+  border-color: hsl(var(--primary));
+  outline: none;
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+}
+
+.job-filter-select option {
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+}
+
+/* Custom styles for the status chips in the table */
+.status-chip {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px; /* full rounded */
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.status-chip.NEW {
+  background-color: hsl(var(--blue-100));
+  color: hsl(var(--blue-800));
+}
+
+.status-chip.REVIEWING {
+  background-color: hsl(var(--purple-100));
+  color: hsl(var(--purple-800));
+}
+
+.status-chip.INTERVIEW {
+  background-color: hsl(var(--amber-100));
+  color: hsl(var(--amber-800));
+}
+
+.status-chip.OFFER {
+  background-color: hsl(var(--green-100));
+  color: hsl(var(--green-800));
+}
+
+.status-chip.REJECTED {
+  background-color: hsl(var(--red-100));
+  color: hsl(var(--red-800));
+}
+
+.status-chip.HIRED {
+  background-color: hsl(var(--emerald-100));
+  color: hsl(var(--emerald-800));
+}
+
+/* Custom styles for AI Match Score colors */
+.text-green-600 {
+  color: hsl(var(--success));
+}
+
+.text-amber-600 {
+  color: hsl(var(--accent));
+}
+
+.text-red-600 {
+  color: hsl(var(--destructive));
+}
+
+/* Mat Slider */
+:host ::ng-deep .mat-mdc-slider .mdc-slider__track--active_fill {
+  border-color: hsl(var(--primary));
+}
+
+:host ::ng-deep .mat-mdc-slider .mdc-slider__thumb-knob {
+  background-color: hsl(var(--primary));
+}
+
+:host ::ng-deep .mat-mdc-slider .mdc-slider__thumb-ripple::before {
+  background-color: hsl(var(--primary));
+}
+
+/* Mat Selection List */
+:host ::ng-deep .mat-mdc-selection-list {
+  background-color: transparent;
+}
+
+:host ::ng-deep .mat-mdc-list-option {
+  color: hsl(var(--foreground));
+}
+
+:host ::ng-deep .mat-mdc-list-option:hover:not(.mdc-list-item--disabled),
+:host ::ng-deep .mat-mdc-list-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background-color: hsl(var(--muted));
+}
+
+:host ::ng-deep .mat-mdc-list-option .mdc-list-item__primary-text {
+  color: inherit;
+}
+
+:host ::ng-deep .mat-mdc-list-option.mdc-list-item--selected .mdc-list-item__primary-text {
+  color: hsl(var(--primary));
+}

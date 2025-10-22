@@ -1,0 +1,257 @@
+<div class="glassmorphism rounded-xl p-6 mb-8">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+    <h2 class="text-xl font-bold text-foreground">Applicant Analytics</h2>
+    <div class="flex items-center gap-2">
+      <button class="px-3 py-1.5 text-sm font-medium rounded-lg border border-border bg-card hover:bg-muted transition-colors">
+        Last 30 Days
+      </button>
+      <button class="px-3 py-1.5 text-sm font-medium rounded-lg border border-border bg-card hover:bg-muted transition-colors">
+        Export
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Applications Card -->
+    <div class="bg-card border border-border rounded-lg p-4 flex flex-col">
+      <div class="flex justify-between items-start mb-2">
+        <span class="text-sm font-medium text-muted-foreground">Total Applications</span>
+        <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+          <mat-icon class="text-primary">people</mat-icon>
+        </div>
+      </div>
+      <div class="flex items-end justify-between">
+        <div>
+          <p class="text-2xl font-bold">{{ applicationStats.total }}</p>
+          <p class="text-xs text-muted-foreground">+24% from last month</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Applications Card -->
+    <div class="bg-card border border-border rounded-lg p-4 flex flex-col">
+      <div class="flex justify-between items-start mb-2">
+        <span class="text-sm font-medium text-muted-foreground">New Applications</span>
+        <div class="h-8 w-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+          <mat-icon class="text-blue-500">new_releases</mat-icon>
+        </div>
+      </div>
+      <div class="flex items-end justify-between">
+        <div>
+          <p class="text-2xl font-bold">{{ applicationStats.new }}</p>
+          <p class="text-xs text-success">+12% from last month</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interview Stage Card -->
+    <div class="bg-card border border-border rounded-lg p-4 flex flex-col">
+      <div class="flex justify-between items-start mb-2">
+        <span class="text-sm font-medium text-muted-foreground">In Interview Stage</span>
+        <div class="h-8 w-8 rounded-full bg-amber-500/10 flex items-center justify-center">
+          <mat-icon class="text-amber-500">event</mat-icon>
+        </div>
+      </div>
+      <div class="flex items-end justify-between">
+        <div>
+          <p class="text-2xl font-bold">{{ applicationStats.interview }}</p>
+          <p class="text-xs text-accent">+5% from last month</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Time to Fill Card -->
+    <div class="bg-card border border-border rounded-lg p-4 flex flex-col">
+      <div class="flex justify-between items-start mb-2">
+        <span class="text-sm font-medium text-muted-foreground">Avg. Time to Fill</span>
+        <div class="h-8 w-8 rounded-full bg-green-500/10 flex items-center justify-center">
+          <mat-icon class="text-green-500">schedule</mat-icon>
+        </div>
+      </div>
+      <div class="flex items-end justify-between">
+        <div>
+          <p class="text-2xl font-bold">{{ timeToFillData.average }} days</p>
+          <p class="text-xs text-success">-3 days from last month</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <mat-tab-group animationDuration="0ms" class="analytics-tabs">
+    <mat-tab label="Pipeline Metrics">
+      <div class="py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Application Status Distribution -->
+          <div class="bg-card border border-border rounded-lg p-6">
+            <h3 class="text-lg font-medium mb-4">Application Status</h3>
+            <div class="flex flex-col space-y-4">
+              <div class="flex items-center">
+                <div class="w-24 text-sm">New</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-500 rounded-full" [style.width.%]="(applicationStats.new / applicationStats.total) * 100"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ ((applicationStats.new / applicationStats.total) * 100).toFixed(1) }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Reviewing</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-purple-500 rounded-full" [style.width.%]="(applicationStats.reviewing / applicationStats.total) * 100"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ ((applicationStats.reviewing / applicationStats.total) * 100).toFixed(1) }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Interview</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-amber-500 rounded-full" [style.width.%]="(applicationStats.interview / applicationStats.total) * 100"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ ((applicationStats.interview / applicationStats.total) * 100).toFixed(1) }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Offer</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 rounded-full" [style.width.%]="(applicationStats.offer / applicationStats.total) * 100"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ ((applicationStats.offer / applicationStats.total) * 100).toFixed(1) }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Hired</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-emerald-500 rounded-full" [style.width.%]="(applicationStats.hired / applicationStats.total) * 100"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ ((applicationStats.hired / applicationStats.total) * 100).toFixed(1) }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Rejected</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-red-500 rounded-full" [style.width.%]="(applicationStats.rejected / applicationStats.total) * 100"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ ((applicationStats.rejected / applicationStats.total) * 100).toFixed(1) }}%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Application Sources -->
+          <div class="bg-card border border-border rounded-lg p-6">
+            <h3 class="text-lg font-medium mb-4">Application Sources</h3>
+            <div class="flex flex-col space-y-4">
+              <div class="flex items-center">
+                <div class="w-24 text-sm">LinkedIn</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-500 rounded-full" [style.width.%]="sourcesData.linkedin"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ sourcesData.linkedin }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Indeed</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-indigo-500 rounded-full" [style.width.%]="sourcesData.indeed"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ sourcesData.indeed }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Website</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-purple-500 rounded-full" [style.width.%]="sourcesData.companyWebsite"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ sourcesData.companyWebsite }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Referral</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 rounded-full" [style.width.%]="sourcesData.referral"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ sourcesData.referral }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Other</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-gray-500 rounded-full" [style.width.%]="sourcesData.other"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ sourcesData.other }}%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    
+    <mat-tab label="Demographics">
+      <div class="py-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Gender Distribution -->
+          <div class="bg-card border border-border rounded-lg p-6">
+            <h3 class="text-lg font-medium mb-4">Gender Distribution</h3>
+            <div class="flex flex-col space-y-4">
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Male</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-500 rounded-full" [style.width.%]="genderDistribution.male"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ genderDistribution.male }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Female</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-pink-500 rounded-full" [style.width.%]="genderDistribution.female"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ genderDistribution.female }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Non-Binary</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-purple-500 rounded-full" [style.width.%]="genderDistribution.nonBinary"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ genderDistribution.nonBinary }}%</div>
+              </div>
+              <div class="flex items-center">
+                <div class="w-24 text-sm">Undisclosed</div>
+                <div class="flex-grow">
+                  <div class="h-2 bg-muted rounded-full overflow-hidden">
+                    <div class="h-full bg-gray-500 rounded-full" [style.width.%]="genderDistribution.undisclosed"></div>
+                  </div>
+                </div>
+                <div class="w-16 text-right text-sm">{{ genderDistribution.undisclosed }}%</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Location Map (placeholder) -->
+          <div class="bg-card border border-border rounded-lg p-6">
+            <h3 class="text-lg font-medium mb-4">Applicant Locations</h3>
+            <div class="h-48 bg-muted rounded-lg flex items-center justify-center">
+              <p class="text-muted-foreground">Geographic distribution map</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

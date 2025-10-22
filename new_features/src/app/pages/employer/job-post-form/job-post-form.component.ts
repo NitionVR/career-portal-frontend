@@ -1,0 +1,225 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
+import { JobPostControllerService } from '../../../api/services';
+import { JobPostRequest } from '../../../api/models';
+import { SnackbarService } from '../../../shared/components/snackbar/snackbar.service';
+import { Router } from '@angular/router';
+import { CustomSelectComponent } from '../../../shared/components/custom-select/custom-select.component';
+import { EXPERIENCE_LEVEL_OPTIONS, CONTRACT_TYPE_OPTIONS, WORK_TYPE_OPTIONS } from '../../../shared/data/form-options';
+
+import { OrganizationControllerService } from '../../../api/services';
+import { OrganizationDto } from '../../../api/models';
+
+@Component({
+  selector: 'app-job-post-form',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, CustomSelectComponent],
+  templateUrl: './job-post-form.component.html',
+  styleUrls: ['./job-post-form.component.css']
+})
+export class JobPostFormComponent implements OnInit {
+  jobPostForm!: FormGroup;
+  isSubmitted = false;
+  organization: OrganizationDto | null = null;
+
+  experienceLevelOptions = EXPERIENCE_LEVEL_OPTIONS;
+  contractTypeOptions = CONTRACT_TYPE_OPTIONS;
+  workTypeOptions = WORK_TYPE_OPTIONS;
+
+  private fb = inject(FormBuilder);
+  private jobPostService = inject(JobPostControllerService);
+  private orgService = inject(OrganizationControllerService);
+  private snackbarService = inject(SnackbarService);
+  private router = inject(Router);
+
+  constructor() { }
+
+  ngOnInit(): void {
+    this.loadOrganization();
+    this.jobPostForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(5)]],
+      description: ['', [Validators.required, Validators.minLength(50), Validators.maxLength(5000)]],
+      location: this.fb.group({
+        city: ['', Validators.required],
+        countryCode: ['', Validators.required]
+      }),
+      salary: ['', Validators.required],
+      experienceLevel: ['', Validators.required],
+      contractType: ['', Validators.required],
+      workType: ['', Validators.required],
+      skills: this.fb.array([], [Validators.required, Validators.minLength(1)]),
+      responsibilities: this.fb.array([], [Validators.required, Validators.minLength(1)]),
+      qualifications: this.fb.array([], [Validators.required, Validators.minLength(1)]),
+    });
+  }
+
+    loadOrganization(): void {
+
+      this.orgService.getCurrentOrganization().subscribe(org => {
+
+        this.organization = org;
+
+      });
+
+    }
+
+    // Getters for FormArrays
+
+    get skills() {
+
+      return this.jobPostForm.get('skills') as FormArray;
+
+    }
+
+  
+
+    get responsibilities() {
+
+      return this.jobPostForm.get('responsibilities') as FormArray;
+
+    }
+
+  
+
+    get qualifications() {
+
+      return this.jobPostForm.get('qualifications') as FormArray;
+
+    }
+
+  
+
+    // Methods to add/remove skills
+
+    addSkill() {
+
+      this.skills.push(this.fb.group({ name: ['', Validators.required] }));
+
+    }
+
+  
+
+    removeSkill(index: number) {
+
+      this.skills.removeAt(index);
+
+    }
+
+  
+
+    // Methods to add/remove responsibilities
+
+    addResponsibility() {
+
+      this.responsibilities.push(this.fb.control('', Validators.required));
+
+    }
+
+  
+
+    removeResponsibility(index: number) {
+
+      this.responsibilities.removeAt(index);
+
+    }
+
+  
+
+    // Methods to add/remove qualifications
+
+    addQualification() {
+
+      this.qualifications.push(this.fb.control('', Validators.required));
+
+    }
+
+  
+
+    removeQualification(index: number) {
+
+      this.qualifications.removeAt(index);
+
+    }
+
+  
+
+    // Validation Helpers
+
+    hasError(fieldName: string): boolean {
+
+      const field = this.jobPostForm.get(fieldName);
+
+      return !!(field && field.invalid && (field.dirty || this.isSubmitted));
+
+    }
+
+  
+
+    getErrorMessage(fieldName: string): string {
+
+      const field = this.jobPostForm.get(fieldName);
+
+      if (!field || !field.errors) return '';
+
+  
+
+      if (field.hasError('required')) return 'This field is required';
+
+      if (field.hasError('minlength')) return `Minimum ${field.errors['minlength'].requiredLength} characters required`;
+
+      if (field.hasError('maxlength')) return `Maximum ${field.errors['maxlength'].requiredLength} characters exceeded`;
+
+      return 'Invalid input';
+
+    }
+
+  
+
+    onSubmit(status: 'DRAFT' | 'PUBLISHED'): void {
+
+      this.isSubmitted = true;
+
+      if (this.jobPostForm.invalid && status === 'PUBLISHED') {
+
+        this.snackbarService.error('Please fill in all required fields to publish.');
+
+        this.jobPostForm.markAllAsTouched();
+
+        return;
+
+      }
+
+  
+
+      if (!this.organization?.id) {
+
+        this.snackbarService.error('Could not find your company information. Please complete your company profile first.');
+
+        return;
+
+      }
+
+      const jobPostRequest: JobPostRequest = {
+        ...this.jobPostForm.value,
+        jobType: this.jobPostForm.value.contractType,
+        remote: this.jobPostForm.value.workType,
+        company: this.organization.id, // Corrected field name
+        status: status
+      };
+
+      console.log('Job Post Request:', jobPostRequest);
+      this.jobPostService.createJobPost({ body: jobPostRequest }).subscribe({
+
+  
+      next: (newJob) => {
+        this.snackbarService.success(`Job post successfully ${status === 'DRAFT' ? 'saved as draft' : 'published'}!`);
+        this.router.navigate(['/employer/dashboard']);
+      },
+      error: (err) => {
+        this.snackbarService.error(err.error?.message || 'Failed to create job post.');
+      }
+    });
+  }
+
+}
