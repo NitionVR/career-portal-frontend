@@ -80,9 +80,10 @@
             <p class="text-sm font-medium text-muted-foreground">Applied On</p>
             <p class="text-sm text-foreground">{{ application.applicationDate | date:'mediumDate' }}</p>
           </div>
-          <button (click)="withdrawApplication()" [disabled]="isWithdrawing || application.status === 'WITHDRAWN'" class="w-full mt-6 inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-destructive rounded-full hover:bg-destructive/90 transition-colors disabled:opacity-50">
-            <span *ngIf="!isWithdrawing && application.status !== 'WITHDRAWN'">Withdraw Application</span>
+          <button (click)="withdrawApplication()" [disabled]="isWithdrawing || application.status === 'WITHDRAWN' || application.status === 'REJECTED'" class="w-full mt-6 inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-destructive rounded-full hover:bg-destructive/90 transition-colors disabled:opacity-50">
+            <span *ngIf="!isWithdrawing && application.status !== 'WITHDRAWN' && application.status !== 'REJECTED'">Withdraw Application</span>
             <span *ngIf="application.status === 'WITHDRAWN'">Application Withdrawn</span>
+            <span *ngIf="application.status === 'REJECTED'">Application Rejected</span>
             <span *ngIf="isWithdrawing" class="flex items-center">
               <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
