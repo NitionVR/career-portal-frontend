@@ -38,6 +38,10 @@ export const routes: Routes = [
     component: ProfileCreate,
   },
   {
+    path: 'accept-invitation',
+    loadComponent: () => import('./pages/accept-invitation/accept-invitation.component').then(m => m.AcceptInvitationComponent)
+  },
+  {
     path: 'job-posts/:id',
     component: JobPostDetailsPageComponent // Publicly viewable job details
   },

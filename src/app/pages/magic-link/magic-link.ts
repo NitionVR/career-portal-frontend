@@ -43,6 +43,8 @@ export class MagicLinkPage implements OnInit {
 
     if (action === 'register') {
       this.handleRegistrationLink(token);
+    } else if (action === 'accept_invitation') {
+      this.handleInvitationLink(token);
     } else {
       this.handleLoginLink(token);
     }
@@ -62,6 +64,11 @@ export class MagicLinkPage implements OnInit {
         console.error('Registration link validation error:', err);
       },
     });
+  }
+
+  private handleInvitationLink(token: string): void {
+    // The accept-invitation page will handle the token validation.
+    this.router.navigate(['/accept-invitation'], { queryParams: { token } });
   }
 
   private handleLoginLink(token: string): void {
