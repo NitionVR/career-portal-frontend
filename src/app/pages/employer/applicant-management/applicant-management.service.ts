@@ -1,24 +1,34 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
 import { map, tap } from 'rxjs/operators';
-import { JobApplicationControllerService } from '../../../api/services';
-import { ApplicationDetailsDto } from '../../../api/models/application-details-dto';
+import { ApplicantsService } from '../../../api/services/applicants.service';
+
+
+import { ApplicantSummaryDto } from '../../../api/models/applicant-summary-dto';
+import { Pageable } from '../../../api/models/pageable';
+import { GetApplicants$Params, getApplicants } from '../../../api/fn/applicants/get-applicants';
+import { PageApplicantSummaryDto } from '../../../api/models/page-applicant-summary-dto';
 
 export interface ApplicantFilter {
+  page?: number;
+  size?: number;
+  sort?: string;
+  search?: string;
+  jobId?: string | null; // Allow null
   status?: string[];
   skills?: string[];
-  experience?: number;
+  experience?: number; // This will map to experienceMin
   education?: string[];
   location?: string;
-  aiMatchScore?: number;
+  aiMatchScore?: number; // This will map to aiMatchScoreMin
 }
 
 export interface Applicant {
   id: string;
   name: string;
   jobTitle: string;
-  company: string;
   applicationDate: Date;
   status: string;
   skills: string[];
@@ -51,7 +61,7 @@ export interface AnalyticsData {
 })
 export class ApplicantManagementService {
   private http = inject(HttpClient);
-  private applicationService = inject(JobApplicationControllerService);
+  private applicantsService = inject(ApplicantsService);
 
   private _applicants = new BehaviorSubject<Applicant[]>([]);
   private _filters = new BehaviorSubject<ApplicantFilter>({});
@@ -61,75 +71,7 @@ export class ApplicantManagementService {
   filters$ = this._filters.asObservable();
   analytics$ = this._analytics.asObservable();
 
-  // Mock data for development
-  private mockApplicationDetails: ApplicationDetailsDto[] = [
-    {
-      id: '1',
-      applicationDate: '2023-05-15T10:00:00Z',
-      status: 'NEW',
-      candidateProfile: {
-        id: 'candidate1',
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        profileImageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-        profile: {
-          work: [{name: 'Tech Co', position: 'Frontend Developer', startDate: '2020-01-01'}],
-          skills: [{name: 'JavaScript'}, {name: 'React'}, {name: 'TypeScript'}],
-          basics: {location: {city: 'New York'}}
-        }
-      },
-      job: {
-        id: 'job1',
-        title: 'Frontend Developer',
-        company: 'Tech Co'
-      }
-    },
-    {
-      id: '2',
-      applicationDate: '2023-05-10T11:30:00Z',
-      status: 'INTERVIEW',
-      candidateProfile: {
-        id: 'candidate2',
-        firstName: 'Jane',
-        lastName: 'Smith',
-        email: 'jane.smith@example.com',
-        profileImageUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
-        profile: {
-          work: [{name: 'Design Studio', position: 'UX Designer', startDate: '2018-03-01'}],
-          skills: [{name: 'Figma'}, {name: 'UI/UX'}, {name: 'Prototyping'}],
-          basics: {location: {city: 'San Francisco'}}
-        }
-      },
-      job: {
-        id: 'job2',
-        title: 'UX Designer',
-        company: 'Design Studio'
-      }
-    },
-    {
-      id: '3',
-      applicationDate: '2023-05-05T14:00:00Z',
-      status: 'OFFER',
-      candidateProfile: {
-        id: 'candidate3',
-        firstName: 'Mike',
-        lastName: 'Johnson',
-        email: 'mike.johnson@example.com',
-        profileImageUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
-        profile: {
-          work: [{name: 'Software Inc', position: 'Backend Developer', startDate: '2016-06-01'}],
-          skills: [{name: 'Java'}, {name: 'Spring'}, {name: 'Microservices'}],
-          basics: {location: {city: 'Austin'}}
-        }
-      },
-      job: {
-        id: 'job3',
-        title: 'Backend Developer',
-        company: 'Software Inc'
-      }
-    }
-  ];
+
 
   private mockAnalytics: AnalyticsData = {
     totalApplications: 156,
@@ -158,67 +100,51 @@ export class ApplicantManagementService {
   };
 
   constructor() {
-    // Initialize with mock data for development
-    this._applicants.next(this.mapApplicationDetailsToApplicants(this.mockApplicationDetails));
+
     this._analytics.next(this.mockAnalytics);
   }
 
-  private mapApplicationDetailsToApplicants(appDetails: ApplicationDetailsDto[]): Applicant[] {
-    return appDetails.map(app => ({
+  private mapApplicantSummaryDtoToApplicants(appSummaries: ApplicantSummaryDto[]): Applicant[] {
+    return appSummaries.map(app => ({
       id: app.id!,
-      name: `${app.candidateProfile?.firstName} ${app.candidateProfile?.lastName}`,
-      jobTitle: app.job?.title!,
-      company: app.job?.company!,
+      name: app.candidateName!,
+      jobTitle: app.jobTitle!,
       applicationDate: new Date(app.applicationDate!),
       status: app.status!,
-      skills: app.candidateProfile?.profile?.skills?.map((s: any) => s.name) || [],
-      experience: app.candidateProfile?.profile?.work?.length || 0, // Simplified experience
-      location: app.candidateProfile?.profile?.basics?.location?.city || 'N/A',
-      aiMatchScore: Math.floor(Math.random() * 41) + 60 // Random score for now
+      skills: app.skills || [],
+      experience: app.experienceYears || 0,
+      location: app.location || 'N/A',
+      aiMatchScore: app.aiMatchScore || 0 // Use 0 as mock if null
     }));
   }
 
   getApplicants(filters?: ApplicantFilter): Observable<Applicant[]> {
-    // In a real implementation, this would call the API with filters
-    // return this.applicationService.getAllApplications$Response(filters)
-    //   .pipe(
-    //     map(response => response.body as Applicant[]),
-    //     tap(applicants => this._applicants.next(applicants))
-    //   );
+    const getApplicantsParams: GetApplicants$Params = {
+      pageable: {
+        page: filters?.page || 0, // Default to 0
+        size: filters?.size || 10, // Default to 10
+        sort: [filters?.sort || 'applicationDate,desc'] // Default sort
+      },
+      search: filters?.search,
+      jobId: filters?.jobId ?? undefined, // Convert null to undefined
+      statuses: filters?.status, // Note: backend expects 'statuses'
+      skillSearch: Array.isArray(filters?.skills) ? filters?.skills.join(',') : filters?.skills, // Ensure skills is an array before joining
+      experienceMin: filters?.experience,
+      education: filters?.education,
+      location: filters?.location,
+      aiMatchScoreMin: filters?.aiMatchScore
+    };
 
-    // For now, use mock data with filtering
-    let filtered = this.mockApplicationDetails;
-
-    if (filters) {
-      if (filters.status && filters.status.length > 0) {
-        filtered = filtered.filter(a => filters.status?.includes(a.status!));
-      }
-
-      if (filters.skills && filters.skills.length > 0) {
-        filtered = filtered.filter(a =>
-          a.candidateProfile?.profile?.skills?.some((skill: any) => filters.skills?.includes(skill.name))
-        );
-      }
-
-      if (filters.experience) {
-        filtered = filtered.filter(a => (a.candidateProfile?.profile?.work?.length || 0) >= (filters.experience || 0));
-      }
-
-      if (filters.location) {
-        filtered = filtered.filter(a =>
-          a.candidateProfile?.profile?.basics?.location?.city?.toLowerCase().includes(filters.location?.toLowerCase() || '')
-        );
-      }
-
-      if (filters.aiMatchScore) {
-        // This filter would need to be applied after mapping to Applicant
-        // For now, we'll skip filtering by aiMatchScore on the raw ApplicationDetailsDto
-      }
-    }
-
-    const mappedApplicants = this.mapApplicationDetailsToApplicants(filtered);
-    this._applicants.next(mappedApplicants);
-    return of(mappedApplicants);
+    console.log('Making API call to:', getApplicants.PATH, getApplicantsParams); // Added for debugging
+    return this.applicantsService.getApplicants$Response(getApplicantsParams).pipe(
+      map(response => {
+        const mapped = this.mapApplicantSummaryDtoToApplicants(response.body?.content || []);
+        this._applicants.next(mapped);
+        // Also update total count for paginator, etc. (response.body?.totalElements, response.body?.totalPages)
+        return mapped;
+      }),
+      tap(applicants => this._applicants.next(applicants))
+    );
   }
 
   updateFilters(filters: ApplicantFilter): void {
@@ -239,14 +165,6 @@ export class ApplicantManagementService {
     // return this.http.post<boolean>('/api/applicants/status', { applicantIds, newStatus });
 
     // For now, simulate success
-    this.mockApplicationDetails = this.mockApplicationDetails.map(app => {
-      if (applicantIds.includes(app.id!)) {
-        return {...app, status: newStatus};
-      }
-      return app;
-    });
-
-    this._applicants.next(this.mapApplicationDetailsToApplicants(this.mockApplicationDetails));
     return of(true);
   }
 

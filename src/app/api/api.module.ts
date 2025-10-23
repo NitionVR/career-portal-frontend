@@ -13,6 +13,7 @@ import { RegistrationControllerService } from './services/registration-controlle
 import { JobApplicationControllerService } from './services/job-application-controller.service';
 import { InvitationControllerService } from './services/invitation-controller.service';
 import { AuthenticationControllerService } from './services/authentication-controller.service';
+import { ApplicantsService } from './services/applicants.service';
 
 /**
  * Module that provides all services and configuration.
@@ -31,6 +32,7 @@ import { AuthenticationControllerService } from './services/authentication-contr
     JobApplicationControllerService,
     InvitationControllerService,
     AuthenticationControllerService,
+    ApplicantsService,
     ApiConfiguration
   ],
 })

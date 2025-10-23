@@ -170,7 +170,6 @@ export class ApplicantManagementComponent implements OnInit {
     return (
       app.name.toLowerCase().includes(searchLower) ||
       app.jobTitle.toLowerCase().includes(searchLower) ||
-      app.company.toLowerCase().includes(searchLower) ||
       false
     );
   }

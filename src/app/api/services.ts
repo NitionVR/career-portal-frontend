@@ -7,3 +7,4 @@ export { RegistrationControllerService } from './services/registration-controlle
 export { JobApplicationControllerService } from './services/job-application-controller.service';
 export { InvitationControllerService } from './services/invitation-controller.service';
 export { AuthenticationControllerService } from './services/authentication-controller.service';
+export { ApplicantsService } from './services/applicants.service';

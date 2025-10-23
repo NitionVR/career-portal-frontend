@@ -80,8 +80,16 @@
             <p class="text-sm font-medium text-muted-foreground">Applied On</p>
             <p class="text-sm text-foreground">{{ application.applicationDate | date:'mediumDate' }}</p>
           </div>
-          <button class="w-full mt-6 inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary/90 transition-colors">
-            Withdraw Application
+          <button (click)="withdrawApplication()" [disabled]="isWithdrawing || application.status === 'WITHDRAWN'" class="w-full mt-6 inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-destructive rounded-full hover:bg-destructive/90 transition-colors disabled:opacity-50">
+            <span *ngIf="!isWithdrawing && application.status !== 'WITHDRAWN'">Withdraw Application</span>
+            <span *ngIf="application.status === 'WITHDRAWN'">Application Withdrawn</span>
+            <span *ngIf="isWithdrawing" class="flex items-center">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Withdrawing...
+            </span>
           </button>
         </div>
         <div class="glassmorphism rounded-xl p-6">
@@ -101,4 +109,13 @@
       </div>
     </div>
   </div>
+  <app-confirmation-dialog 
+    [isVisible]="showWithdrawDialog" 
+    title="Withdraw Application?" 
+    message="Are you sure you want to withdraw your application for this position? This action cannot be undone."
+    confirmButtonText="Yes, Withdraw"
+    confirmButtonClass="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+    (confirm)="onWithdrawConfirm(true)"
+    (cancel)="onWithdrawConfirm(false)">
+  </app-confirmation-dialog>
 </section>

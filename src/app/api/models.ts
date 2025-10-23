@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { AcceptInvitationRequest } from './models/accept-invitation-request';
+export type { ApplicantSummaryDto } from './models/applicant-summary-dto';
 export type { ApplicationDetailsDto } from './models/application-details-dto';
 export type { ApplicationSummaryDto } from './models/application-summary-dto';
 export type { ApplicationTransitionRequest } from './models/application-transition-request';
@@ -11,6 +12,7 @@ export type { CandidateRegistrationRequest } from './models/candidate-registrati
 export type { CommunicationHistoryDto } from './models/communication-history-dto';
 export type { CompleteProfileRequest } from './models/complete-profile-request';
 export type { EmployerApplicationSummaryDto } from './models/employer-application-summary-dto';
+export type { ErrorResponse } from './models/error-response';
 export type { HiringManagerRegistrationDto } from './models/hiring-manager-registration-dto';
 export type { HiringManagerRegistrationRequest } from './models/hiring-manager-registration-request';
 export type { JobPostDto } from './models/job-post-dto';
@@ -25,6 +27,7 @@ export type { NotificationResponse } from './models/notification-response';
 export type { OrganizationDto } from './models/organization-dto';
 export type { Pageable } from './models/pageable';
 export type { PageableObject } from './models/pageable-object';
+export type { PageApplicantSummaryDto } from './models/page-applicant-summary-dto';
 export type { PageApplicationSummaryDto } from './models/page-application-summary-dto';
 export type { PageEmployerApplicationSummaryDto } from './models/page-employer-application-summary-dto';
 export type { PageJobPostResponse } from './models/page-job-post-response';
