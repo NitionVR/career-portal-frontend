@@ -241,7 +241,7 @@ export class ApplicantManagementComponent implements OnInit {
         this.addBulkTags(applicationIds, value);
         break;
       case 'export':
-        this.exportApplications(applicationIds);
+        this.exportApplications(value);
         break;
       default:
         this.snackbarService.error('Unknown action');
@@ -249,15 +249,26 @@ export class ApplicantManagementComponent implements OnInit {
   }
 
   updateBulkStatus(applicationIds: string[], status: string): void {
-    // In a real implementation, this would be a single API call
     this.isLoading = true;
-
-    // Simulate API call
-    setTimeout(() => {
-      this.snackbarService.success(`Updated ${applicationIds.length} applications to ${status}`);
-      this.selectedApplications.clear();
-      this.loadApplications();
-    }, 1000);
+    this.applicantService.updateApplicantStatus(applicationIds, status).subscribe({
+      next: (response: any) => {
+        let successMessage = `Successfully updated ${response.successCount} applications.`;
+        if (response.failureCount > 0) {
+          this.snackbarService.error(`Failed to update ${response.failureCount} applications. Please check the logs.`);
+          // Optionally, you could display more detailed error info from response.errors
+        }
+        this.snackbarService.success(successMessage);
+        this.selectedApplications.clear();
+        this.loadApplications(); // Refresh the list
+      },
+      error: (err) => {
+        this.snackbarService.error('An unexpected error occurred during the bulk update.');
+        this.isLoading = false;
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   addBulkTags(applicationIds: string[], tags: string[]): void {
@@ -271,13 +282,14 @@ export class ApplicantManagementComponent implements OnInit {
     }, 1000);
   }
 
-  exportApplications(applicationIds: string[]): void {
-    // Simulate export
-    this.snackbarService.info(`Exporting ${applicationIds.length} applications...`);
-
-    setTimeout(() => {
-      this.snackbarService.success('Export complete');
-    }, 1500);
+  exportApplications(format: string): void {
+    const currentFilters = {
+      ...this.filterForm.value,
+      jobId: this.selectedJobId,
+      search: this.searchTerm
+    };
+    this.applicantService.exportApplicants(currentFilters, format);
+    this.snackbarService.info(`Exporting applicants to ${format.toUpperCase()}...`);
   }
 
   toggleSelectAll(checked: boolean): void {

@@ -43,7 +43,7 @@ export class CollaborationDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<CollaborationDialogComponent>,
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { candidateName: string, previousNotes: any[] }
+    @Inject(MAT_DIALOG_DATA) public data: { application: any, candidateName: string, previousNotes: any[] }
   ) {
     this.collaborationForm = this.fb.group({
       note: ['', Validators.required]

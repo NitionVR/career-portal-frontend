@@ -1,10 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { HttpParams } from '@angular/common/http';
 import { map, tap } from 'rxjs/operators';
 import { ApplicantsService } from '../../../api/services/applicants.service';
-
+import { BulkStatusUpdateRequest } from '../../../api/models/bulk-status-update-request';
 
 import { ApplicantSummaryDto } from '../../../api/models/applicant-summary-dto';
 import { Pageable } from '../../../api/models/pageable';
@@ -160,15 +159,15 @@ export class ApplicantManagementService {
     return of(this.mockAnalytics);
   }
 
-  updateApplicantStatus(applicantIds: string[], newStatus: string): Observable<boolean> {
-    // In a real implementation, this would call the API
-    // return this.http.post<boolean>('/api/applicants/status', { applicantIds, newStatus });
-
-    // For now, simulate success
-    return of(true);
+  updateApplicantStatus(applicationIds: string[], newStatus: string): Observable<any> {
+    const request: BulkStatusUpdateRequest = {
+      applicationIds,
+      targetStatus: newStatus as any // Cast to any to satisfy the enum
+    };
+    return this.applicantsService.bulkUpdateStatus({ body: request });
   }
 
-  addTagsToApplicants(applicantIds: string[], tags: string[]): Observable<boolean> {
+  addTagsToApplicants(applicationIds: string[], tags: string[]): Observable<boolean> {
     // In a real implementation, this would call the API
     // return this.http.post<boolean>('/api/applicants/tags', { applicantIds, tags });
 
@@ -176,12 +175,22 @@ export class ApplicantManagementService {
     return of(true);
   }
 
-  exportApplicants(applicantIds: string[], format: string): Observable<string> {
-    // In a real implementation, this would call the API
-    // return this.http.post<string>('/api/applicants/export', { applicantIds, format });
+  exportApplicants(filters: ApplicantFilter, format: string): void {
+    const rawParams: { [param: string]: any } = {
+      ...filters,
+      format: format
+    };
 
-    // For now, simulate success with a mock URL
-    return of('https://example.com/export/applicants.csv');
+    // Remove null or undefined properties
+    const cleanParams = Object.entries(rawParams).reduce((acc, [key, value]) => {
+      if (value !== null && value !== undefined) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {} as { [param: string]: any });
+
+    const params = new HttpParams({ fromObject: cleanParams });
+    window.location.href = `/api/applicants/export?${params.toString()}`;
   }
 
   addCollaborationNote(applicantId: string, note: string, teamMembers: string[]): Observable<boolean> {

@@ -15,7 +15,10 @@ import { getCurrentOrganization } from '../fn/organization-controller/get-curren
 import { GetCurrentOrganization$Params } from '../fn/organization-controller/get-current-organization';
 import { getLogoUploadUrl } from '../fn/organization-controller/get-logo-upload-url';
 import { GetLogoUploadUrl$Params } from '../fn/organization-controller/get-logo-upload-url';
+import { getOrganizationMembers } from '../fn/organization-controller/get-organization-members';
+import { GetOrganizationMembers$Params } from '../fn/organization-controller/get-organization-members';
 import { OrganizationDto } from '../models/organization-dto';
+import { OrganizationMemberDto } from '../models/organization-member-dto';
 import { updateLogo } from '../fn/organization-controller/update-logo';
 import { UpdateLogo$Params } from '../fn/organization-controller/update-logo';
 import { UploadUrlResponse } from '../models/upload-url-response';
@@ -98,6 +101,31 @@ export class OrganizationControllerService extends BaseService {
   getLogoUploadUrl(params: GetLogoUploadUrl$Params, context?: HttpContext): Observable<UploadUrlResponse> {
     return this.getLogoUploadUrl$Response(params, context).pipe(
       map((r: StrictHttpResponse<UploadUrlResponse>): UploadUrlResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `getOrganizationMembers()` */
+  static readonly GetOrganizationMembersPath = '/api/organization/members';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getOrganizationMembers()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOrganizationMembers$Response(params?: GetOrganizationMembers$Params, context?: HttpContext): Observable<StrictHttpResponse<Array<OrganizationMemberDto>>> {
+    return getOrganizationMembers(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `getOrganizationMembers$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getOrganizationMembers(params?: GetOrganizationMembers$Params, context?: HttpContext): Observable<Array<OrganizationMemberDto>> {
+    return this.getOrganizationMembers$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Array<OrganizationMemberDto>>): Array<OrganizationMemberDto> => r.body)
     );
   }
 
