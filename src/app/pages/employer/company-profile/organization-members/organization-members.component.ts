@@ -159,12 +159,29 @@ export class OrganizationMembersComponent implements OnInit {
   //   }
   // }
 
+  getAvatarColor(memberId: string): string {
+    const colors = ['bg-blue-200', 'bg-green-200', 'bg-purple-200', 'bg-amber-200', 'bg-red-200'];
+    const hash = memberId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return colors[hash % colors.length];
+  }
+
+  getStatusIndicatorClass(status: string | undefined): string {
+    switch (status) {
+      case 'ACTIVE':
+        return 'bg-success';
+      case 'PENDING':
+        return 'bg-warning';
+      default:
+        return 'bg-muted';
+    }
+  }
+
   getRoleChipClass(role: string | undefined): string {
     switch (role) {
       case 'HIRING_MANAGER':
-        return 'bg-primary text-primary-foreground';
+        return 'bg-primary/10 text-primary';
       case 'RECRUITER':
-        return 'bg-secondary text-secondary-foreground';
+        return 'bg-secondary/10 text-secondary';
       default:
         return 'bg-muted text-muted-foreground';
     }
@@ -173,9 +190,9 @@ export class OrganizationMembersComponent implements OnInit {
   getStatusChipClass(status: string | undefined): string {
     switch (status) {
       case 'ACTIVE':
-        return 'bg-success text-success-foreground';
+        return 'bg-success/10 text-success';
       case 'PENDING':
-        return 'bg-warning text-warning-foreground';
+        return 'bg-warning/10 text-warning';
       default:
         return 'bg-muted text-muted-foreground';
     }

@@ -24,10 +24,7 @@
 }
 
 // Table styles
-.mat-mdc-table {
-  width: 100%;
-  background: transparent;
-}
+/* No component-specific styles needed with this approach as Tailwind handles it */
 
 .mat-mdc-header-cell {
   font-weight: 600;
