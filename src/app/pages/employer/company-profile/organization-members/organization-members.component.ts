@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
@@ -11,27 +11,11 @@ import { OrganizationControllerService } from '../../../../api/services/organiza
 import { InvitationControllerService } from '../../../../api/services/invitation-controller.service';
 import { SnackbarService } from '../../../../shared/components/snackbar/snackbar.service';
 import { InviteRecruiterDialogComponent } from './invite-recruiter-dialog/invite-recruiter-dialog.component';
-import { MatFormFieldModule } from '@angular/material/form-field'
-import { MatInputModule } from '@angular/material/input'
-import { MatSelectModule } from '@angular/material/select'
-import { FormsModule } from '@angular/forms'
-
-interface OrganizationMember {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  status: string;
-  joinedDate: string;
-}
-
-interface PendingInvitation {
-  id: string;
-  email: string;
-  createdAt: string;
-  status: string;
-}
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { OrganizationMemberDto, RecruiterInvitationDto, RecruiterInvitationRequest } from '../../../../api/models';
 
 @Component({
   selector: 'app-organization-members',
@@ -54,8 +38,8 @@ interface PendingInvitation {
   styleUrls: ['./organization-members.component.scss']
 })
 export class OrganizationMembersComponent implements OnInit {
-  members: OrganizationMember[] = [];
-  pendingInvitations: PendingInvitation[] = [];
+  members: OrganizationMemberDto[] = [];
+  pendingInvitations: RecruiterInvitationDto[] = [];
   isLoading = true;
   displayedColumns: string[] = ['name', 'email', 'role', 'status', 'joinedDate', 'actions'];
   invitationColumns: string[] = ['email', 'createdAt', 'status', 'actions'];
@@ -71,20 +55,20 @@ export class OrganizationMembersComponent implements OnInit {
   selectedRole: '' | 'HIRING_MANAGER' | 'RECRUITER' = '';
   roleOptions: string[] = ['HIRING_MANAGER', 'RECRUITER'];
 
-  get filteredMembers(): OrganizationMember[] {
+  get filteredMembers(): OrganizationMemberDto[] {
     const q = this.searchQuery.trim().toLowerCase();
     return this.members.filter(m => {
       const matchesQuery = q ? (
-        m.firstName.toLowerCase().includes(q) ||
-        m.lastName.toLowerCase().includes(q) ||
-        m.email.toLowerCase().includes(q)
+        m.firstName?.toLowerCase().includes(q) ||
+        m.lastName?.toLowerCase().includes(q) ||
+        m.email?.toLowerCase().includes(q)
       ) : true;
       const matchesRole = this.selectedRole ? m.role === this.selectedRole : true;
       return matchesQuery && matchesRole;
     });
   }
 
-  getInitials(member: OrganizationMember): string {
+  getInitials(member: OrganizationMemberDto): string {
     const f = member.firstName?.[0] ?? '';
     const l = member.lastName?.[0] ?? '';
     return (f + l).toUpperCase();
@@ -97,47 +81,27 @@ export class OrganizationMembersComponent implements OnInit {
 
   loadOrganizationMembers(): void {
     this.isLoading = true;
-    
-    // Mock implementation since API doesn't exist yet
-    setTimeout(() => {
-      // Mock data for demonstration
-      this.members = [
-        {
-          id: '1',
-          email: 'admin@example.com',
-          firstName: 'Admin',
-          lastName: 'User',
-          role: 'HIRING_MANAGER',
-          status: 'ACTIVE',
-          joinedDate: new Date().toISOString()
-        },
-        {
-          id: '2',
-          email: 'recruiter@example.com',
-          firstName: 'Jane',
-          lastName: 'Recruiter',
-          role: 'RECRUITER',
-          status: 'ACTIVE',
-          joinedDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
-        }
-      ];
-      this.isLoading = false;
-    }, 500);
+    this.orgService.getOrganizationMembers().subscribe({
+      next: (members) => {
+        this.members = members;
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        this.snackbarService.error('Failed to load organization members.');
+        this.isLoading = false;
+      }
+    });
   }
 
   loadPendingInvitations(): void {
-    // Mock implementation since API doesn't exist yet
-    setTimeout(() => {
-      // Mock data for demonstration
-      this.pendingInvitations = [
-        {
-          id: '101',
-          email: 'newrecruiter@example.com',
-          createdAt: new Date().toISOString(),
-          status: 'PENDING'
-        }
-      ];
-    }, 500);
+    this.invitationService.listOrganizationInvitations({ pageable: { page: 0, size: 100 } }).subscribe({
+      next: (invitations) => {
+        this.pendingInvitations = invitations.content || [];
+      },
+      error: (err: any) => {
+        this.snackbarService.error('Failed to load pending invitations.');
+      }
+    });
   }
 
   openInviteDialog(): void {
@@ -147,69 +111,55 @@ export class OrganizationMembersComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.inviteRecruiters(result.emails);
+        this.inviteRecruiters(result.emails, result.message);
       }
     });
   }
 
-  inviteRecruiters(emails: string[]): void {
-    // Mock implementation since API doesn't match our requirements
-    setTimeout(() => {
-      this.snackbarService.success('Invitations sent successfully!');
-      // Add the new invitations to our mock data
-      emails.forEach(email => {
-        this.pendingInvitations.push({
-          id: 'new-' + Math.random().toString(36).substring(2, 9),
-          email: email,
-          createdAt: new Date().toISOString(),
-          status: 'PENDING'
-        });
-      });
-    }, 500);
+  inviteRecruiters(emails: string[], message?: string): void {
+    const requests: RecruiterInvitationRequest[] = emails.map(email => ({ email, personalMessage: message }));
+    this.invitationService.inviteRecruiterBulk({ body: requests }).subscribe({
+      next: () => {
+        this.snackbarService.success('Invitations sent successfully!');
+        this.loadPendingInvitations();
+      },
+      error: (err: any) => {
+        this.snackbarService.error('Failed to send invitations.');
+      }
+    });
   }
 
   revokeInvitation(invitationId: string): void {
-    // Mock implementation
-    setTimeout(() => {
-      this.pendingInvitations = this.pendingInvitations.filter(inv => inv.id !== invitationId);
-      this.snackbarService.success('Invitation revoked successfully!');
-    }, 500);
-  }
-
-  resendInvitation(invitationId: string): void {
-    // Mock implementation
-    setTimeout(() => {
-      const invitation = this.pendingInvitations.find(inv => inv.id === invitationId);
-      if (invitation) {
-        invitation.createdAt = new Date().toISOString();
+    this.invitationService.revokeInvitation({ invitationId }).subscribe({
+      next: () => {
+        this.snackbarService.success('Invitation revoked successfully!');
+        this.loadPendingInvitations();
+      },
+      error: (err: any) => {
+        this.snackbarService.error('Failed to revoke invitation.');
       }
-      this.snackbarService.success('Invitation resent successfully!');
-    }, 500);
+    });
   }
 
-  updateMemberRole(memberId: string, newRole: string): void {
-    // Mock implementation
-    setTimeout(() => {
-      const member = this.members.find(m => m.id === memberId);
-      if (member) {
-        member.role = newRole;
-      }
-      this.snackbarService.success('Member role updated successfully!');
-    }, 500);
-  }
+  // resendInvitation(invitationId: string): void {
+  //   // Backend endpoint does not exist yet
+  //   this.snackbarService.info('Resend functionality is not yet available.');
+  // }
 
-  removeMember(memberId: string): void {
-    const confirmed = window.confirm('Are you sure you want to remove this member from your organization?');
-    if (confirmed) {
-      // Mock implementation
-      setTimeout(() => {
-        this.members = this.members.filter(m => m.id !== memberId);
-        this.snackbarService.success('Member removed successfully!');
-      }, 500);
-    }
-  }
+  // updateMemberRole(memberId: string, newRole: string): void {
+  //   // Backend endpoint does not exist yet
+  //   this.snackbarService.info('Update role functionality is not yet available.');
+  // }
 
-  getRoleChipClass(role: string): string {
+  // removeMember(memberId: string): void {
+  //   const confirmed = window.confirm('Are you sure you want to remove this member from your organization?');
+  //   if (confirmed) {
+  //     // Backend endpoint does not exist yet
+  //     this.snackbarService.info('Remove member functionality is not yet available.');
+  //   }
+  // }
+
+  getRoleChipClass(role: string | undefined): string {
     switch (role) {
       case 'HIRING_MANAGER':
         return 'bg-primary text-primary-foreground';
@@ -220,7 +170,7 @@ export class OrganizationMembersComponent implements OnInit {
     }
   }
 
-  getStatusChipClass(status: string): string {
+  getStatusChipClass(status: string | undefined): string {
     switch (status) {
       case 'ACTIVE':
         return 'bg-success text-success-foreground';

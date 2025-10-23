@@ -107,18 +107,18 @@
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item *ngIf="member.role !== 'HIRING_MANAGER'" (click)="updateMemberRole(member.id, 'HIRING_MANAGER')">
+            <!-- <button mat-menu-item [disabled]="member.role === 'HIRING_MANAGER'" (click)="updateMemberRole(member.id, 'HIRING_MANAGER')">
               <mat-icon>admin_panel_settings</mat-icon>
               <span>Make Hiring Manager</span>
             </button>
-            <button mat-menu-item *ngIf="member.role !== 'RECRUITER'" (click)="updateMemberRole(member.id, 'RECRUITER')">
-              <mat-icon>person</mat-icon>
+            <button mat-menu-item [disabled]="member.role === 'RECRUITER'" (click)="updateMemberRole(member.id, 'RECRUITER')">
+              <mat-icon>support_agent</mat-icon>
               <span>Make Recruiter</span>
-            </button>
-            <button mat-menu-item (click)="removeMember(member.id)">
+            </button> -->
+            <!-- <button mat-menu-item (click)="removeMember(member.id)">
               <mat-icon>delete</mat-icon>
-              <span>Remove from Organization</span>
-            </button>
+              <span>Remove Member</span>
+            </button> -->
           </mat-menu>
         </td>
       </ng-container>
@@ -164,9 +164,9 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let invitation">
-          <button mat-icon-button (click)="resendInvitation(invitation.id)" matTooltip="Resend Invitation" aria-label="Resend invitation">
-            <mat-icon>refresh</mat-icon>
-          </button>
+          <!-- <button mat-icon-button (click)="resendInvitation(invitation.id)" matTooltip="Resend Invitation">
+            <mat-icon>send</mat-icon>
+          </button> -->
           <button mat-icon-button (click)="revokeInvitation(invitation.id)" matTooltip="Revoke Invitation" aria-label="Revoke invitation">
             <mat-icon>delete</mat-icon>
           </button>
