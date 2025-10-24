@@ -38,10 +38,20 @@ export class HomepageComponent implements OnInit {
   private jobPostService = inject(JobPostControllerService);
 
   ngOnInit(): void {
-    this.fetchJobs();
     this.route.queryParams.subscribe(params => {
-      if (params['reason'] === 'session_expired') {
-        this.snackbarService.info('For your security, your session has expired. Please log in again.');
+      const token = params['token'];
+      const action = params['action'];
+
+      if (token && action) {
+        // If token and action exist, redirect to the auth callback handler
+        // preserving the query parameters.
+        this.router.navigate(['/auth/callback'], { queryParams: { token, action } });
+      } else {
+        // Normal homepage initialization
+        this.fetchJobs();
+        if (params['reason'] === 'session_expired') {
+          this.snackbarService.info('For your security, your session has expired. Please log in again.');
+        }
       }
     });
   }

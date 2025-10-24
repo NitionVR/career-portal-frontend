@@ -272,14 +272,22 @@ export class ApplicantManagementComponent implements OnInit {
   }
 
   addBulkTags(applicationIds: string[], tags: string[]): void {
-    // Simulate API call
     this.isLoading = true;
 
-    setTimeout(() => {
-      this.snackbarService.success(`Added tags to ${applicationIds.length} applications`);
-      this.selectedApplications.clear();
-      this.loadApplications();
-    }, 1000);
+    this.applicantService.addTagsToApplicants(applicationIds, tags).subscribe({
+      next: () => {
+        this.snackbarService.success(`Added tags to ${applicationIds.length} applications`);
+        this.selectedApplications.clear();
+        this.loadApplications();
+      },
+      error: () => {
+        this.snackbarService.error('Failed to add tags to selected applications');
+        this.isLoading = false;
+      },
+      complete: () => {
+        this.isLoading = false;
+      }
+    });
   }
 
   exportApplications(format: string): void {

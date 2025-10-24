@@ -176,21 +176,41 @@ export class ApplicantManagementService {
   }
 
   exportApplicants(filters: ApplicantFilter, format: string): void {
-    const rawParams: { [param: string]: any } = {
-      ...filters,
-      format: format
-    };
+    // Map filters to backend expected query params
+    let params = new HttpParams();
 
-    // Remove null or undefined properties
-    const cleanParams = Object.entries(rawParams).reduce((acc, [key, value]) => {
-      if (value !== null && value !== undefined) {
-        acc[key] = value;
-      }
-      return acc;
-    }, {} as { [param: string]: any });
+    if (format) {
+      params = params.set('format', format.toUpperCase());
+    }
+    if (filters.search) {
+      params = params.set('search', filters.search);
+    }
+    // skillSearch expects comma-separated string
+    const skillSearch = Array.isArray(filters.skills) ? filters.skills.join(',') : filters.skills;
+    if (skillSearch) {
+      params = params.set('skillSearch', skillSearch);
+    }
+    if (filters.jobId) {
+      params = params.set('jobId', filters.jobId);
+    }
+    // statuses expects array; append each value
+    const statuses = Array.isArray(filters.status) ? filters.status : (filters.status ? [filters.status] : []);
+    statuses.forEach(s => {
+      params = params.append('statuses', s);
+    });
+    if (typeof filters.experience === 'number') {
+      params = params.set('experienceMin', String(filters.experience));
+    }
+    const education = Array.isArray(filters.education) ? filters.education : (filters.education ? [filters.education] : []);
+    education.forEach(e => {
+      params = params.append('education', e);
+    });
+    if (filters.location) {
+      params = params.set('location', filters.location);
+    }
 
-    const params = new HttpParams({ fromObject: cleanParams });
-    window.location.href = `/api/applicants/export?${params.toString()}`;
+    const url = `/api/applicants/export?${params.toString()}`;
+    window.location.href = url;
   }
 
   addCollaborationNote(applicantId: string, note: string, teamMembers: string[]): Observable<boolean> {

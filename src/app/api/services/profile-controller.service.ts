@@ -27,6 +27,8 @@ import { getResumeUploadUrl } from '../fn/profile-controller/get-resume-upload-u
 import { GetResumeUploadUrl$Params } from '../fn/profile-controller/get-resume-upload-url';
 import { JsonNode } from '../models/json-node';
 import { ResumeDto } from '../models/resume-dto';
+import { autofillResume } from '../fn/profile-controller/autofill-resume';
+import { AutofillResume$Params } from '../fn/profile-controller/autofill-resume';
 import { updateAvatar } from '../fn/profile-controller/update-avatar';
 import { UpdateAvatar$Params } from '../fn/profile-controller/update-avatar';
 import { updateFullProfile } from '../fn/profile-controller/update-full-profile';
@@ -318,4 +320,15 @@ export class ProfileControllerService extends BaseService {
     );
   }
 
+  static readonly AutofillResumePath = '/api/profile/me/autofill-resume';
+
+  autofillResume$Response(params: AutofillResume$Params, context?: HttpContext): Observable<StrictHttpResponse<JsonNode>> {
+    return autofillResume(this.http, this.rootUrl, params, context);
+  }
+
+  autofillResume(params: AutofillResume$Params, context?: HttpContext): Observable<JsonNode> {
+    return this.autofillResume$Response(params, context).pipe(
+      map((r: StrictHttpResponse<JsonNode>): JsonNode => r.body)
+    );
+  }
 }

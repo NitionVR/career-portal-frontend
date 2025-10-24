@@ -15,6 +15,10 @@ import { firstValueFrom } from 'rxjs';
 export function loadConfig(http: HttpClient) {
   return () => firstValueFrom(http.get('/assets/config.json'))
     .then((config: any) => {
+      // In development, force same-origin to leverage Angular proxy and avoid CORS
+      if (!environment.production) {
+        config.apiUrl = window.location.origin;
+      }
       (window as any).config = config;
     });
 }
