@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { EmployerSidebarComponent } from './employer-sidebar.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('EmployerSidebarComponent', () => {
   let component: EmployerSidebarComponent;
@@ -8,7 +9,7 @@ describe('EmployerSidebarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EmployerSidebarComponent],
+      imports: [EmployerSidebarComponent, HttpClientTestingModule],
       providers: [
         {
           provide: ActivatedRoute,
