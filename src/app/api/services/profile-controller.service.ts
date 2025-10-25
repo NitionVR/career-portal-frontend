@@ -11,6 +11,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 
 import { addResumeToProfile } from '../fn/profile-controller/add-resume-to-profile';
 import { AddResumeToProfile$Params } from '../fn/profile-controller/add-resume-to-profile';
+import { autofillProfileFromResume } from '../fn/profile-controller/autofill-profile-from-resume';
+import { AutofillProfileFromResume$Params } from '../fn/profile-controller/autofill-profile-from-resume';
 import { completeProfile } from '../fn/profile-controller/complete-profile';
 import { CompleteProfile$Params } from '../fn/profile-controller/complete-profile';
 import { deleteAvatar } from '../fn/profile-controller/delete-avatar';
@@ -27,8 +29,6 @@ import { getResumeUploadUrl } from '../fn/profile-controller/get-resume-upload-u
 import { GetResumeUploadUrl$Params } from '../fn/profile-controller/get-resume-upload-url';
 import { JsonNode } from '../models/json-node';
 import { ResumeDto } from '../models/resume-dto';
-import { autofillResume } from '../fn/profile-controller/autofill-resume';
-import { AutofillResume$Params } from '../fn/profile-controller/autofill-resume';
 import { updateAvatar } from '../fn/profile-controller/update-avatar';
 import { UpdateAvatar$Params } from '../fn/profile-controller/update-avatar';
 import { updateFullProfile } from '../fn/profile-controller/update-full-profile';
@@ -295,6 +295,31 @@ export class ProfileControllerService extends BaseService {
     );
   }
 
+  /** Path part for operation `autofillProfileFromResume()` */
+  static readonly AutofillProfileFromResumePath = '/api/profile/me/autofill-resume';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `autofillProfileFromResume()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  autofillProfileFromResume$Response(params: AutofillProfileFromResume$Params, context?: HttpContext): Observable<StrictHttpResponse<JsonNode>> {
+    return autofillProfileFromResume(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `autofillProfileFromResume$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  autofillProfileFromResume(params: AutofillProfileFromResume$Params, context?: HttpContext): Observable<JsonNode> {
+    return this.autofillProfileFromResume$Response(params, context).pipe(
+      map((r: StrictHttpResponse<JsonNode>): JsonNode => r.body)
+    );
+  }
+
   /** Path part for operation `deleteResume()` */
   static readonly DeleteResumePath = '/api/profile/me/resumes/{resumeId}';
 
@@ -320,15 +345,4 @@ export class ProfileControllerService extends BaseService {
     );
   }
 
-  static readonly AutofillResumePath = '/api/profile/me/autofill-resume';
-
-  autofillResume$Response(params: AutofillResume$Params, context?: HttpContext): Observable<StrictHttpResponse<JsonNode>> {
-    return autofillResume(this.http, this.rootUrl, params, context);
-  }
-
-  autofillResume(params: AutofillResume$Params, context?: HttpContext): Observable<JsonNode> {
-    return this.autofillResume$Response(params, context).pipe(
-      map((r: StrictHttpResponse<JsonNode>): JsonNode => r.body)
-    );
-  }
 }

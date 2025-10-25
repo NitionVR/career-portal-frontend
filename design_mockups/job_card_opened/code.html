@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>eTalente - Find Your Dream Job</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        :root {
+        --primary-color: #FACC15;--primary-hover-color: #FBBF24;--secondary-color: #3B82F6;--background-color: #0F172A;--card-color: rgba(15, 23, 42, 0.6);--text-color: #F8FAFC;--subtle-text-color: #94A3B8;--border-color: #334155;--glass-blur: blur(16px);
+      }
+      .glassmorphism {
+        background: var(--card-color);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 300,
+          'GRAD' 0,
+          'opsz' 24
+      }
+      .bg-gradient-hero {
+        background-image: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #3B82F6 100%);
+      }
+      .smooth-shadow {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(59, 130, 246, 0.2);
+      }
+      .smooth-shadow-sm {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1), 0 0 20px rgba(250, 204, 21, 0.1);
+      }
+      .group:hover .group-hover-effect {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1), 0 0 50px rgba(59, 130, 246, 0.3);
+      }
+      .modal-content {
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary-color) transparent;
+      }
+      .modal-content::-webkit-scrollbar {
+        width: 6px;
+      }
+      .modal-content::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .modal-content::-webkit-scrollbar-thumb {
+        background-color: var(--primary-color);
+        border-radius: 20px;
+        border: 3px solid transparent;
+      }
+    </style>
+</head>
+<body class="bg-[var(--background-color)] font-['Inter'] text-[var(--text-color)] antialiased">
+<div class="min-h-screen flex flex-col">
+<div class="relative bg-gradient-hero">
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glassmorphism border-b border-[var(--border-color)]">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-20">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-[var(--primary-color)]" style="font-size: 32px;">business_center</span>
+<a class="text-2xl font-bold tracking-tighter" href="#">eTalente</a>
+</div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-sm font-medium text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors" href="#">Find Jobs</a>
+<a class="text-sm font-medium text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors" href="#">Companies</a>
+<a class="text-sm font-medium text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors" href="#">Career Advice</a>
+</nav>
+<div class="flex items-center space-x-4">
+<a class="text-sm font-medium text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors" href="#">Log In</a>
+<a class="px-5 py-2.5 text-sm font-semibold text-gray-900 bg-[var(--primary-color)] rounded-full hover:bg-[var(--primary-hover-color)] transition-all duration-300 ease-in-out transform hover:scale-105" href="#">Sign Up</a>
+</div>
+</div>
+</div>
+</header>
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
+<div class="relative w-full max-w-4xl max-h-[90vh] glassmorphism rounded-2xl overflow-hidden border border-[var(--border-color)] smooth-shadow flex flex-col">
+<div class="flex-shrink-0 p-6 border-b border-[var(--border-color)]">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-4">
+<img alt="Company Logo" class="w-16 h-16 rounded-lg bg-white p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHwracevImG81zEqFH9kkEB5Y3E3T7tJYIIJ1DBetcfji5E1NELPFQT8FvsPJXOOWie5foLREzbuRh7-5EdA_hG6bUEgmv3NT_N3b1UVFKy_F7jSLATnKWrbRZz2HUyOchAgQ88-0pRffZzKjD5b67Ho1alckoV-EOE5_TCRBsIUr4SQCdNHUJ2rasT_qNpqyw1Q6ctkn2B__JzE2rCb6T-8HHyqNxT-LY6pMxsVNAyvnAgFlxXJ10xb7WfBpN-zlPlKyq0TES5A"/>
+<div>
+<h2 class="text-2xl font-bold text-white">Senior Frontend Developer</h2>
+<div class="flex items-center text-sm text-[var(--subtle-text-color)] mt-1 space-x-4">
+<p class="flex items-center"><span class="material-symbols-outlined text-base mr-1.5">business</span> Tech Innovate Inc.</p>
+<p class="flex items-center"><span class="material-symbols-outlined text-base mr-1.5">location_on</span> San Francisco, CA (Remote)</p>
+</div>
+</div>
+</div>
+<button class="text-[var(--subtle-text-color)] hover:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+<div class="flex-grow p-8 overflow-y-auto modal-content">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="md:col-span-2 space-y-8">
+<div>
+<h3 class="text-lg font-semibold text-[var(--primary-color)] mb-3">Job Description</h3>
+<p class="text-[var(--subtle-text-color)] leading-relaxed">We are seeking a highly skilled Senior Frontend Developer to join our dynamic team. The ideal candidate will be passionate about creating beautiful, functional, and user-centric web applications. You will be responsible for leading the development of our next-generation user interfaces, collaborating with designers and backend engineers to deliver a seamless user experience.</p>
+</div>
+<div>
+<h3 class="text-lg font-semibold text-[var(--primary-color)] mb-3">Responsibilities</h3>
+<ul class="list-disc list-inside space-y-2 text-[var(--subtle-text-color)]">
+<li>Develop and maintain responsive web applications using React and TypeScript.</li>
+<li>Collaborate with UI/UX designers to translate wireframes and mockups into high-quality code.</li>
+<li>Optimize applications for maximum speed and scalability.</li>
+<li>Write clean, maintainable, and well-documented code.</li>
+<li>Mentor junior developers and participate in code reviews.</li>
+<li>Stay up-to-date with emerging frontend technologies and best practices.</li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold text-[var(--primary-color)] mb-3">Requirements</h3>
+<ul class="list-disc list-inside space-y-2 text-[var(--subtle-text-color)]">
+<li>5+ years of professional experience in frontend development.</li>
+<li>Expertise in JavaScript, HTML5, and CSS3.</li>
+<li>Proficient with React and its ecosystem (Redux, Next.js).</li>
+<li>Experience with TypeScript is a must.</li>
+<li>Strong understanding of RESTful APIs and modern authorization mechanisms.</li>
+<li>Familiarity with modern frontend build pipelines and tools.</li>
+</ul>
+</div>
+</div>
+<div class="space-y-8">
+<div class="glassmorphism rounded-xl p-6 border border-white/10">
+<h3 class="text-lg font-semibold text-white mb-4">Benefits</h3>
+<ul class="space-y-3">
+<li class="flex items-center text-sm text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">health_and_safety</span> Comprehensive Health Insurance</li>
+<li class="flex items-center text-sm text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">attach_money</span> 401(k) with Company Match</li>
+<li class="flex items-center text-sm text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">beach_access</span> Unlimited Paid Time Off</li>
+<li class="flex items-center text-sm text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">laptop_mac</span> Latest Tech Equipment</li>
+<li class="flex items-center text-sm text-[var(--subtle-text-color)]"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">school</span> Professional Development Budget</li>
+</ul>
+</div>
+<div class="glassmorphism rounded-xl p-6 border border-white/10">
+<h3 class="text-lg font-semibold text-white mb-4">Job Summary</h3>
+<ul class="space-y-3 text-sm text-[var(--subtle-text-color)]">
+<li><span class="font-medium text-white/80">Salary:</span> $120,000 - $150,000</li>
+<li><span class="font-medium text-white/80">Experience:</span> 5+ Years</li>
+<li><span class="font-medium text-white/80">Job Type:</span> Full-Time</li>
+<li><span class="font-medium text-white/80">Work Model:</span> Remote</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="flex-shrink-0 p-6 border-t border-[var(--border-color)] bg-black/20 flex items-center justify-end">
+<button class="px-8 py-3 text-base font-bold text-gray-900 bg-[var(--primary-color)] rounded-full hover:bg-[var(--primary-hover-color)] transition-all duration-300 ease-in-out transform hover:scale-105 flex items-center gap-2">
+                            Apply Now
+                            <span class="material-symbols-outlined">arrow_forward</span></button>
+</div>
+</div>
+</div>
+</div>
+<main class="pt-20 flex-grow">
+<section class="py-16 sm:py-24">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+</div>
+</section>
+</main>
+<footer class="bg-gray-900/50 border-t border-[var(--border-color)]">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<div class="md:col-span-5 lg:col-span-4">
+<h3 class="text-lg font-semibold text-white mb-4">About Us</h3>
+<p class="text-sm text-[var(--subtle-text-color)] leading-relaxed">eTalente is a modern job search platform dedicated to connecting top talent with innovative companies. Our mission is to make the job search process seamless and efficient for both candidates and employers.</p>
+</div>
+<div class="md:col-span-4 lg:col-span-3 lg:col-start-9">
+<h3 class="text-lg font-semibold text-white mb-4">Contact Us</h3>
+<div class="space-y-3 text-sm text-[var(--subtle-text-color)]">
+<p class="flex items-center"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">call</span> (123) 456-7890</p>
+<p class="flex items-center"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">mail</span> contact@etalente.com</p>
+<p class="flex items-center"><span class="material-symbols-outlined text-base mr-3 text-[var(--primary-color)]">location_on</span> 123 Innovation Drive, Tech City</p>
+</div>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-[var(--border-color)] flex flex-col sm:flex-row justify-between items-center text-sm text-[var(--subtle-text-color)]">
+<p class="mb-4 sm:mb-0">© 2024 eTalente. All rights reserved.</p>
+<div class="flex space-x-6">
+<a class="hover:text-[var(--text-color)] transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-[var(--text-color)] transition-colors" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+
+</body></html>

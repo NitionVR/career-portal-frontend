@@ -152,4 +152,42 @@ input:-webkit-autofill:active {
   }
   
   /* === END ngx-intl-tel-input Global Overrides === */
+
+/*
+ * Global Overrides for Angular Material Components on custom backgrounds
+ */
+
+/* Override mat-table text color when inside a glassmorphism card */
+/*
+ * Global Overrides for Angular Material Components on custom backgrounds
+ */
+
+/* Override mat-table text color when inside a glassmorphism card */
+.glassmorphism .mat-mdc-header-cell {
+  color: hsl(var(--muted-foreground));
+}
+
+.glassmorphism .mat-mdc-cell {
+  color: hsl(var(--foreground));
+}
+
+/* Ensure icons within the table also get the correct color */
+.glassmorphism .mat-mdc-cell .mat-icon-button mat-icon {
+  color: hsl(var(--muted-foreground));
+}
+
+.glassmorphism .mat-mdc-cell .mat-icon-button mat-icon.text-destructive {
+  color: hsl(var(--destructive));
+}
+
+
+/* Ensure icons within the table also get the correct color */
+.glassmorphism .mat-mdc-cell .mat-icon-button mat-icon {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.glassmorphism .mat-mdc-cell .mat-icon-button mat-icon.text-destructive {
+  color: hsl(var(--destructive)) !important;
+}
+
   

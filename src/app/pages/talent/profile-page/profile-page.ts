@@ -456,67 +456,49 @@ export class ProfilePageComponent implements OnInit {
         contentLength: file.size
       }
     }).subscribe({
-      next: async (response) => {
-        if (response.uploadUrl && response.fileUrl) {
-          try {
-            const putResp = await fetch(response.uploadUrl, { method: 'PUT', body: file });
-            if (!putResp.ok) {
-              const errText = await putResp.text();
-              console.error('CV upload failed', putResp.status, errText);
-              this.snackbarService.error('Failed to upload CV. Please try again.');
-              this.uploading = false;
-              return;
-            }
-
-            this.profileService.addResumeToProfile({ body: { url: response.fileUrl, filename: file.name } }).subscribe({
-              next: () => {
-                this.profileService.autofillResume({ body: { url: response.fileUrl } }).subscribe({
-                  next: () => {
-                    this.snackbarService.success('CV uploaded and profile autofilled!');
-                    this.refreshProfileAfterAutofill();
-                  },
-                  error: (err) => {
-                    console.error('Autofill failed', err);
-                    this.snackbarService.error('Autofill failed. Resume saved, but profile not updated.');
-                    this.uploading = false;
-                  }
-                });
-              },
-              error: (err) => {
-                console.error('Failed to register resume', err);
-                this.snackbarService.error('Failed to save resume. Please try again.');
-                this.uploading = false;
-              }
-            });
-          } catch (err) {
-            console.error('Failed CV upload to cloud', err);
-            this.snackbarService.error('Network error during CV upload.');
-            this.uploading = false;
-          }
-        } else {
-          console.error('Invalid resume upload URL response');
+      next: async (uploadResponse) => {
+        if (!uploadResponse.uploadUrl || !uploadResponse.fileUrl) {
           this.snackbarService.error('Failed to get CV upload URL.');
+          this.uploading = false;
+          return;
+        }
+
+        try {
+          const uploadRequest = await fetch(uploadResponse.uploadUrl, { method: 'PUT', body: file });
+
+          if (!uploadRequest.ok) {
+            this.snackbarService.error('Failed to upload CV. Please try again.');
+            this.uploading = false;
+            return;
+          }
+
+          const resumeDto: any = { // Using any temporarily if ResumeDto is not available
+            url: uploadResponse.fileUrl,
+            filename: file.name
+          };
+
+          this.profileService.autofillProfileFromResume({ body: resumeDto }).subscribe({
+            next: (profileData) => {
+              this.profileForm.patchValue(profileData);
+              this.snackbarService.success('CV uploaded and profile has been autofilled!');
+              this.uploading = false;
+            },
+            error: (err) => {
+              console.error('Autofill failed', err);
+              this.snackbarService.error('Autofill failed. Your resume was saved, but we could not fill your profile.');
+              this.uploading = false;
+            }
+          });
+
+        } catch (err) {
+          console.error('CV upload process failed', err);
+          this.snackbarService.error('An error occurred during the CV upload process.');
           this.uploading = false;
         }
       },
       error: (err) => {
         console.error('Failed to get resume upload URL', err);
         this.snackbarService.error('Failed to get CV upload URL.');
-        this.uploading = false;
-      }
-    });
-  }
-
-  private refreshProfileAfterAutofill(): void {
-    this.profileService.getCurrentUserProfile().subscribe({
-      next: (profileData) => {
-        if (profileData) {
-          this.profileForm.patchValue(profileData);
-        }
-        this.uploading = false;
-      },
-      error: (err) => {
-        console.error('Failed to reload profile after autofill', err);
         this.uploading = false;
       }
     });

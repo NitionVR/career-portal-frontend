@@ -56,6 +56,7 @@ export const routes: Routes = [
       { path: 'applications', component: MyApplicationsPageComponent, pathMatch: 'full' },
       { path: 'applications/:id', component: ApplicationDetailsPageComponent },
       { path: 'profile', component: ProfilePageComponent },
+      { path: 'documents', loadComponent: () => import('./pages/talent/documents/documents.component').then(m => m.DocumentsComponent) },
     ]
   },
   {

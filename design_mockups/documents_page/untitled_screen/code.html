@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>eTalente - Resume &amp; Documents</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        :root {
+            --primary-color: #FACC15;
+            --primary-hover-color: #FBBF24;
+            --secondary-color: #3B82F6;
+            --background-color: #0F172A;
+            --card-color: rgba(15, 23, 42, 0.6);
+            --text-color: #F8FAFC;
+            --subtle-text-color: #94A3B8;
+            --border-color: #334155;
+            --glass-blur: blur(16px);
+        }
+        .glassmorphism {
+            background: var(--card-color);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24
+        }
+        #profile-sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-[var(--background-color)] font-['Inter'] text-[var(--text-color)] antialiased" x-data="{ profileSidebarOpen: false }">
+<div class="min-h-screen flex flex-col">
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glassmorphism border-b border-[var(--border-color)]">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-20">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-[var(--primary-color)]" style="font-size: 32px;">business_center</span>
+<a class="text-2xl font-bold tracking-tighter" href="#">eTalente</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="relative">
+<span class="material-symbols-outlined text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors">
+                                notifications
+                            </span>
+<span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">3</span>
+</button>
+<button @click="profileSidebarOpen = !profileSidebarOpen" class="flex items-center space-x-3">
+<img alt="User avatar" class="h-10 w-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB9dlvqcgv_9_uNlhIov6f7xWIsXxmKdCCHoml79PoJyGOftNhCqIAxhypnat0xKeHURjMIWAQPGVDYIloGcONJy2DOsVRWZdCW7xURgXB26K0KHrS-p001xF4BJ2tgZAHfoTHnHngO-D1XnqSDnkELSIgFNHnyZp9Lka1RUMd8Ua7BSqzpgfi5Yf_bg6VQxE_NFlMtPmRMBNdHHoUYIiLXlbfR5gc-fjNeuA7fxCOsW72tokMjQP_czvQZqwP6MQxXwFzMsLe0Q"/>
+<div>
+<p class="font-semibold text-sm">Jane Doe</p>
+<p class="text-xs text-[var(--subtle-text-color)]">Talent</p>
+</div>
+<span :class="{'rotate-180': profileSidebarOpen}" class="material-symbols-outlined text-[var(--subtle-text-color)] transition-transform">
+                                    expand_more
+                                </span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<div :class="{'translate-x-0': profileSidebarOpen, 'translate-x-full': !profileSidebarOpen}" class="fixed top-0 right-0 h-full w-80 bg-gray-900/80 backdrop-blur-lg border-l border-[var(--border-color)] z-40 transition-transform duration-300 ease-in-out" id="profile-sidebar">
+<div class="flex flex-col h-full">
+<div class="flex items-center justify-between p-6 border-b border-[var(--border-color)] h-20">
+<div class="flex items-center space-x-4">
+<img alt="User avatar" class="h-12 w-12 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB9dlvqcgv_9_uNlhIov6f7xWIsXxmKdCCHoml79PoJyGOftNhCqIAxhypnat0xKeHURjMIWAQPGVDYIloGcONJy2DOsVRWZdCW7xURgXB26K0KHrS-p001xF4BJ2tgZAHfoTHnHngO-D1XnqSDnkELSIgFNHnyZp9Lka1RUMd8Ua7BSqzpgfi5Yf_bg6VQxE_NFlMtPmRMBNdHHoUYIiLXlbfR5gc-fjNeuA7fxCOsW72tokMjQP_czvQZqwP6MQxXwFzMsLe0Q"/>
+<div>
+<p class="font-bold text-lg">Jane Doe</p>
+<p class="text-sm text-[var(--subtle-text-color)]">Talent Profile</p>
+</div>
+</div>
+<button @click="profileSidebarOpen = false">
+<span class="material-symbols-outlined text-[var(--subtle-text-color)] hover:text-white">close</span>
+</button>
+</div>
+<nav class="flex-grow p-6 space-y-2">
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span> Dashboard
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">person</span> My Profile
+                    </a>
+<a class="flex items-center px-4 py-3 bg-[var(--secondary-color)]/20 text-[var(--primary-color)] rounded-lg font-semibold" href="#">
+<span class="material-symbols-outlined mr-3">folder_shared</span> Resume &amp; Documents
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">military_tech</span> Skills &amp; Endorsements
+                    </a>
+<hr class="border-[var(--border-color)] my-4"/>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">privacy_tip</span> Privacy Settings
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">notifications_active</span> Notifications Settings
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">help</span> Help &amp; Support
+                    </a>
+<div class="flex-grow"></div>
+</nav>
+<div class="p-6 border-t border-[var(--border-color)]">
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-red-500/20 hover:text-red-400 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">logout</span> Logout
+                    </a>
+</div>
+</div>
+</div>
+<div class="flex flex-1 pt-20">
+<aside class="w-72 flex-shrink-0 bg-gray-900/50 border-r border-[var(--border-color)] p-6 hidden md:block">
+<nav class="flex flex-col space-y-2 sticky top-24">
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">person</span> My Profile
+                    </a>
+<a class="flex items-center px-4 py-3 bg-[var(--secondary-color)]/20 text-[var(--primary-color)] rounded-lg font-semibold" href="#">
+<span class="material-symbols-outlined mr-3">folder_shared</span> Resume &amp; Documents
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">military_tech</span> Skills &amp; Endorsements
+                    </a>
+<hr class="border-[var(--border-color)] my-2"/>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">privacy_tip</span> Privacy Settings
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">notifications_active</span> Notifications
+                    </a>
+</nav>
+</aside>
+<main class="flex-grow">
+<div class="py-8 sm:py-12">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+<div class="flex items-center mb-4 sm:mb-0">
+<span class="material-symbols-outlined text-[var(--primary-color)] text-4xl mr-4">folder_shared</span>
+<h1 class="text-3xl font-bold tracking-tight">Resume &amp; Documents</h1>
+</div>
+<label class="cursor-pointer px-6 py-3 text-base font-semibold text-gray-900 bg-[var(--primary-color)] rounded-full hover:bg-[var(--primary-hover-color)] transition-colors flex items-center justify-center" for="document-upload">
+<span class="material-symbols-outlined mr-2">upload_file</span>
+                                Upload Document
+                            </label>
+<input class="hidden" id="document-upload" multiple="" type="file"/>
+</div>
+<div class="glassmorphism rounded-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-gray-800/50">
+<tr>
+<th class="p-5 font-semibold text-sm uppercase tracking-wider">Document Name</th>
+<th class="p-5 font-semibold text-sm uppercase tracking-wider">File Type</th>
+<th class="p-5 font-semibold text-sm uppercase tracking-wider">Date Uploaded</th>
+<th class="p-5 font-semibold text-sm uppercase tracking-wider text-center">Status</th>
+<th class="p-5 font-semibold text-sm uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[var(--border-color)]">
+<tr class="hover:bg-gray-800/30 transition-colors duration-200">
+<td class="p-5 whitespace-nowrap">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[var(--secondary-color)] mr-3">description</span>
+<div>
+<p class="font-medium">Jane_Doe_Resume_2024.pdf</p>
+<p class="text-sm text-[var(--subtle-text-color)]">Primary Resume</p>
+</div>
+</div>
+</td>
+<td class="p-5 whitespace-nowrap text-[var(--subtle-text-color)]">PDF Document</td>
+<td class="p-5 whitespace-nowrap text-[var(--subtle-text-color)]">Oct 12, 2023</td>
+<td class="p-5 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400">
+<span class="material-symbols-outlined text-sm mr-1">check_circle</span>
+                                            Verified
+                                        </span>
+</td>
+<td class="p-5 whitespace-nowrap text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="p-2 text-[var(--subtle-text-color)] hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"><span class="material-symbols-outlined">visibility</span></button>
+<button class="p-2 text-[var(--subtle-text-color)] hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"><span class="material-symbols-outlined">download</span></button>
+<button class="p-2 text-[var(--subtle-text-color)] hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded-full transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-gray-800/30 transition-colors duration-200">
+<td class="p-5 whitespace-nowrap">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[var(--subtle-text-color)] mr-3">draft</span>
+<div>
+<p class="font-medium">Cover_Letter_Frontend_Dev.docx</p>
+</div>
+</div>
+</td>
+<td class="p-5 whitespace-nowrap text-[var(--subtle-text-color)]">Word Document</td>
+<td class="p-5 whitespace-nowrap text-[var(--subtle-text-color)]">Sep 28, 2023</td>
+<td class="p-5 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400">
+<span class="material-symbols-outlined text-sm mr-1">pending</span>
+                                            Processing
+                                        </span>
+</td>
+<td class="p-5 whitespace-nowrap text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="p-2 text-[var(--subtle-text-color)] hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"><span class="material-symbols-outlined">visibility</span></button>
+<button class="p-2 text-[var(--subtle-text-color)] hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"><span class="material-symbols-outlined">download</span></button>
+<button class="p-2 text-[var(--subtle-text-color)] hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded-full transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-gray-800/30 transition-colors duration-200">
+<td class="p-5 whitespace-nowrap">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[var(--subtle-text-color)] mr-3">workspace_premium</span>
+<div>
+<p class="font-medium">React_Advanced_Certificate.pdf</p>
+</div>
+</div>
+</td>
+<td class="p-5 whitespace-nowrap text-[var(--subtle-text-color)]">PDF Document</td>
+<td class="p-5 whitespace-nowrap text-[var(--subtle-text-color)]">Aug 15, 2023</td>
+<td class="p-5 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400">
+<span class="material-symbols-outlined text-sm mr-1">check_circle</span>
+                                            Verified
+                                        </span>
+</td>
+<td class="p-5 whitespace-nowrap text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="p-2 text-[var(--subtle-text-color)] hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"><span class="material-symbols-outlined">visibility</span></button>
+<button class="p-2 text-[var(--subtle-text-color)] hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"><span class="material-symbols-outlined">download</span></button>
+<button class="p-2 text-[var(--subtle-text-color)] hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded-full transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-gray-800/30 transition-colors duration-200">
+<td class="p-5 whitespace-nowrap">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-[var(--subtle-text-color)] mr-3">image</span>
+<div>
+<p class="font-medium">Project_Screenshot_Portfolio.png</p>
+</div>
+</div>
+</td>
+<td class="p-5 whitespace-nowrap text-[var(--subtle-text-color)]">PNG Image</td>
+<td class="p-5 whitespace-nowrap text-[var(--subtle-text-color)]">Jul 02, 2023</td>
+<td class="p-5 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-400">
+<span class="material-symbols-outlined text-sm mr-1">error</span>
+                                            Failed
+                                        </span>
+</td>
+<td class="p-5 whitespace-nowrap text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="p-2 text-[var(--subtle-text-color)] hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"><span class="material-symbols-outlined">refresh</span></button>
+<button class="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded-full transition-colors"><span class="material-symbols-outlined">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<script defer="" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+
+</body></html>

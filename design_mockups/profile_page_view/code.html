@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>eTalente - My Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        :root {
+            --primary-color: #FACC15;
+            --primary-hover-color: #FBBF24;
+            --secondary-color: #3B82F6;
+            --background-color: #0F172A;
+            --card-color: rgba(15, 23, 42, 0.6);
+            --text-color: #F8FAFC;
+            --subtle-text-color: #94A3B8;
+            --border-color: #334155;
+            --glass-blur: blur(16px);
+        }
+        .glassmorphism {
+            background: var(--card-color);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            background-color: rgba(30, 41, 59, 0.5);
+            border-color: var(--border-color);
+            color: var(--text-color);
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            --tw-ring-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        label {
+            color: var(--subtle-text-color);
+        }
+        #profile-sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-[var(--background-color)] font-['Inter'] text-[var(--text-color)] antialiased" x-data="{ profileSidebarOpen: false, uploading: false, progress: 0 }">
+<div class="min-h-screen flex flex-col">
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glassmorphism border-b border-[var(--border-color)]">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-20">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-[var(--primary-color)]" style="font-size: 32px;">business_center</span>
+<a class="text-2xl font-bold tracking-tighter" href="#">eTalente</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="relative">
+<span class="material-symbols-outlined text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors">
+                                notifications
+                            </span>
+<span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">3</span>
+</button>
+<button @click="profileSidebarOpen = !profileSidebarOpen" class="flex items-center space-x-3">
+<img alt="User avatar" class="h-10 w-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB9dlvqcgv_9_uNlhIov6f7xWIsXxmKdCCHoml79PoJyGOftNhCqIAxhypnat0xKeHURjMIWAQPGVDYIloGcONJy2DOsVRWZdCW7xURgXB26K0KHrS-p001xF4BJ2tgZAHfoTHnHngO-D1XnqSDnkELSIgFNHnyZp9Lka1RUMd8Ua7BSqzpgfi5Yf_bg6VQxE_NFlMtPmRMBNdHHoUYIiLXlbfR5gc-fjNeuA7fxCOsW72tokMjQP_czvQZqwP6MQxXwFzMsLe0Q"/>
+<div>
+<p class="font-semibold text-sm">Jane Doe</p>
+<p class="text-xs text-[var(--subtle-text-color)]">Talent</p>
+</div>
+<span :class="{'rotate-180': profileSidebarOpen}" class="material-symbols-outlined text-[var(--subtle-text-color)] transition-transform">
+                                    expand_more
+                                </span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<div :class="{'translate-x-0': profileSidebarOpen, 'translate-x-full': !profileSidebarOpen}" class="fixed top-0 right-0 h-full w-80 bg-gray-900/80 backdrop-blur-lg border-l border-[var(--border-color)] z-40 transition-transform duration-300 ease-in-out" id="profile-sidebar">
+<div class="flex flex-col h-full">
+<div class="flex items-center justify-between p-6 border-b border-[var(--border-color)] h-20">
+<div class="flex items-center space-x-4">
+<img alt="User avatar" class="h-12 w-12 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB9dlvqcgv_9_uNlhIov6f7xWIsXxmKdCCHoml79PoJyGOftNhCqIAxhypnat0xKeHURjMIWAQPGVDYIloGcONJy2DOsVRWZdCW7xURgXB26K0KHrS-p001xF4BJ2tgZAHfoTHnHngO-D1XnqSDnkELSIgFNHnyZp9Lka1RUMd8Ua7BSqzpgfi5Yf_bg6VQxE_NFlMtPmRMBNdHHoUYIiLXlbfR5gc-fjNeuA7fxCOsW72tokMjQP_czvQZqwP6MQxXwFzMsLe0Q"/>
+<div>
+<p class="font-bold text-lg">Jane Doe</p>
+<p class="text-sm text-[var(--subtle-text-color)]">Talent Profile</p>
+</div>
+</div>
+<button @click="profileSidebarOpen = false">
+<span class="material-symbols-outlined text-[var(--subtle-text-color)] hover:text-white">close</span>
+</button>
+</div>
+<nav class="flex-grow p-6 space-y-2">
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span> Dashboard
+                    </a>
+<a class="flex items-center px-4 py-3 bg-[var(--secondary-color)]/20 text-[var(--primary-color)] rounded-lg font-semibold" href="#">
+<span class="material-symbols-outlined mr-3">person</span> My Profile
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">folder_shared</span> Resume &amp; Documents
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">military_tech</span> Skills &amp; Endorsements
+                    </a>
+<hr class="border-[var(--border-color)] my-4"/>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">privacy_tip</span> Privacy Settings
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">notifications_active</span> Notifications Settings
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">help</span> Help &amp; Support
+                    </a>
+<div class="flex-grow"></div>
+</nav>
+<div class="p-6 border-t border-[var(--border-color)]">
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-red-500/20 hover:text-red-400 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">logout</span> Logout
+                    </a>
+</div>
+</div>
+</div>
+<div class="flex flex-1 pt-20">
+<aside class="w-72 flex-shrink-0 bg-gray-900/50 border-r border-[var(--border-color)] p-6 hidden md:block">
+<nav class="flex flex-col space-y-2 sticky top-24">
+<a class="flex items-center px-4 py-3 bg-[var(--secondary-color)]/20 text-[var(--primary-color)] rounded-lg font-semibold" href="#">
+<span class="material-symbols-outlined mr-3">person</span> My Profile
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">folder_shared</span> Resume &amp; Documents
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">military_tech</span> Skills &amp; Endorsements
+                    </a>
+<hr class="border-[var(--border-color)] my-2"/>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">privacy_tip</span> Privacy Settings
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">notifications_active</span> Notifications
+                    </a>
+</nav>
+</aside>
+<main class="flex-grow">
+<div class="py-8 sm:py-12">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+<div class="flex items-center mb-8">
+<span class="material-symbols-outlined text-[var(--primary-color)] text-4xl mr-4">person</span>
+<h1 class="text-3xl font-bold tracking-tight">My Profile</h1>
+</div>
+<div class="space-y-10">
+<div class="glassmorphism rounded-xl p-6 sm:p-8">
+<h2 class="text-xl font-semibold mb-6 flex items-center">
+<span class="material-symbols-outlined mr-3">account_circle</span>
+                                    Profile Picture
+                                </h2>
+<div class="flex flex-col sm:flex-row items-center gap-6">
+<div class="relative">
+<img alt="User avatar" class="h-32 w-32 rounded-full ring-4 ring-[var(--secondary-color)]/50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB9dlvqcgv_9_uNlhIov6f7xWIsXxmKdCCHoml79PoJyGOftNhCqIAxhypnat0xKeHURjMIWAQPGVDYIloGcONJy2DOsVRWZdCW7xURgXB26K0KHrS-p001xF4BJ2tgZAHfoTHnHngO-D1XnqSDnkELSIgFNHnyZp9Lka1RUMd8Ua7BSqzpgfi5Yf_bg6VQxE_NFlMtPmRMBNdHHoUYIiLXlbfR5gc-fjNeuA7fxCOsW72tokMjQP_czvQZqwP6MQxXwFzMsLe0Q"/>
+<div class="absolute inset-0 bg-gray-900/70 rounded-full flex items-center justify-center" x-show="uploading">
+<div class="w-20 h-20 rounded-full border-4 border-t-[var(--primary-color)] border-gray-600 animate-spin"></div>
+</div>
+</div>
+<div class="flex-grow text-center sm:text-left">
+<div class="flex flex-col sm:flex-row gap-4 items-center">
+<label class="cursor-pointer px-6 py-2.5 text-sm font-semibold text-gray-900 bg-[var(--primary-color)] rounded-full hover:bg-[var(--primary-hover-color)] transition-colors flex items-center justify-center" for="profile-picture-upload">
+<span class="material-symbols-outlined mr-2">upload</span> Upload Picture
+                                            </label>
+<input @change="uploading = true; progress = 0; let interval = setInterval(() =&gt; { progress += 10; if(progress &gt;= 100) { clearInterval(interval); uploading = false; } }, 200);" class="hidden" id="profile-picture-upload" type="file"/>
+<button class="px-6 py-2.5 text-sm font-semibold text-[var(--subtle-text-color)] bg-gray-700/50 rounded-full hover:bg-gray-700/80 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined mr-2 text-red-400">delete</span> Remove
+                                            </button>
+</div>
+<p class="text-xs text-[var(--subtle-text-color)] mt-3">PNG, JPG, GIF up to 5MB. Recommended: 400x400px.</p>
+<div class="w-full bg-gray-700 rounded-full h-2.5 mt-4" x-show="uploading">
+<div :style="`width: ${progress}%`" class="bg-[var(--secondary-color)] h-2.5 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="glassmorphism rounded-xl p-6 sm:p-8">
+<h2 class="text-xl font-semibold mb-6 flex items-center">
+<span class="material-symbols-outlined mr-3">badge</span> Personal Information
+                                </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium mb-2" for="first-name">First Name</label>
+<input class="w-full rounded-md border-gray-600 focus:ring-blue-500 focus:border-blue-500" id="first-name" name="first-name" type="text" value="Jane"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-2" for="last-name">Last Name</label>
+<input class="w-full rounded-md border-gray-600 focus:ring-blue-500 focus:border-blue-500" id="last-name" name="last-name" type="text" value="Doe"/>
+</div>
+<div class="md:col-span-2">
+<label class="block text-sm font-medium mb-2" for="email">Email Address</label>
+<input class="w-full rounded-md border-gray-600 focus:ring-blue-500 focus:border-blue-500" id="email" name="email" type="email" value="jane.doe@example.com"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-2" for="phone">Phone Number</label>
+<input class="w-full rounded-md border-gray-600 focus:ring-blue-500 focus:border-blue-500" id="phone" name="phone" type="text" value="+1 (555) 123-4567"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-2" for="location">Location</label>
+<input class="w-full rounded-md border-gray-600 focus:ring-blue-500 focus:border-blue-500" id="location" name="location" type="text" value="San Francisco, CA"/>
+</div>
+<div class="md:col-span-2">
+<label class="block text-sm font-medium mb-2" for="address">Address</label>
+<input class="w-full rounded-md border-gray-600 focus:ring-blue-500 focus:border-blue-500" id="address" name="address" type="text" value="123 Market St, Suite 456"/>
+</div>
+</div>
+</div>
+<div class="glassmorphism rounded-xl p-6 sm:p-8">
+<h2 class="text-xl font-semibold mb-6 flex items-center">
+<span class="material-symbols-outlined mr-3">article</span> Professional Summary
+                                </h2>
+<div>
+<label class="block text-sm font-medium mb-2" for="summary">Summary</label>
+<textarea class="w-full rounded-md border-gray-600 focus:ring-blue-500 focus:border-blue-500" id="summary" name="summary" rows="6">Highly motivated and experienced Frontend Developer with a passion for creating beautiful, responsive, and user-friendly web applications. Proficient in React, TypeScript, and modern JavaScript frameworks. Seeking to leverage my skills to build innovative products at a forward-thinking company.</textarea>
+</div>
+</div>
+<div class="flex justify-end pt-4">
+<button class="px-8 py-3 text-base font-semibold text-gray-900 bg-[var(--primary-color)] rounded-full hover:bg-[var(--primary-hover-color)] transition-colors flex items-center">
+<span class="material-symbols-outlined mr-2">save</span> Save Changes
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<script defer="" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+
+</body></html>

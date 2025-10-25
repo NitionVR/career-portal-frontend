@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>eTalente - Notifications</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        :root {
+            --primary-color: #FACC15;
+            --primary-hover-color: #FBBF24;
+            --secondary-color: #3B82F6;
+            --background-color: #0F172A;
+            --card-color: rgba(15, 23, 42, 0.6);
+            --text-color: #F8FAFC;
+            --subtle-text-color: #94A3B8;
+            --border-color: #334155;
+            --glass-blur: blur(16px);
+        }
+        .glassmorphism {
+            background: var(--card-color);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24
+        }
+        .bg-gradient-hero {
+            background-image: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #3B82F6 100%);
+        }
+        .smooth-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 0 40px rgba(59, 130, 246, 0.2);
+        }
+        .smooth-shadow-sm {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1), 0 0 20px rgba(250, 204, 21, 0.1);
+        }
+        .group:hover .group-hover-effect {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1), 0 0 50px rgba(59, 130, 246, 0.3);
+        }
+        .notification-item:not(.unread) .unread-dot {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-[var(--background-color)] font-['Inter'] text-[var(--text-color)] antialiased">
+<div class="min-h-screen flex flex-col">
+<header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glassmorphism border-b border-[var(--border-color)]">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-20">
+<div class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-[var(--primary-color)]" style="font-size: 32px;">business_center</span>
+<a class="text-2xl font-bold tracking-tighter" href="#">eTalente</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="relative">
+<span class="material-symbols-outlined text-[var(--subtle-text-color)] hover:text-[var(--text-color)] transition-colors">
+                                notifications
+                            </span>
+<span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">3</span>
+</button>
+<div class="flex items-center space-x-3">
+<img alt="User avatar" class="h-10 w-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB9dlvqcgv_9_uNlhIov6f7xWIsXxmKdCCHoml79PoJyGOftNhCqIAxhypnat0xKeHURjMIWAQPGVDYIloGcONJy2DOsVRWZdCW7xURgXB26K0KHrS-p001xF4BJ2tgZAHfoTHnHngO-D1XnqSDnkELSIgFNHnyZp9Lka1RUMd8Ua7BSqzpgfi5Yf_bg6VQxE_NFlMtPmRMBNdHHoUYIiLXlbfR5gc-fjNeuA7fxCOsW72tokMjQP_czvQZqwP6MQxXwFzMsLe0Q"/>
+<div>
+<p class="font-semibold text-sm">Jane Doe</p>
+<p class="text-xs text-[var(--subtle-text-color)]">Talent</p>
+</div>
+<button>
+<span class="material-symbols-outlined text-[var(--subtle-text-color)]">
+                                    expand_more
+                                </span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1 pt-20">
+<aside class="w-64 flex-shrink-0 bg-gray-900/50 border-r border-[var(--border-color)] p-6 hidden md:block">
+<nav class="flex flex-col space-y-2">
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">work</span> Job Posts
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">description</span> My Applications
+                    </a>
+<a class="flex items-center px-4 py-3 text-[var(--subtle-text-color)] hover:bg-gray-800/50 hover:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">request_quote</span> Job Offers/Contracts
+                    </a>
+<a class="flex items-center px-4 py-3 bg-[var(--secondary-color)]/20 text-[var(--primary-color)] rounded-lg font-semibold" href="#">
+<span class="material-symbols-outlined mr-3">notifications</span> Notifications
+                        <span class="ml-auto inline-block bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">3</span>
+</a>
+</nav>
+</aside>
+<main class="flex-grow">
+<section class="py-8 sm:py-12">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="mb-8">
+<h1 class="text-3xl font-bold tracking-tight">Notifications</h1>
+<p class="mt-1 text-[var(--subtle-text-color)]">Manage and view all your updates here.</p>
+</div>
+<div class="glassmorphism rounded-xl p-6 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+<div class="md:col-span-3">
+<label class="sr-only" for="search-notifications">Search notifications</label>
+<div class="relative">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="material-symbols-outlined text-[var(--subtle-text-color)]">search</span>
+</div>
+<input class="block w-full rounded-lg border-[var(--border-color)] bg-transparent pl-10 pr-4 py-2.5 text-sm placeholder:text-[var(--subtle-text-color)] focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]" id="search-notifications" placeholder="Search by keyword, company, etc." type="search"/>
+</div>
+</div>
+<div class="md:col-span-2">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="sr-only" for="filter-type">Filter by type</label>
+<select class="block w-full rounded-lg border-[var(--border-color)] bg-transparent py-2.5 text-sm text-[var(--subtle-text-color)] focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]" id="filter-type">
+<option>All types</option>
+<option>Unread</option>
+<option>Job Alerts</option>
+<option>Messages</option>
+<option>Applications</option>
+<option>Contracts</option>
+</select>
+</div>
+<div>
+<label class="sr-only" for="filter-date">Filter by date</label>
+<select class="block w-full rounded-lg border-[var(--border-color)] bg-transparent py-2.5 text-sm text-[var(--subtle-text-color)] focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]" id="filter-date">
+<option>Newest first</option>
+<option>Oldest first</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<a class="notification-item unread block p-6 glassmorphism rounded-xl hover:bg-gray-800/50 transition-colors duration-200" href="#">
+<div class="flex items-start space-x-4">
+<div class="flex-shrink-0">
+<span class="material-symbols-outlined text-green-400 text-2xl">mail</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center">
+<p class="font-semibold text-sm text-green-400">New Message</p>
+<div class="flex items-center space-x-2">
+<p class="text-xs text-[var(--subtle-text-color)]">5 minutes ago</p>
+<div class="unread-dot h-2 w-2 rounded-full bg-[var(--primary-color)]"></div>
+</div>
+</div>
+<h3 class="text-lg font-semibold mt-1">John from Acme Inc. sent you a message.</h3>
+<p class="text-sm text-[var(--subtle-text-color)] mt-1 line-clamp-2">"Hi Jane, we were very impressed with your profile and would like to schedule a quick chat to discuss the Senior Frontend Developer role..."</p>
+</div>
+</div>
+</a>
+<a class="notification-item unread block p-6 glassmorphism rounded-xl hover:bg-gray-800/50 transition-colors duration-200" href="#">
+<div class="flex items-start space-x-4">
+<div class="flex-shrink-0">
+<span class="material-symbols-outlined text-blue-400 text-2xl">description</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center">
+<p class="font-semibold text-sm text-blue-400">Application Status Update</p>
+<div class="flex items-center space-x-2">
+<p class="text-xs text-[var(--subtle-text-color)]">2 hours ago</p>
+<div class="unread-dot h-2 w-2 rounded-full bg-[var(--primary-color)]"></div>
+</div>
+</div>
+<h3 class="text-lg font-semibold mt-1">Your application for Product Designer was viewed.</h3>
+<p class="text-sm text-[var(--subtle-text-color)] mt-1">Innovate LLC has viewed your application. We'll notify you when there's another update.</p>
+</div>
+</div>
+</a>
+<a class="notification-item block p-6 glassmorphism rounded-xl hover:bg-gray-800/50 transition-colors duration-200" href="#">
+<div class="flex items-start space-x-4">
+<div class="flex-shrink-0">
+<span class="material-symbols-outlined text-[var(--primary-color)] text-2xl">work_alert</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center">
+<p class="font-semibold text-sm text-[var(--primary-color)]">New Job Alert</p>
+<p class="text-xs text-[var(--subtle-text-color)]">1 day ago</p>
+</div>
+<h3 class="text-lg font-semibold mt-1">New role matching your profile: UI/UX Designer.</h3>
+<p class="text-sm text-[var(--subtle-text-color)] mt-1">A new remote position for a UI/UX Designer at Creative Solutions has just been posted. Check it out now!</p>
+</div>
+</div>
+</a>
+<a class="notification-item block p-6 glassmorphism rounded-xl hover:bg-gray-800/50 transition-colors duration-200" href="#">
+<div class="flex items-start space-x-4">
+<div class="flex-shrink-0">
+<span class="material-symbols-outlined text-purple-400 text-2xl">request_quote</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center">
+<p class="font-semibold text-sm text-purple-400">Contract Update</p>
+<p class="text-xs text-[var(--subtle-text-color)]">3 days ago</p>
+</div>
+<h3 class="text-lg font-semibold mt-1">Your contract for DevOps Engineer is ready.</h3>
+<p class="text-sm text-[var(--subtle-text-color)] mt-1">TechForward has sent you a contract offer for the DevOps Engineer role. Please review and sign.</p>
+</div>
+</div>
+</a>
+<a class="notification-item unread block p-6 glassmorphism rounded-xl hover:bg-gray-800/50 transition-colors duration-200" href="#">
+<div class="flex items-start space-x-4">
+<div class="flex-shrink-0">
+<span class="material-symbols-outlined text-green-400 text-2xl">mail</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center">
+<p class="font-semibold text-sm text-green-400">New Message</p>
+<div class="flex items-center space-x-2">
+<p class="text-xs text-[var(--subtle-text-color)]">4 days ago</p>
+<div class="unread-dot h-2 w-2 rounded-full bg-[var(--primary-color)]"></div>
+</div>
+</div>
+<h3 class="text-lg font-semibold mt-1">Reply from Data Corp regarding your question.</h3>
+<p class="text-sm text-[var(--subtle-text-color)] mt-1 line-clamp-2">"Thanks for your question about the team structure. The Data Science team consists of 5 engineers and reports directly to the CTO..."</p>
+</div>
+</div>
+</a>
+<a class="notification-item block p-6 glassmorphism rounded-xl hover:bg-gray-800/50 transition-colors duration-200" href="#">
+<div class="flex items-start space-x-4">
+<div class="flex-shrink-0">
+<span class="material-symbols-outlined text-blue-400 text-2xl">thumb_down</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-center">
+<p class="font-semibold text-sm text-red-400">Application Status Update</p>
+<p class="text-xs text-[var(--subtle-text-color)]">1 week ago</p>
+</div>
+<h3 class="text-lg font-semibold mt-1">Update on your Backend Engineer application.</h3>
+<p class="text-sm text-[var(--subtle-text-color)] mt-1">Unfortunately, Server Solutions has decided not to move forward with your application at this time. We encourage you to apply for other roles.</p>
+</div>
+</div>
+</a>
+</div>
+</div>
+</section>
+</main>
+</div>
+</div>
+
+</body></html>

@@ -1,0 +1,8 @@
+/*
+  This override is necessary because the Material Symbols font is not being
+  correctly applied to mat-icon components within this component's template,
+  causing them to render as text instead of icons.
+*/
+:host mat-icon {
+  font-family: 'Material Symbols Outlined';
+}

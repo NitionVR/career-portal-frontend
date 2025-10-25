@@ -6,15 +6,15 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { ResumeDto } from '../../models/resume-dto';
 import { JsonNode } from '../../models/json-node';
+import { ResumeDto } from '../../models/resume-dto';
 
-export interface AutofillResume$Params {
+export interface AutofillProfileFromResume$Params {
       body: ResumeDto
 }
 
-export function autofillResume(http: HttpClient, rootUrl: string, params: AutofillResume$Params, context?: HttpContext): Observable<StrictHttpResponse<JsonNode>> {
-  const rb = new RequestBuilder(rootUrl, autofillResume.PATH, 'post');
+export function autofillProfileFromResume(http: HttpClient, rootUrl: string, params: AutofillProfileFromResume$Params, context?: HttpContext): Observable<StrictHttpResponse<JsonNode>> {
+  const rb = new RequestBuilder(rootUrl, autofillProfileFromResume.PATH, 'post');
   if (params) {
     rb.body(params.body, 'application/json');
   }
@@ -29,4 +29,4 @@ export function autofillResume(http: HttpClient, rootUrl: string, params: Autofi
   );
 }
 
-autofillResume.PATH = '/api/profile/me/autofill-resume';
+autofillProfileFromResume.PATH = '/api/profile/me/autofill-resume';

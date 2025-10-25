@@ -1,0 +1,76 @@
+<div class="py-8 sm:py-12">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+      <div class="flex items-center mb-4 sm:mb-0">
+        <span class="material-symbols-outlined text-primary text-4xl mr-4">folder_shared</span>
+        <h1 class="text-3xl font-bold tracking-tight">CV & Documents</h1>
+      </div>
+      <label class="cursor-pointer px-6 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center" for="document-upload" [class.opacity-50]="dataSource.length >= 3" [class.cursor-not-allowed]="dataSource.length >= 3">
+        <span class="material-symbols-outlined mr-2">upload_file</span>
+        Upload CV
+      </label>
+      <input class="hidden" id="document-upload" type="file" (change)="onFileSelected($event)" [disabled]="dataSource.length >= 3" accept=".pdf,.doc,.docx"/>
+    </div>
+
+    <!-- Info Box for Upload Limit -->
+    <div class="glassmorphism rounded-xl p-4 mb-8 flex items-center gap-4">
+        <span class="material-symbols-outlined text-primary text-3xl">info</span>
+        <div>
+            <p class="font-semibold">Upload Limit</p>
+            <p class="text-sm text-muted-foreground">You can upload a maximum of 3 CVs. The first one you upload will be set as your primary CV for applications.</p>
+        </div>
+    </div>
+
+    <!-- Documents Table -->
+    <div class="glassmorphism rounded-xl overflow-hidden">
+      <div *ngIf="isLoading" class="flex items-center justify-center p-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+
+      <div *ngIf="!isLoading && dataSource.length === 0" class="text-center p-12">
+        <span class="material-symbols-outlined text-6xl text-muted-foreground">description</span>
+        <p class="mt-4 text-lg font-semibold">No Documents Found</p>
+        <p class="mt-2 text-muted-foreground">Get started by uploading your first CV.</p>
+      </div>
+
+      <table class="min-w-full divide-y divide-border">
+        <thead class="bg-white/5">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Document Name</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Date Uploaded</th>
+            <th scope="col" class="relative px-6 py-3">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border">
+          <tr *ngFor="let element of dataSource" class="hover:bg-white/5 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <span class="material-symbols-outlined text-primary mr-4">description</span>
+                <div>
+                  <div class="text-sm font-medium text-foreground">{{element.filename}}</div>
+                  <div *ngIf="dataSource.indexOf(element) === 0" class="text-xs text-primary font-semibold">Primary CV</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+              {{element.uploadDate | date:'longDate'}}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <div class="flex items-center justify-end space-x-2">
+                <a [href]="element.url" target="_blank" mat-icon-button matTooltip="View CV">
+                  <mat-icon>visibility</mat-icon>
+                </a>
+                <button mat-icon-button matTooltip="Delete CV" (click)="deleteResume(element)">
+                  <mat-icon class="text-destructive">delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
