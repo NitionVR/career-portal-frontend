@@ -1,0 +1,9 @@
+/* Make the radio button itself invisible, as we are styling the label as the button */
+:host ::ng-deep .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control {
+    display: none;
+}
+
+/* Remove padding from the radio button label container */
+:host ::ng-deep .mat-mdc-radio-button .mdc-form-field {
+    padding: 0;
+}

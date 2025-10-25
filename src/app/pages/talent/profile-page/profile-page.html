@@ -26,11 +26,10 @@
     <div class="glassmorphism rounded-xl p-6 sm:p-8 mb-10 text-center">
       <h2 class="text-xl font-semibold mb-4 text-foreground">Get Started Instantly</h2>
       <p class="text-muted-foreground mb-6 max-w-2xl mx-auto">Let us do the heavy lifting. Upload your CV or resume, and we'll automatically fill in your profile to get you started in seconds.</p>
-      <button (click)="triggerFileUpload(cvUploadInput)" class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center mx-auto">
+      <button (click)="openChooseCvModal()" class="px-8 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center mx-auto">
         <span class="material-symbols-outlined mr-2">upload_file</span>
         Upload CV to Autofill
       </button>
-      <input type="file" class="hidden" #cvUploadInput (change)="onCVFileSelected($event)" accept=".pdf,.doc,.docx"/>
     </div>
 
     <form [formGroup]="profileForm" (ngSubmit)="onSaveProfile()" class="space-y-6">
@@ -120,8 +119,8 @@
           <span class="material-symbols-outlined mr-3">work</span>
           Work Experience
         </h3>
-        <div *ngFor="let workExperienceFormGroup of workExperiences.controls; let i = index" [formGroupName]="i">
-          <app-work-experience [workFormGroup]="workExperienceFormGroup" (remove)="removeWorkExperience(i)"></app-work-experience>
+        <div *ngFor="let group of workExperiences; let i = index" [formGroupName]="i">
+          <app-work-experience [workFormGroup]="group" (remove)="removeWorkExperience(i)"></app-work-experience>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addWorkExperience()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
@@ -136,8 +135,8 @@
           <span class="material-symbols-outlined mr-3">volunteer_activism</span>
           Volunteer Experience
         </h3>
-        <div *ngFor="let volunteerExperienceFormGroup of volunteerExperiences.controls; let i = index" [formGroupName]="i">
-          <app-volunteer-experience [volunteerFormGroup]="volunteerExperienceFormGroup" (remove)="removeVolunteerExperience(i)"></app-volunteer-experience>
+        <div *ngFor="let group of volunteerExperiences; let i = index" [formGroupName]="i">
+          <app-volunteer-experience [volunteerFormGroup]="group" (remove)="removeVolunteerExperience(i)"></app-volunteer-experience>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addVolunteerExperience()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
@@ -152,8 +151,8 @@
           <span class="material-symbols-outlined mr-3">school</span>
           Education
         </h3>
-        <div *ngFor="let educationFormGroup of educations.controls; let i = index" [formGroupName]="i">
-          <app-education [educationFormGroup]="educationFormGroup" (remove)="removeEducation(i)"></app-education>
+        <div *ngFor="let group of educations; let i = index" [formGroupName]="i">
+          <app-education [educationFormGroup]="group" (remove)="removeEducation(i)"></app-education>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addEducation()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
@@ -168,8 +167,8 @@
           <span class="material-symbols-outlined mr-3">emoji_events</span>
           Awards
         </h3>
-        <div *ngFor="let awardFormGroup of awards.controls; let i = index" [formGroupName]="i">
-          <app-award [awardFormGroup]="awardFormGroup" (remove)="removeAward(i)"></app-award>
+        <div *ngFor="let group of awards; let i = index" [formGroupName]="i">
+          <app-award [awardFormGroup]="group" (remove)="removeAward(i)"></app-award>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addAward()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
@@ -184,8 +183,8 @@
           <span class="material-symbols-outlined mr-3">military_tech</span>
           Certificates
         </h3>
-        <div *ngFor="let certificateFormGroup of certificates.controls; let i = index" [formGroupName]="i">
-          <app-certificate [certificateFormGroup]="certificateFormGroup" (remove)="removeCertificate(i)"></app-certificate>
+        <div *ngFor="let group of certificates; let i = index" [formGroupName]="i">
+          <app-certificate [certificateFormGroup]="group" (remove)="removeCertificate(i)"></app-certificate>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addCertificate()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
@@ -200,8 +199,8 @@
           <span class="material-symbols-outlined mr-3">book</span>
           Publications
         </h3>
-        <div *ngFor="let publicationFormGroup of publications.controls; let i = index" [formGroupName]="i">
-          <app-publication [publicationFormGroup]="publicationFormGroup" (remove)="removePublication(i)"></app-publication>
+        <div *ngFor="let group of publications; let i = index" [formGroupName]="i">
+          <app-publication [publicationFormGroup]="group" (remove)="removePublication(i)"></app-publication>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addPublication()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
@@ -216,8 +215,8 @@
           <span class="material-symbols-outlined mr-3">psychology</span>
           Skills
         </h3>
-        <div *ngFor="let skillFormGroup of skills.controls; let i = index" [formGroupName]="i">
-          <app-skill [skillFormGroup]="skillFormGroup" (remove)="removeSkill(i)"></app-skill>
+        <div *ngFor="let group of skills; let i = index" [formGroupName]="i">
+          <app-skill [skillFormGroup]="group" (remove)="removeSkill(i)"></app-skill>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addSkill()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
@@ -232,8 +231,8 @@
           <span class="material-symbols-outlined mr-3">language</span>
           Languages
         </h3>
-        <div *ngFor="let languageFormGroup of languages.controls; let i = index" [formGroupName]="i">
-          <app-language [languageFormGroup]="languageFormGroup" (remove)="removeLanguage(i)"></app-language>
+        <div *ngFor="let group of languages; let i = index" [formGroupName]="i">
+          <app-language [languageFormGroup]="group" (remove)="removeLanguage(i)"></app-language>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addLanguage()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
@@ -248,8 +247,8 @@
           <span class="material-symbols-outlined mr-3">interests</span>
           Interests
         </h3>
-        <div *ngFor="let interestFormGroup of interests.controls; let i = index" [formGroupName]="i">
-          <app-interest [interestFormGroup]="interestFormGroup" (remove)="removeInterest(i)"></app-interest>
+        <div *ngFor="let group of interests; let i = index" [formGroupName]="i">
+          <app-interest [interestFormGroup]="group" (remove)="removeInterest(i)"></app-interest>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addInterest()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
@@ -264,8 +263,8 @@
           <span class="material-symbols-outlined mr-3">group</span>
           References
         </h3>
-        <div *ngFor="let referenceFormGroup of references.controls; let i = index" [formGroupName]="i">
-          <app-reference [referenceFormGroup]="referenceFormGroup" (remove)="removeReference(i)"></app-reference>
+        <div *ngFor="let group of references; let i = index" [formGroupName]="i">
+          <app-reference [referenceFormGroup]="group" (remove)="removeReference(i)"></app-reference>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addReference()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">
@@ -280,8 +279,8 @@
           <span class="material-symbols-outlined mr-3">workspaces</span>
           Projects
         </h3>
-        <div *ngFor="let projectFormGroup of projects.controls; let i = index" [formGroupName]="i">
-          <app-project [projectFormGroup]="projectFormGroup" (remove)="removeProject(i)"></app-project>
+        <div *ngFor="let group of projects; let i = index" [formGroupName]="i">
+          <app-project [projectFormGroup]="group" (remove)="removeProject(i)"></app-project>
         </div>
         <div class="flex justify-end mt-4">
           <button type="button" (click)="addProject()" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center">

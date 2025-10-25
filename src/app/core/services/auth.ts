@@ -181,6 +181,11 @@ export class AuthService {
     return this.getUserRole() === role;
   }
 
+  public setCurrentUser(user: User): void {
+    this.storeUser(user);
+    this.currentUserSubject.next(user);
+  }
+
   // ============= PRIVATE HELPERS =============
 
   private handleSuccessfulAuth(response: VerifyTokenResponse): void {
