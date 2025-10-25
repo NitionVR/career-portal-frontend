@@ -85,7 +85,7 @@ export class MagicLinkPage implements OnInit {
   }
 
   private redirectUser(user: User): void {
-    const dashboardUrl = user.isNewUser
+    const dashboardUrl = (user.isNewUser && user.role !== 'RECRUITER')
       ? '/profile/create'
       : this.getDashboardUrl(user.role);
     this.router.navigate([dashboardUrl]);
@@ -96,6 +96,7 @@ export class MagicLinkPage implements OnInit {
       case 'CANDIDATE':
         return '/talent/job-list';
       case 'HIRING_MANAGER':
+      case 'RECRUITER':
         return '/employer/dashboard';
       default:
         return '/';

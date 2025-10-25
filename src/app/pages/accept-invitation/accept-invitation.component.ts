@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { InvitationControllerService } from '../../api/services/invitation-controller.service';
 import { AuthService } from '../../core/services/auth';
 import { AcceptInvitationRequest, VerifyTokenResponse } from '../../api/models';
+import { NgxIntlTelInputModule, SearchCountryField, CountryISO, PhoneNumberFormat } from 'ngx-intl-tel-input';
 
 interface InvitationDetails {
   valid: boolean;
@@ -19,7 +20,7 @@ interface InvitationDetails {
 @Component({
   selector: 'app-accept-invitation',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, NgxIntlTelInputModule],
   templateUrl: './accept-invitation.component.html',
   styleUrls: ['./accept-invitation.component.css']
 })
@@ -31,6 +32,11 @@ export class AcceptInvitationComponent implements OnInit {
   isLoading = true;
   isSubmitting = false;
   isSubmitted = false;
+
+  // For phone input
+  SearchCountryField = SearchCountryField;
+  CountryISO = CountryISO;
+  PhoneNumberFormat = PhoneNumberFormat;
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -72,8 +78,7 @@ export class AcceptInvitationComponent implements OnInit {
       username: ['', [Validators.required, Validators.minLength(3)]],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      contactNumber: [''],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      contactNumber: ['', [Validators.required]]
     });
   }
 
@@ -92,6 +97,9 @@ export class AcceptInvitationComponent implements OnInit {
     if (field.hasError('minlength')) {
       return `Minimum ${field.errors['minlength'].requiredLength} characters required`;
     }
+    if (field.hasError('validatePhoneNumber')) {
+      return 'Please enter a valid phone number.';
+    }
     return 'Invalid input';
   }
 
@@ -109,21 +117,22 @@ export class AcceptInvitationComponent implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = null;
 
-    const body: AcceptInvitationRequest = this.acceptForm.value;
+    const formValue = this.acceptForm.value;
+    const body: AcceptInvitationRequest = {
+      ...formValue,
+      contactNumber: formValue.contactNumber.internationalNumber.replace(/\s/g, '')
+    };
 
     this.invitationService.acceptInvitation({ token: this.invitationToken, body })
       .subscribe({
         next: (res: any) => {
-          // The response from acceptInvitation is { token: string, message: string }
-          // We need to adapt it to what handleSuccessfulAuth expects, which is VerifyTokenResponse
           const authResponse: VerifyTokenResponse = {
             token: res.token,
-            // We don't get the full user object back, so we create a partial one
             user: {
               email: this.invitationDetails?.email,
               firstName: body.firstName,
               lastName: body.lastName,
-              role: 'RECRUITER' // Role is known from context
+              role: 'RECRUITER'
             }
           };
           this.authService['handleSuccessfulAuth'](authResponse);

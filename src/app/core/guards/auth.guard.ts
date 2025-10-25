@@ -20,16 +20,22 @@ export const authGuard: CanActivateFn = (
 
   // Check if the user is authenticated
   if (authService.isAuthenticated()) {
-    const requiredRole = route.data['role'] as string;
+    const requiredRoleOrRoles = route.data['role'] as string | string[];
 
-    // If the route requires a specific role
-    if (requiredRole) {
+    // If the route requires a specific role or roles
+    if (requiredRoleOrRoles) {
       const userRole = authService.getUserRole();
-      if (userRole === requiredRole) {
-        return true; // User has the required role
+
+      // Check if the user has one of the required roles
+      const hasRequiredRole = Array.isArray(requiredRoleOrRoles)
+        ? requiredRoleOrRoles.includes(userRole!)
+        : userRole === requiredRoleOrRoles;
+
+      if (hasRequiredRole) {
+        return true; // User has a required role
       } else {
         // Role mismatch, redirect to an unauthorized page or dashboard
-        console.warn(`Access denied. Required role: ${requiredRole}, User role: ${userRole}`);
+        console.warn(`Access denied. Required role(s): ${requiredRoleOrRoles}, User role: ${userRole}`);
         return router.createUrlTree(['/']); // Or a dedicated '/unauthorized' page
       }
     }

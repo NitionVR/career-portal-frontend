@@ -62,7 +62,7 @@ export const routes: Routes = [
     path: 'employer',
     component: AuthenticatedLayoutComponent,
     canActivate: [authGuard], // Protect the entire employer section
-    data: { role: 'HIRING_MANAGER' }, // Specify the required role for this section
+    data: { role: ['HIRING_MANAGER', 'RECRUITER'] }, // Specify the required role for this section
     children: [
       { path: 'dashboard', component: EmployerDashboardComponent },
       { path: 'jobs/create', component: JobPostFormComponent },
