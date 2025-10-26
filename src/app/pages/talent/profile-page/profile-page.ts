@@ -43,6 +43,7 @@ import { ChooseCvModalComponent } from './choose-cv-modal/choose-cv-modal.compon
     ProjectComponent, 
     FileDropDirective, 
     FileDropOverlayComponent,
+    ChooseCvModalComponent,
     MatDialogModule
   ],
   templateUrl: './profile-page.html',
@@ -55,6 +56,8 @@ export class ProfilePageComponent implements OnInit {
   user: User | null = null;
   userSubscription: Subscription | undefined;
   isDragging = false;
+  showChooseCvModal = false;
+  existingResumes: ResumeDto[] = [];
 
   private authService = inject(AuthService);
   private profileService = inject(ProfileControllerService);
@@ -183,13 +186,24 @@ export class ProfilePageComponent implements OnInit {
 
   openChooseCvModal(): void {
     this.profileService.getResumes().subscribe(resumes => {
-      const dialogRef = this.dialog.open(ChooseCvModalComponent, { width: '500px', data: { resumes: resumes || [] } });
-      dialogRef.afterClosed().subscribe(result => {
-        if (!result) return;
-        if (result instanceof File) this.handleCVUpload(result);
-        else if (result.url) this.autofillFromExisting(result);
-      });
+      this.existingResumes = resumes || [];
+      this.showChooseCvModal = true;
     });
+  }
+
+
+
+  handleModalConfirm(result: File | ResumeDto): void {
+    this.showChooseCvModal = false;
+    if (result instanceof File) {
+      this.handleCVUpload(result);
+    } else if (result.url) {
+      this.autofillFromExisting(result);
+    }
+  }
+
+  handleModalCancel(): void {
+    this.showChooseCvModal = false;
   }
 
   private autofillFromExisting(resume: ResumeDto): void {

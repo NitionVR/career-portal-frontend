@@ -1,35 +1,25 @@
-import { Component, Inject, OnInit, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ResumeDto } from '../../../../api/models';
-import { MatRadioModule } from '@angular/material/radio';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
-export interface ChooseCvModalData {
-  resumes: ResumeDto[];
-}
+import { RadioCardComponent } from '../../../../shared/components/radio-card/radio-card.component';
 
 @Component({
   selector: 'app-choose-cv-modal',
   standalone: true,
-  imports: [CommonModule, MatRadioModule, FormsModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, RadioCardComponent],
   templateUrl: './choose-cv-modal.component.html',
   styleUrls: ['./choose-cv-modal.component.css']
 })
 export class ChooseCvModalComponent implements OnInit {
-  selectedResume: ResumeDto | 'new' = 'new';
-  resumes: ResumeDto[] = [];
+  @Input() isVisible: boolean = false;
+  @Input() resumes: ResumeDto[] = [];
+  @Output() confirm = new EventEmitter<File | ResumeDto>();
+  @Output() cancel = new EventEmitter<void>();
 
-  constructor(
-    public dialogRef: MatDialogRef<ChooseCvModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ChooseCvModalData
-  ) {}
+  selectedResume: ResumeDto | 'new' = 'new';
 
   ngOnInit(): void {
-    this.resumes = this.data.resumes || [];
-    // Default selection
     if (this.resumes.length > 0) {
       this.selectedResume = this.resumes[0];
     }
@@ -38,26 +28,25 @@ export class ChooseCvModalComponent implements OnInit {
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      // A file was selected, close the dialog and return the file object
-      this.dialogRef.close(file);
+      this.confirm.emit(file);
     }
   }
 
-  triggerFileInput(fileInput: HTMLInputElement): void {
-    fileInput.click();
+  handleSelection(value: any): void {
+    if (value === 'new') {
+      document.getElementById('new-cv-input-modal')?.click();
+    } else {
+      this.selectedResume = value;
+    }
   }
 
   confirmSelection(): void {
-    if (this.selectedResume === 'new') {
-      // This case is handled by the file input directly, but as a fallback:
-      this.dialogRef.close('new');
-    } else {
-      // An existing resume was selected
-      this.dialogRef.close(this.selectedResume);
+    if (this.selectedResume !== 'new') {
+      this.confirm.emit(this.selectedResume);
     }
   }
 
   onCancel(): void {
-    this.dialogRef.close();
+    this.cancel.emit();
   }
 }

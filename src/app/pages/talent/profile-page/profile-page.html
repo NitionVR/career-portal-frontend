@@ -295,5 +295,10 @@
         </button>
       </div>
     </form>
-  </div>
+      <app-choose-cv-modal
+      [isVisible]="showChooseCvModal"
+      [resumes]="existingResumes"
+      (confirm)="handleModalConfirm($event)"
+      (cancel)="handleModalCancel()"
+    ></app-choose-cv-modal>
 </div>

@@ -1,41 +1,29 @@
-<div class="p-6">
-  <h2 mat-dialog-title class="text-2xl font-bold text-foreground mb-2">Autofill Profile</h2>
-  <p class="text-muted-foreground mb-6">Choose a CV to autofill your profile information. This will overwrite existing data in your profile form.</p>
+<div *ngIf="isVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+  <div class="w-full max-w-lg bg-card p-8 rounded-xl shadow-lg m-4">
+    <h2 class="text-2xl font-bold text-foreground mb-2">Autofill Profile</h2>
+    <p class="text-muted-foreground mb-6">Choose a CV to autofill your profile information. This will overwrite existing data in your profile form.</p>
 
-  <div class="space-y-4">
-    <mat-radio-group [(ngModel)]="selectedResume" class="space-y-3">
+    <div class="space-y-3">
       <!-- Option for uploading a new CV -->
-      <mat-radio-button value="new" (click)="triggerFileInput(fileInput)" class="w-full">
-        <div class="p-4 border rounded-lg flex items-center justify-between w-full cursor-pointer" [class.border-primary]="selectedResume === 'new'" [class.ring-2]="selectedResume === 'new'" [class.ring-primary]="selectedResume === 'new'">
-          <div class="flex items-center">
-            <mat-icon class="mr-3">upload_file</mat-icon>
-            <span class="font-semibold">Upload a new CV</span>
-          </div>
-        </div>
-      </mat-radio-button>
-      <input type="file" class="hidden" #fileInput (change)="onFileSelected($event)" accept=".pdf,.doc,.docx"/>
+      <app-radio-card [value]="'new'" [selectedValue]="selectedResume" (selectionChange)="handleSelection($event)" icon="upload_file">
+        <span class="font-semibold">Upload a new CV</span>
+      </app-radio-card>
+      <input type="file" class="hidden" id="new-cv-input-modal" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx"/>
 
       <!-- Options for existing CVs -->
-      <mat-radio-button *ngFor="let resume of resumes" [value]="resume" class="w-full">
-        <div class="p-4 border rounded-lg flex items-center justify-between w-full" [class.border-primary]="selectedResume === resume" [class.ring-2]="selectedResume === resume" [class.ring-primary]="selectedResume === resume">
-          <div class="flex items-center">
-            <mat-icon class="mr-3">description</mat-icon>
-            <div class="text-left">
-              <p class="font-medium">{{ resume.filename }}</p>
-              <p class="text-xs text-muted-foreground">Uploaded: {{ resume.uploadDate | date:'mediumDate' }}</p>
-            </div>
-          </div>
-        </div>
-      </mat-radio-button>
-    </mat-radio-group>
+      <app-radio-card *ngFor="let resume of resumes" [value]="resume" [selectedValue]="selectedResume" (selectionChange)="handleSelection($event)">
+        <p class="font-medium">{{ resume.filename }}</p>
+        <p class="text-xs text-muted-foreground">Uploaded: {{ resume.uploadDate | date:'mediumDate' }}</p>
+      </app-radio-card>
 
-    <div *ngIf="resumes.length === 0" class="text-center text-muted-foreground p-4 border border-dashed rounded-lg">
-      You have no existing CVs to choose from. Please upload one.
+      <div *ngIf="resumes.length === 0" class="text-center text-muted-foreground p-4 border border-dashed rounded-lg">
+        You have no existing CVs to choose from. Please upload one.
+      </div>
     </div>
-  </div>
 
-  <div class="flex justify-end gap-3 mt-8">
-    <button mat-button (click)="onCancel()">Cancel</button>
-    <button mat-raised-button color="primary" (click)="confirmSelection()" [disabled]="!selectedResume || selectedResume === 'new'">Use Selected CV</button>
+    <div class="flex justify-end gap-3 mt-8">
+      <button (click)="onCancel()" class="px-6 py-2 text-sm font-semibold text-muted-foreground bg-muted rounded-full hover:bg-muted/80">Cancel</button>
+      <button (click)="confirmSelection()" [disabled]="!selectedResume || selectedResume === 'new'" class="px-6 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover disabled:opacity-50">Use Selected CV</button>
+    </div>
   </div>
 </div>
