@@ -1,38 +1,28 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatMenuModule } from '@angular/material/menu';
 import { OrganizationControllerService } from '../../../../api/services/organization-controller.service';
 import { InvitationControllerService } from '../../../../api/services/invitation-controller.service';
 import { SnackbarService } from '../../../../shared/components/snackbar/snackbar.service';
 import { InviteRecruiterDialogComponent } from './invite-recruiter-dialog/invite-recruiter-dialog.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { OrganizationMemberDto, RecruiterInvitationDto, RecruiterInvitationRequest } from '../../../../api/models';
+import {MatTableModule} from '@angular/material/table';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatMenu, MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 
 @Component({
   selector: 'app-organization-members',
   standalone: true,
   imports: [
     CommonModule,
-    MatDialogModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
-    MatMenuModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    FormsModule
+    FormsModule,
+    InviteRecruiterDialogComponent
   ],
   templateUrl: './organization-members.component.html',
   styleUrls: ['./organization-members.component.scss']
@@ -41,14 +31,27 @@ export class OrganizationMembersComponent implements OnInit {
   members: OrganizationMemberDto[] = [];
   pendingInvitations: RecruiterInvitationDto[] = [];
   isLoading = true;
+  showInviteRecruiterModal = false;
   displayedColumns: string[] = ['name', 'email', 'role', 'status', 'joinedDate', 'actions'];
+  selectedMemberMenuId: string | null = null;
+
+  toggleMemberMenu(memberId: string): void {
+    this.selectedMemberMenuId = this.selectedMemberMenuId === memberId ? null : memberId;
+  }
+
+  isMemberMenuOpen(memberId: string): boolean {
+    return this.selectedMemberMenuId === memberId;
+  }
+
+  closeMemberMenu(): void {
+    this.selectedMemberMenuId = null;
+  }
   invitationColumns: string[] = ['email', 'createdAt', 'status', 'actions'];
 
   constructor(
     private orgService: OrganizationControllerService,
     private invitationService: InvitationControllerService,
-    private snackbarService: SnackbarService,
-    private dialog: MatDialog
+    private snackbarService: SnackbarService
   ) {}
 
   searchQuery: string = '';
@@ -105,15 +108,18 @@ export class OrganizationMembersComponent implements OnInit {
   }
 
   openInviteDialog(): void {
-    const dialogRef = this.dialog.open(InviteRecruiterDialogComponent, {
-      width: '500px'
-    });
+    this.showInviteRecruiterModal = true;
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.inviteRecruiters(result.emails, result.message);
-      }
-    });
+  handleInviteRecruiterConfirm(result: { emails: string[], message: string }): void {
+    this.showInviteRecruiterModal = false;
+    if (result) {
+      this.inviteRecruiters(result.emails, result.message);
+    }
+  }
+
+  handleInviteRecruiterCancel(): void {
+    this.showInviteRecruiterModal = false;
   }
 
   inviteRecruiters(emails: string[], message?: string): void {
@@ -141,23 +147,44 @@ export class OrganizationMembersComponent implements OnInit {
     });
   }
 
-  // resendInvitation(invitationId: string): void {
-  //   // Backend endpoint does not exist yet
-  //   this.snackbarService.info('Resend functionality is not yet available.');
-  // }
+  updateMemberRole(memberId: string, newRole: 'HIRING_MANAGER' | 'RECRUITER'): void {
+    this.orgService.updateMemberRole({ memberId, body: { newRole } }).subscribe({
+      next: () => {
+        this.snackbarService.success('Member role updated successfully!');
+        this.loadOrganizationMembers();
+      },
+      error: (err: any) => {
+        this.snackbarService.error('Failed to update member role.');
+      }
+    });
+  }
 
-  // updateMemberRole(memberId: string, newRole: string): void {
-  //   // Backend endpoint does not exist yet
-  //   this.snackbarService.info('Update role functionality is not yet available.');
-  // }
+  removeMember(memberId: string): void {
+    const confirmed = window.confirm('Are you sure you want to remove this member from your organization?');
+    if (confirmed) {
+      this.orgService.removeMember({ memberId }).subscribe({
+        next: () => {
+          this.snackbarService.success('Member removed successfully!');
+          this.loadOrganizationMembers();
+        },
+        error: (err: any) => {
+          this.snackbarService.error('Failed to remove member.');
+        }
+      });
+    }
+  }
 
-  // removeMember(memberId: string): void {
-  //   const confirmed = window.confirm('Are you sure you want to remove this member from your organization?');
-  //   if (confirmed) {
-  //     // Backend endpoint does not exist yet
-  //     this.snackbarService.info('Remove member functionality is not yet available.');
-  //   }
-  // }
+  resendInvitation(invitationId: string): void {
+    this.invitationService.resendInvitation({ invitationId }).subscribe({
+      next: () => {
+        this.snackbarService.success('Invitation resent successfully!');
+        this.loadPendingInvitations();
+      },
+      error: (err: any) => {
+        this.snackbarService.error('Failed to resend invitation.');
+      }
+    });
+  }
 
   getAvatarColor(memberId: string): string {
     const colors = ['bg-blue-200', 'bg-green-200', 'bg-purple-200', 'bg-amber-200', 'bg-red-200'];

@@ -35,89 +35,70 @@
 
     <!-- Members Table -->
     <div class="overflow-x-auto">
-      <table mat-table [dataSource]="filteredMembers" class="w-full">
-
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef class="p-4 text-left text-sm font-semibold text-muted-foreground">Name</th>
-          <td mat-cell *matCellDef="let member" class="p-4">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" [ngClass]="getAvatarColor(member.id)">
-                {{ getInitials(member) }}
+      <table class="min-w-full divide-y divide-border">
+        <thead class="bg-white/5">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Name</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Email</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Role</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Joined</th>
+            <th scope="col" class="relative px-6 py-3">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border">
+          <tr *ngFor="let member of filteredMembers" class="hover:bg-white/5 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center gap-3">
+                <div class="avatar" [attr.aria-label]="member.firstName + ' ' + member.lastName">
+                  {{ getInitials(member) }}
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-foreground">{{member.firstName}} {{member.lastName}}</div>
+                  <div class="text-muted-foreground text-sm">{{member.email}}</div>
+                </div>
               </div>
-              <div>
-                <p class="font-medium text-foreground">{{ member.firstName }} {{ member.lastName }}</p>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{{member.email}}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="getRoleChipClass(member.role)">
+                {{member.role | titlecase}}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="getStatusChipClass(member.status)">
+                {{member.status | titlecase}}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{{member.joinedDate | date}}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <div class="relative inline-block text-left">
+                <button type="button" (click)="toggleMemberMenu(member.id!)" class="inline-flex justify-center w-full rounded-md px-2 py-2 text-sm font-medium text-muted-foreground hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary" aria-haspopup="true" [attr.aria-expanded]="isMemberMenuOpen(member.id!)">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+                <div *ngIf="isMemberMenuOpen(member.id!)" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-card ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                  <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <button *ngIf="member.role !== 'HIRING_MANAGER'" (click)="updateMemberRole(member.id!, 'HIRING_MANAGER'); closeMemberMenu()" class="block px-4 py-2 text-sm text-foreground hover:bg-muted w-full text-left" role="menuitem">
+                      <span class="material-symbols-outlined mr-2">admin_panel_settings</span>
+                      Make Hiring Manager
+                    </button>
+                    <button *ngIf="member.role !== 'RECRUITER'" (click)="updateMemberRole(member.id!, 'RECRUITER'); closeMemberMenu()" class="block px-4 py-2 text-sm text-foreground hover:bg-muted w-full text-left" role="menuitem">
+                      <span class="material-symbols-outlined mr-2">person</span>
+                      Make Recruiter
+                    </button>
+                    <button (click)="removeMember(member.id!); closeMemberMenu()" class="block px-4 py-2 text-sm text-destructive hover:bg-muted w-full text-left" role="menuitem">
+                      <span class="material-symbols-outlined mr-2">delete</span>
+                      Remove from Organization
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </td>
-        </ng-container>
-
-        <!-- Email Column -->
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef class="p-4 text-left text-sm font-semibold text-muted-foreground">Email</th>
-          <td mat-cell *matCellDef="let member" class="p-4 text-muted-foreground">{{ member.email }}</td>
-        </ng-container>
-
-        <!-- Role Column -->
-        <ng-container matColumnDef="role">
-          <th mat-header-cell *matHeaderCellDef class="p-4 text-left text-sm font-semibold text-muted-foreground">Role</th>
-          <td mat-cell *matCellDef="let member" class="p-4">
-            <span class="px-3 py-1 text-xs font-medium rounded-full" [ngClass]="getRoleChipClass(member.role)">
-              {{ member.role | titlecase }}
-            </span>
-          </td>
-        </ng-container>
-
-        <!-- Status Column -->
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef class="p-4 text-left text-sm font-semibold text-muted-foreground">Status</th>
-          <td mat-cell *matCellDef="let member" class="p-4">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full" [ngClass]="getStatusChipClass(member.status)">
-              <span class="w-2 h-2 rounded-full" [ngClass]="getStatusIndicatorClass(member.status)"></span>
-              {{ member.status | titlecase }}
-            </span>
-          </td>
-        </ng-container>
-
-        <!-- Joined Date Column -->
-        <ng-container matColumnDef="joinedDate">
-          <th mat-header-cell *matHeaderCellDef class="p-4 text-left text-sm font-semibold text-muted-foreground">Joined Date</th>
-          <td mat-cell *matCellDef="let member" class="p-4 text-muted-foreground">{{ member.joinedDate | date:'mediumDate' }}</td>
-        </ng-container>
-
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="p-4 text-right text-sm font-semibold text-muted-foreground">Actions</th>
-          <td mat-cell *matCellDef="let member" class="p-4 text-right">
-            <button mat-icon-button [matMenuTriggerFor]="menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu">
-              <!-- <button mat-menu-item [disabled]="member.role === 'HIRING_MANAGER'" (click)="updateMemberRole(member.id, 'HIRING_MANAGER')">
-                <mat-icon>admin_panel_settings</mat-icon>
-                <span>Make Hiring Manager</span>
-              </button>
-              <button mat-menu-item [disabled]="member.role === 'RECRUITER'" (click)="updateMemberRole(member.id, 'RECRUITER')">
-                <mat-icon>support_agent</mat-icon>
-                <span>Make Recruiter</span>
-              </button> -->
-              <!-- <button mat-menu-item (click)="removeMember(member.id)">
-                <mat-icon>delete</mat-icon>
-                <span>Remove Member</span>
-              </button> -->
-            </mat-menu>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="bg-muted"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="border-b border-border hover:bg-muted/50 transition-colors"></tr>
+            </td>
+          </tr>
+        </tbody>
       </table>
-      <div *ngIf="isLoading" class="absolute inset-0 bg-background/80 flex items-center justify-center">
-        <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
-      </div>
-      <div *ngIf="!isLoading && filteredMembers.length === 0" class="text-center p-8 text-muted-foreground">
-        <p>No members found.</p>
-      </div>
     </div>
   </div>
 
@@ -127,50 +108,41 @@
       <h3 class="text-xl font-bold tracking-tight">Pending Invitations</h3>
     </div>
     <div class="overflow-x-auto">
-      <table mat-table [dataSource]="pendingInvitations" class="w-full">
-
-        <!-- Email Column -->
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef class="p-4 text-left text-sm font-semibold text-muted-foreground">Email</th>
-          <td mat-cell *matCellDef="let invitation" class="p-4 text-muted-foreground">{{ invitation.email }}</td>
-        </ng-container>
-
-        <!-- Sent Date Column -->
-        <ng-container matColumnDef="createdAt">
-          <th mat-header-cell *matHeaderCellDef class="p-4 text-left text-sm font-semibold text-muted-foreground">Sent Date</th>
-          <td mat-cell *matCellDef="let invitation" class="p-4 text-muted-foreground">{{ invitation.createdAt | date:'mediumDate' }}</td>
-        </ng-container>
-
-        <!-- Status Column -->
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef class="p-4 text-left text-sm font-semibold text-muted-foreground">Status</th>
-          <td mat-cell *matCellDef="let invitation" class="p-4">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full" [ngClass]="getStatusChipClass(invitation.status)">
-              <span class="w-2 h-2 rounded-full" [ngClass]="getStatusIndicatorClass(invitation.status)"></span>
-              {{ invitation.status | titlecase }}
-            </span>
-          </td>
-        </ng-container>
-
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="p-4 text-right text-sm font-semibold text-muted-foreground">Actions</th>
-          <td mat-cell *matCellDef="let invitation" class="p-4 text-right">
-            <!-- <button mat-icon-button (click)="resendInvitation(invitation.id)" matTooltip="Resend Invitation">
-              <mat-icon>send</mat-icon>
-            </button> -->
-            <button mat-icon-button (click)="revokeInvitation(invitation.id)" matTooltip="Revoke Invitation">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="invitationColumns; sticky: true" class="bg-muted"></tr>
-        <tr mat-row *matRowDef="let row; columns: invitationColumns;" class="border-b border-border hover:bg-muted/50 transition-colors"></tr>
+      <table class="min-w-full divide-y divide-border">
+        <thead class="bg-white/5">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Email</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Sent</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+            <th scope="col" class="relative px-6 py-3">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border">
+          <tr *ngFor="let invitation of pendingInvitations" class="hover:bg-white/5 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">{{invitation.email}}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{{invitation.createdAt | date}}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 py-1 rounded-full text-xs font-medium bg-warning text-warning-foreground">
+                Pending
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <button (click)="resendInvitation(invitation.id!)" class="p-2 text-muted-foreground hover:text-primary focus:outline-none" matTooltip="Resend Invitation" aria-label="Resend invitation">
+                <span class="material-symbols-outlined">refresh</span>
+              </button>
+              <button (click)="revokeInvitation(invitation.id!)" class="p-2 text-muted-foreground hover:text-destructive focus:outline-none" matTooltip="Revoke Invitation" aria-label="Revoke invitation">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
       </table>
-      <div *ngIf="!isLoading && pendingInvitations.length === 0" class="text-center p-8 text-muted-foreground">
-        <p>No pending invitations.</p>
-      </div>
     </div>
-  </div>
+  <app-invite-recruiter-dialog
+    [isVisible]="showInviteRecruiterModal"
+    (confirm)="handleInviteRecruiterConfirm($event)"
+    (cancel)="handleInviteRecruiterCancel()"
+  ></app-invite-recruiter-dialog>
 </div>

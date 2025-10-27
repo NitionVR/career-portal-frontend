@@ -1,12 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon'; // Keep MatIconModule for now, will replace icons in HTML
 
 @Component({
   selector: 'app-invite-recruiter-dialog',
@@ -14,21 +9,19 @@ import { MatChipsModule } from '@angular/material/chips';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatChipsModule
+    MatIconModule // Keep MatIconModule for now
   ],
   templateUrl: './invite-recruiter-dialog.component.html'
 })
 export class InviteRecruiterDialogComponent {
+  @Input() isVisible: boolean = false;
+  @Output() confirm = new EventEmitter<{ emails: string[], message: string }>();
+  @Output() cancel = new EventEmitter<void>();
+
   inviteForm: FormGroup;
   emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  
+
   private fb = inject(FormBuilder);
-  private dialogRef = inject(MatDialogRef<InviteRecruiterDialogComponent>);
 
   constructor() {
     this.inviteForm = this.fb.group({
@@ -58,7 +51,7 @@ export class InviteRecruiterDialogComponent {
   onSubmit() {
     if (this.inviteForm.valid) {
       const emails = this.emailsArray.controls.map(control => control.value);
-      this.dialogRef.close({ 
+      this.confirm.emit({
         emails,
         message: this.inviteForm.get('message')?.value
       });
@@ -66,6 +59,6 @@ export class InviteRecruiterDialogComponent {
   }
 
   onCancel() {
-    this.dialogRef.close();
+    this.cancel.emit();
   }
 }
