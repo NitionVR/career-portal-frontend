@@ -13,6 +13,7 @@ import { ProfilePageComponent } from './pages/talent/profile-page/profile-page';
 import { EmployerDashboardComponent } from './pages/employer/dashboard/dashboard';
 import { JobPostFormComponent } from './pages/employer/job-post-form/job-post-form.component';
 import { CompanyProfileComponent } from './pages/employer/company-profile/company-profile.component';
+import { OrganizationMembersComponent } from './pages/employer/company-profile/organization-members/organization-members.component';
 import { EmployerApplicationDetailsComponent } from './pages/employer/employer-application-details/employer-application-details.component';
 import { ViewApplicantsComponent } from './pages/employer/view-applicants/view-applicants.component';
 import { ApplicantManagementComponent } from './pages/employer/applicant-management/applicant-management.component';
@@ -72,6 +73,7 @@ export const routes: Routes = [
       { path: 'applications/:id', component: EmployerApplicationDetailsComponent },
       { path: 'applicants', component: ApplicantManagementComponent },
       { path: 'settings/company', component: CompanyProfileComponent },
+      { path: 'settings/members', component: OrganizationMembersComponent },
       { path: 'notifications', component: EmployerNotificationsPageComponent },
       { path: 'audit-log', component: EmployerAuditLogPageComponent },
       // Add other employer routes here

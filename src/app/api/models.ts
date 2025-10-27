@@ -49,6 +49,7 @@ export type { StateAuditResponse } from './models/state-audit-response';
 export type { StateTransitionRequest } from './models/state-transition-request';
 export type { UpdateAvatarRequest } from './models/update-avatar-request';
 export type { UpdateCompanyLogoRequest } from './models/update-company-logo-request';
+export type { UpdateMemberRoleRequest } from './models/update-member-role-request';
 export type { UploadUrlRequest } from './models/upload-url-request';
 export type { UploadUrlResponse } from './models/upload-url-response';
 export type { UserDto } from './models/user-dto';

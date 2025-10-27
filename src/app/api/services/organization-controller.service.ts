@@ -19,14 +19,43 @@ import { getOrganizationMembers } from '../fn/organization-controller/get-organi
 import { GetOrganizationMembers$Params } from '../fn/organization-controller/get-organization-members';
 import { OrganizationDto } from '../models/organization-dto';
 import { OrganizationMemberDto } from '../models/organization-member-dto';
+import { removeMember } from '../fn/organization-controller/remove-member';
+import { RemoveMember$Params } from '../fn/organization-controller/remove-member';
 import { updateLogo } from '../fn/organization-controller/update-logo';
 import { UpdateLogo$Params } from '../fn/organization-controller/update-logo';
+import { updateMemberRole } from '../fn/organization-controller/update-member-role';
+import { UpdateMemberRole$Params } from '../fn/organization-controller/update-member-role';
 import { UploadUrlResponse } from '../models/upload-url-response';
 
 @Injectable({ providedIn: 'root' })
 export class OrganizationControllerService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `updateMemberRole()` */
+  static readonly UpdateMemberRolePath = '/api/organization/members/{memberId}/role';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateMemberRole()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateMemberRole$Response(params: UpdateMemberRole$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateMemberRole(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `updateMemberRole$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateMemberRole(params: UpdateMemberRole$Params, context?: HttpContext): Observable<void> {
+    return this.updateMemberRole$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
   }
 
   /** Path part for operation `updateLogo()` */
@@ -151,6 +180,31 @@ export class OrganizationControllerService extends BaseService {
   getCurrentOrganization(params?: GetCurrentOrganization$Params, context?: HttpContext): Observable<OrganizationDto> {
     return this.getCurrentOrganization$Response(params, context).pipe(
       map((r: StrictHttpResponse<OrganizationDto>): OrganizationDto => r.body)
+    );
+  }
+
+  /** Path part for operation `removeMember()` */
+  static readonly RemoveMemberPath = '/api/organization/members/{memberId}';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `removeMember()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  removeMember$Response(params: RemoveMember$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return removeMember(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `removeMember$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  removeMember(params: RemoveMember$Params, context?: HttpContext): Observable<void> {
+    return this.removeMember$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

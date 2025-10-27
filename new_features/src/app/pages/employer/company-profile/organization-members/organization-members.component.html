@@ -1,11 +1,11 @@
 <div class="py-6">
   <div class="flex justify-between items-center mb-6">
     <div>
-      <h2 class="text-2xl font-bold tracking-tight">Organization Members</h2>
+      <h2 class="text-2xl font-bold tracking-tight text-green-500">Organization Members</h2>
       <p class="text-muted-foreground">Manage your organization's team members and permissions</p>
     </div>
     <button (click)="openInviteDialog()" class="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center" aria-label="Invite recruiters">
-      <mat-icon class="mr-2">person_add</mat-icon>
+      <span class="material-symbols-outlined mr-2">person_add</span>
       Invite Recruiters
     </button>
   </div>
@@ -27,17 +27,25 @@
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-xl font-semibold">Team Members</h3>
       <div class="table-toolbar flex gap-3 items-center">
-        <mat-form-field appearance="outline" class="w-48">
-          <mat-label>Role</mat-label>
-          <mat-select [(value)]="selectedRole" aria-label="Filter by role">
-            <mat-option value="">All</mat-option>
-            <mat-option *ngFor="let role of roleOptions" [value]="role">{{ role | titlecase }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="w-64">
-          <mat-label>Search members</mat-label>
-          <input matInput [(ngModel)]="searchQuery" placeholder="Name or email" aria-label="Search members" />
-        </mat-form-field>
+        <div class="relative w-48">
+          <label class="sr-only" for="role-filter">Role</label>
+          <select id="role-filter" [(ngModel)]="selectedRole" aria-label="Filter by role"
+                  class="block w-full appearance-none rounded-md border-0 bg-white/5 py-2.5 pl-3 pr-10 text-foreground ring-1 ring-inset ring-border focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm sm:leading-6">
+            <option value="">All</option>
+            <option *ngFor="let role of roleOptions" [value]="role">{{ role | titlecase }}</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+            <span class="material-symbols-outlined text-muted-foreground">expand_more</span>
+          </div>
+        </div>
+        <div class="relative w-64">
+          <label class="sr-only" for="search-members">Search members</label>
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <span class="material-symbols-outlined text-muted-foreground">search</span>
+          </div>
+          <input id="search-members" type="text" [(ngModel)]="searchQuery" placeholder="Name or email" aria-label="Search members"
+                 class="block w-full rounded-md border-0 bg-white/5 py-2.5 pl-10 pr-3 text-foreground ring-1 ring-inset ring-border placeholder:text-muted-foreground focus:ring-2 focus:ring-inset focus:ring-secondary sm:text-sm sm:leading-6" />
+        </div>
       </div>
     </div>
 
@@ -50,82 +58,72 @@
       <p class="mt-2">Try adjusting filters or inviting new team members.</p>
     </div>
 
-    <table mat-table [dataSource]="filteredMembers" class="w-full" *ngIf="!isLoading && filteredMembers.length > 0" aria-label="Team members table">
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let member">
-          <div class="flex items-center gap-3">
-            <div class="avatar" [attr.aria-label]="member.firstName + ' ' + member.lastName">
-              {{ getInitials(member) }}
-            </div>
-            <div>
-              <div class="font-medium">{{member.firstName}} {{member.lastName}}</div>
-              <div class="text-muted-foreground text-sm">{{member.email}}</div>
-            </div>
-          </div>
-        </td>
-      </ng-container>
-
-      <!-- Email Column -->
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef>Email</th>
-        <td mat-cell *matCellDef="let member">{{member.email}}</td>
-      </ng-container>
-
-      <!-- Role Column -->
-      <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef>Role</th>
-        <td mat-cell *matCellDef="let member">
-          <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="getRoleChipClass(member.role)">
-            {{member.role | titlecase}}
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- Status Column -->
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let member">
-          <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="getStatusChipClass(member.status)">
-            {{member.status | titlecase}}
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- Joined Date Column -->
-      <ng-container matColumnDef="joinedDate">
-        <th mat-header-cell *matHeaderCellDef>Joined</th>
-        <td mat-cell *matCellDef="let member">{{member.joinedDate | date}}</td>
-      </ng-container>
-
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let member">
-          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Member actions">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item *ngIf="member.role !== 'HIRING_MANAGER'" (click)="updateMemberRole(member.id, 'HIRING_MANAGER')">
-              <mat-icon>admin_panel_settings</mat-icon>
-              <span>Make Hiring Manager</span>
-            </button>
-            <button mat-menu-item *ngIf="member.role !== 'RECRUITER'" (click)="updateMemberRole(member.id, 'RECRUITER')">
-              <mat-icon>person</mat-icon>
-              <span>Make Recruiter</span>
-            </button>
-            <button mat-menu-item (click)="removeMember(member.id)">
-              <mat-icon>delete</mat-icon>
-              <span>Remove from Organization</span>
-            </button>
-          </mat-menu>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-border">
+        <thead class="bg-white/5">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Name</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Email</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Role</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Joined</th>
+            <th scope="col" class="relative px-6 py-3">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border">
+          <tr *ngFor="let member of filteredMembers" class="hover:bg-white/5 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center gap-3">
+                <div class="avatar" [attr.aria-label]="member.firstName + ' ' + member.lastName">
+                  {{ getInitials(member) }}
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-foreground">{{member.firstName}} {{member.lastName}}</div>
+                  <div class="text-muted-foreground text-sm">{{member.email}}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{{member.email}}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="getRoleChipClass(member.role)">
+                {{member.role | titlecase}}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 py-1 rounded-full text-xs font-medium" [ngClass]="getStatusChipClass(member.status)">
+                {{member.status | titlecase}}
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{{member.joinedDate | date}}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <div class="relative inline-block text-left">
+                <button type="button" (click)="toggleMemberMenu(member.id)" class="inline-flex justify-center w-full rounded-md px-2 py-2 text-sm font-medium text-muted-foreground hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background focus:ring-primary" aria-haspopup="true" [attr.aria-expanded]="isMemberMenuOpen(member.id)">
+                  <span class="material-symbols-outlined">more_vert</span>
+                </button>
+                <div *ngIf="isMemberMenuOpen(member.id)" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-card ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                  <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <button *ngIf="member.role !== 'HIRING_MANAGER'" (click)="updateMemberRole(member.id, 'HIRING_MANAGER'); closeMemberMenu()" class="block px-4 py-2 text-sm text-foreground hover:bg-muted w-full text-left" role="menuitem">
+                      <span class="material-symbols-outlined mr-2">admin_panel_settings</span>
+                      Make Hiring Manager
+                    </button>
+                    <button *ngIf="member.role !== 'RECRUITER'" (click)="updateMemberRole(member.id, 'RECRUITER'); closeMemberMenu()" class="block px-4 py-2 text-sm text-foreground hover:bg-muted w-full text-left" role="menuitem">
+                      <span class="material-symbols-outlined mr-2">person</span>
+                      Make Recruiter
+                    </button>
+                    <button (click)="removeMember(member.id); closeMemberMenu()" class="block px-4 py-2 text-sm text-destructive hover:bg-muted w-full text-left" role="menuitem">
+                      <span class="material-symbols-outlined mr-2">delete</span>
+                      Remove from Organization
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <!-- Pending Invitations -->
@@ -137,44 +135,42 @@
       <p class="mt-2">Invite recruiters to collaborate on your hiring process.</p>
     </div>
 
-    <table mat-table [dataSource]="pendingInvitations" class="w-full" *ngIf="pendingInvitations.length > 0" aria-label="Pending invitations table">
-      <!-- Email Column -->
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef>Email</th>
-        <td mat-cell *matCellDef="let invitation">{{invitation.email}}</td>
-      </ng-container>
-
-      <!-- Sent Date Column -->
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef>Sent</th>
-        <td mat-cell *matCellDef="let invitation">{{invitation.createdAt | date}}</td>
-      </ng-container>
-
-      <!-- Status Column -->
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let invitation">
-          <span class="px-2 py-1 rounded-full text-xs font-medium bg-warning text-warning-foreground">
-            Pending
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let invitation">
-          <button mat-icon-button (click)="resendInvitation(invitation.id)" matTooltip="Resend Invitation" aria-label="Resend invitation">
-            <mat-icon>refresh</mat-icon>
-          </button>
-          <button mat-icon-button (click)="revokeInvitation(invitation.id)" matTooltip="Revoke Invitation" aria-label="Revoke invitation">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="invitationColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: invitationColumns;"></tr>
-    </table>
-  </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-border">
+        <thead class="bg-white/5">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Email</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Sent</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+            <th scope="col" class="relative px-6 py-3">
+              <span class="sr-only">Actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-border">
+          <tr *ngFor="let invitation of pendingInvitations" class="hover:bg-white/5 transition-colors">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">{{invitation.email}}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{{invitation.createdAt | date}}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 py-1 rounded-full text-xs font-medium bg-warning text-warning-foreground">
+                Pending
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <button (click)="resendInvitation(invitation.id)" class="p-2 text-muted-foreground hover:text-primary focus:outline-none" matTooltip="Resend Invitation" aria-label="Resend invitation">
+                <span class="material-symbols-outlined">refresh</span>
+              </button>
+              <button (click)="revokeInvitation(invitation.id)" class="p-2 text-muted-foreground hover:text-destructive focus:outline-none" matTooltip="Revoke Invitation" aria-label="Revoke invitation">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <app-invite-recruiter-dialog
+    [isVisible]="showInviteRecruiterModal"
+    (confirm)="handleInviteRecruiterConfirm($event)"
+    (cancel)="handleInviteRecruiterCancel()"
+  ></app-invite-recruiter-dialog>
 </div>

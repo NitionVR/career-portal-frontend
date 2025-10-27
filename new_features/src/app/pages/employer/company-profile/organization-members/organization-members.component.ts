@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { OrganizationControllerService } from '../../../../api/services/organization-controller.service';
 import { InvitationControllerService } from '../../../../api/services/invitation-controller.service';
 import { SnackbarService } from '../../../../shared/components/snackbar/snackbar.service';
+import { InviteRecruiterDialogComponent } from './invite-recruiter-dialog/invite-recruiter-dialog.component';
 import { InviteRecruiterDialogComponent } from './invite-recruiter-dialog/invite-recruiter-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
@@ -38,17 +39,8 @@ interface PendingInvitation {
   standalone: true,
   imports: [
     CommonModule,
-    MatDialogModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
-    MatMenuModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    FormsModule
+    FormsModule,
+    InviteRecruiterDialogComponent
   ],
   templateUrl: './organization-members.component.html',
   styleUrls: ['./organization-members.component.scss']
@@ -57,14 +49,27 @@ export class OrganizationMembersComponent implements OnInit {
   members: OrganizationMember[] = [];
   pendingInvitations: PendingInvitation[] = [];
   isLoading = true;
+  showInviteRecruiterModal = false;
   displayedColumns: string[] = ['name', 'email', 'role', 'status', 'joinedDate', 'actions'];
+  selectedMemberMenuId: string | null = null;
+
+  toggleMemberMenu(memberId: string): void {
+    this.selectedMemberMenuId = this.selectedMemberMenuId === memberId ? null : memberId;
+  }
+
+  isMemberMenuOpen(memberId: string): boolean {
+    return this.selectedMemberMenuId === memberId;
+  }
+
+  closeMemberMenu(): void {
+    this.selectedMemberMenuId = null;
+  }
   invitationColumns: string[] = ['email', 'createdAt', 'status', 'actions'];
 
   constructor(
     private orgService: OrganizationControllerService,
     private invitationService: InvitationControllerService,
-    private snackbarService: SnackbarService,
-    private dialog: MatDialog
+    private snackbarService: SnackbarService
   ) {}
 
   searchQuery: string = '';
@@ -141,15 +146,18 @@ export class OrganizationMembersComponent implements OnInit {
   }
 
   openInviteDialog(): void {
-    const dialogRef = this.dialog.open(InviteRecruiterDialogComponent, {
-      width: '500px'
-    });
+    this.showInviteRecruiterModal = true;
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.inviteRecruiters(result.emails);
-      }
-    });
+  handleInviteRecruiterConfirm(result: { emails: string[], message: string }): void {
+    this.showInviteRecruiterModal = false;
+    if (result) {
+      this.inviteRecruiters(result.emails);
+    }
+  }
+
+  handleInviteRecruiterCancel(): void {
+    this.showInviteRecruiterModal = false;
   }
 
   inviteRecruiters(emails: string[]): void {

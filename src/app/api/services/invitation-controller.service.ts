@@ -19,6 +19,8 @@ import { listOrganizationInvitations } from '../fn/invitation-controller/list-or
 import { ListOrganizationInvitations$Params } from '../fn/invitation-controller/list-organization-invitations';
 import { PageRecruiterInvitationDto } from '../models/page-recruiter-invitation-dto';
 import { RecruiterInvitationDto } from '../models/recruiter-invitation-dto';
+import { resendInvitation } from '../fn/invitation-controller/resend-invitation';
+import { ResendInvitation$Params } from '../fn/invitation-controller/resend-invitation';
 import { revokeInvitation } from '../fn/invitation-controller/revoke-invitation';
 import { RevokeInvitation$Params } from '../fn/invitation-controller/revoke-invitation';
 import { validateInvitation } from '../fn/invitation-controller/validate-invitation';
@@ -28,6 +30,31 @@ import { ValidateInvitation$Params } from '../fn/invitation-controller/validate-
 export class InvitationControllerService extends BaseService {
   constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
+  }
+
+  /** Path part for operation `resendInvitation()` */
+  static readonly ResendInvitationPath = '/api/invitations/{invitationId}/resend';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `resendInvitation()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  resendInvitation$Response(params: ResendInvitation$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return resendInvitation(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `resendInvitation$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  resendInvitation(params: ResendInvitation$Params, context?: HttpContext): Observable<void> {
+    return this.resendInvitation$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
   }
 
   /** Path part for operation `inviteRecruiter()` */
