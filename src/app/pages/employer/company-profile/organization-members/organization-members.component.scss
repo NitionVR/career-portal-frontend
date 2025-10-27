@@ -23,23 +23,6 @@
   color: var(--text-secondary, var(--text-primary));
 }
 
-// Table styles
-/* No component-specific styles needed with this approach as Tailwind handles it */
-
-.mat-mdc-header-cell {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.mat-mdc-row:hover {
-  background: rgba(0, 0, 0, 0.03);
-}
-
-// Toolbar styles
-.table-toolbar .mat-mdc-form-field {
-  min-width: 180px;
-}
-
 // Avatar initials
 .avatar {
   width: 36px;
@@ -51,12 +34,6 @@
   font-weight: 600;
   color: var(--primary-foreground, #fff);
   background: var(--primary, #3b82f6);
-}
-
-// Action column
-.mat-column-actions {
-  width: 80px;
-  text-align: right;
 }
 
 // Status and role chips
