@@ -1,0 +1,21 @@
+/* Override Angular Material Tab Styles to match app design */
+
+:host ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+:host ::ng-deep .mat-mdc-tab.mat-mdc-tab-active .mdc-tab__text-label {
+  color: hsl(var(--primary)) !important;
+}
+
+/* Tab indicator color */
+:host ::ng-deep .mdc-tab.mdc-tab--active .mdc-tab-indicator__content {
+  background-color: hsl(var(--primary)) !important;
+  height: 2px !important; /* Standard indicator height */
+  border: none !important; /* Remove any potential border */
+}
+
+/* Tab ripple color (optional, for consistency) */
+:host ::ng-deep .mat-mdc-tab .mat-mdc-tab-ripple {
+  background-color: hsl(var(--primary) / 0.1) !important;
+}

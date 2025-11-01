@@ -1,32 +1,53 @@
-<section class="space-y-6">
-  <header class="flex items-center justify-between">
-    <h1 class="text-2xl font-semibold">Notifications</h1>
-    <button class="px-3 py-2 rounded-md bg-primary text-white hover:bg-primary/90 disabled:opacity-50" (click)="markAllAsRead()" [disabled]="unreadCount === 0">Mark all as read</button>
-  </header>
+<section class="py-8 sm:py-12">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+      <div class="flex items-center mb-4 sm:mb-0">
+        <span class="material-symbols-outlined text-primary text-4xl mr-4">notifications</span>
+        <h1 class="text-3xl font-bold tracking-tight">Notifications</h1>
+      </div>
+      <button class="px-6 py-3 text-base font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed" (click)="markAllAsRead()" [disabled]="unreadCount === 0">
+        <span class="material-symbols-outlined mr-2">done_all</span> Mark all as read
+      </button>
+    </div>
 
-  <div *ngIf="errorMessage" class="p-4 bg-red-50 text-red-700 border border-red-200 rounded">{{ errorMessage }}</div>
-  <div *ngIf="isLoading" class="text-muted-foreground">Loading notifications…</div>
+    <div *ngIf="errorMessage" class="p-4 bg-destructive/10 text-destructive border border-destructive/20 rounded-md mb-6">{{ errorMessage }}</div>
+    <div *ngIf="isLoading" class="flex items-center justify-center py-6 glassmorphism rounded-xl mb-6">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <p class="ml-3 text-primary">Loading notifications...</p>
+    </div>
 
-  <div *ngIf="!isLoading && notifications?.content?.length === 0" class="p-6 border rounded bg-card text-muted-foreground">
-    No notifications yet.
+    <div *ngIf="!isLoading && notifications?.content?.length === 0" class="p-6 glassmorphism rounded-xl text-muted-foreground text-center">
+      <span class="material-symbols-outlined text-6xl text-muted-foreground mb-4">notifications_off</span>
+      <p class="mt-4 text-lg font-semibold">No notifications yet.</p>
+      <p class="mt-2 text-muted-foreground">You're all caught up!</p>
+    </div>
+
+    <ul *ngIf="!isLoading && notifications?.content?.length" class="space-y-4">
+      <li *ngFor="let n of notifications!.content!" class="glassmorphism rounded-xl p-6 flex items-start justify-between transition-all duration-200"
+          [ngClass]="{'opacity-75': n.readAt}">
+        <div>
+          <div class="font-semibold text-foreground">{{ n.title || 'Notification' }}</div>
+          <div class="text-sm text-muted-foreground mt-1">{{ n.content }}</div>
+          <div class="text-xs text-muted-foreground mt-2">{{ n.createdAt | date:'medium' }}</div>
+        </div>
+        <div>
+          <button *ngIf="!n.readAt" class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors" (click)="markAsRead(n.id)">
+            Mark as read
+          </button>
+          <span *ngIf="n.readAt" class="px-4 py-2 text-sm font-semibold text-muted-foreground bg-muted rounded-full">Read</span>
+        </div>
+      </li>
+    </ul>
+
+    <footer class="flex items-center justify-between mt-8" *ngIf="notifications">
+      <button class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed" (click)="prevPage()" [disabled]="page === 0">
+        <span class="material-symbols-outlined mr-2">arrow_back</span> Previous
+      </button>
+      <div class="text-sm text-muted-foreground">Page {{ (notifications.number || 0) + 1 }} of {{ notifications.totalPages || 1 }}</div>
+      <button class="px-4 py-2 text-sm font-semibold text-primary-foreground bg-primary rounded-full hover:bg-primary-hover transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed" (click)="nextPage()" [disabled]="notifications.last">
+        Next <span class="material-symbols-outlined ml-2">arrow_forward</span>
+      </button>
+    </footer>
   </div>
-
-  <ul *ngIf="!isLoading && notifications?.content?.length" class="space-y-3">
-    <li *ngFor="let n of notifications!.content!" class="p-4 border rounded-lg bg-card flex items-start justify-between">
-      <div>
-        <div class="font-medium">{{ n.title || 'Notification' }}</div>
-        <div class="text-sm text-muted-foreground mt-1">{{ n.content }}</div>
-        <div class="text-xs text-muted-foreground mt-2">{{ n.createdAt | date:'medium' }}</div>
-      </div>
-      <div>
-        <button class="px-2 py-1 text-xs rounded-md border hover:bg-muted" (click)="markAsRead(n.id)" [disabled]="!!n.readAt">{{ n.readAt ? 'Read' : 'Mark as read' }}</button>
-      </div>
-    </li>
-  </ul>
-
-  <footer class="flex items-center justify-between" *ngIf="notifications">
-    <button class="px-3 py-2 rounded-md border hover:bg-muted disabled:opacity-50" (click)="prevPage()" [disabled]="page === 0">Previous</button>
-    <div class="text-sm text-muted-foreground">Page {{ (notifications.number || 0) + 1 }} of {{ notifications.totalPages || 1 }}</div>
-    <button class="px-3 py-2 rounded-md border hover:bg-muted disabled:opacity-50" (click)="nextPage()" [disabled]="notifications.last">Next</button>
-  </footer>
 </section>

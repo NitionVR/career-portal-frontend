@@ -1,59 +1,108 @@
-# TempApp
+# Career Portal Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.1.
 
-## Development server
+This repository contains the source code for the Career Portal frontend, a modern and feature-rich platform designed to connect talented professionals with employers. The application is built with Angular and provides distinct, role-based experiences for candidates and employers.
 
-To start a local development server, run:
+## Introduction
+
+Career Portal is a comprehensive job portal that streamlines the hiring process. It offers a seamless interface for candidates to find jobs, build their profiles, and track applications. For employers, it provides a powerful suite of tools to manage job postings, review candidates, and collaborate with their hiring team.
+
+## Features
+
+### For Talent (Candidates)
+- **Job Discovery**: Search and filter for job opportunities based on keywords, skills, experience level, and more.
+- **Magic Link Authentication**: Secure and passwordless login and registration using email-based magic links.
+- **Advanced Profile Management**: Create and manage a detailed professional profile.
+- **CV Autofill**: Automatically populate profile sections by uploading a CV.
+- **Document Management**: Upload and manage multiple CVs.
+- **Application Tracking**: View and track the status of all job applications in one place.
+
+### For Employers & Hiring Managers
+- **Company Profile**: Manage your company's brand, logo, and description.
+- **Team Management**: Invite recruiters and hiring managers to your organization and manage their roles.
+- **Job Post Management**: A complete lifecycle management for job posts, including creating, editing, publishing, archiving, and closing.
+- **Applicant Tracking System (ATS)**: View and manage applicants for each job post.
+- **Analytics Dashboard**: Gain insights into your applicant pipeline with key metrics and visualizations.
+- **Audit Log**: Track all status changes and updates to job posts for compliance and transparency.
+
+## Tech Stack
+
+- **Framework**: [Angular](https://angular.io/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with a custom design system.
+- **UI Components**: [Angular Material](https://material.angular.io/) and other custom-built components.
+- **API Communication**: Auto-generated client using [ng-openapi-gen](https://github.com/cyclosproject/ng-openapi-gen) from an OpenAPI specification.
+- **Authentication**: JWT-based authentication with a magic link flow.
+- **State Management**: RxJS for reactive state management.
+
+## Getting Started
+
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18.x or later)
+- [Angular CLI](https://angular.io/cli)
+- `make` command-line utility
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd career-portal-frontend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+### Running the Application
+
+The project includes a `Makefile` for simplified script execution.
+
+- **To run the development server:**
+  ```bash
+  make run
+  ```
+  The application will be available at `http://localhost:4200/`. The server will automatically reload upon file changes.
+
+- **To build the project for production:**
+  ```bash
+  ng build --configuration production
+  ```
+  The build artifacts will be stored in the `dist/` directory.
+
+- **To run unit tests:**
+  ```bash
+  ng test
+  ```
+
+## API Code Generation
+
+The application's API client is generated from an OpenAPI specification. To update the client after changes to the API spec, run the following command:
 
 ```bash
-make run
+npm run generate:api
 ```
+This script uses `ng-openapi-gen` to regenerate the services and models in `src/app/api` and applies a necessary patch to the `base-service.ts`.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Project Structure
 
-## Code scaffolding
+The project follows a standard Angular structure with some key directories:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **`src/app/api`**: Contains the auto-generated TypeScript client for the backend API.
+- **`src/app/core`**: Holds core application logic, including authentication services, guards, interceptors, and initializers.
+- **`src/app/pages`**: Contains the top-level components for each page or route in the application, organized by feature (e.g., `talent`, `employer`).
+- **`src/app/shared`**: Includes reusable components, directives, and data models that are shared across different parts of the application.
+- **`src/assets`**: Static assets like images, fonts, and runtime configuration files.
+- **`src/environments`**: Environment-specific configuration files.
 
-```bash
-ng generate component component-name
-```
+## Contributing
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Contributions are welcome! Please feel free to open an issue or submit a pull request. (A formal contribution guide will be added in the future).
 
-```bash
-ng generate --help
-```
+## License
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs. Test
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+This project is licensed under the [MIT License](LICENSE).
