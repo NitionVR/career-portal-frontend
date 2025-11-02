@@ -7,6 +7,10 @@ This repository contains the source code for the Career Portal frontend, a moder
 
 Career Portal is a comprehensive job portal that streamlines the hiring process. It offers a seamless interface for candidates to find jobs, build their profiles, and track applications. For employers, it provides a powerful suite of tools to manage job postings, review candidates, and collaborate with their hiring team.
 
+## Live Demo
+
+You can access a live demo of the application here: [http://etalente-alb-665506398.af-south-1.elb.amazonaws.com/](http://etalente-alb-665506398.af-south-1.elb.amazonaws.com/)
+
 ## Features
 
 ### For Talent (Candidates)
